@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>SVARP Foundation</title>
+
+    <!-- ✅ Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- ✅ Optional Tailwind config (INLINE) -->
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#1f3b45",
+              accent: "#9bcf9b",
+              muted: "#f4f7f6",
+            },
+            fontFamily: {
+              sans: ["Inter", "sans-serif"],
+              script: ["Pacifico", "cursive"],
+            },
+          },
+        },
+      };
+    </script>
+
+    <!-- Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Pacifico&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="bg-muted font-sans">
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
