@@ -4,30 +4,92 @@ import ImageModal from "../components/ImageModal";
 export default function EventGallery() {
   const events = [
     {
-      id: "corporate-training",
-      title: "Corporate Safety Training",
+      id: "dn-polytechnic",
+      title: "DN Polytechnic",
       images: [
-        "https://images.unsplash.com/photo-1552664730-d307ca884978",
-        "https://images.unsplash.com/photo-1542744173-8e7e53415bb0",
-        "https://images.unsplash.com/photo-1519389950473-47ba0277781c",
+        "/events/event-1/picture-1.webp",
+        "/events/event-1/picture-2.webp",
+        "/events/event-1/picture-3.webp",
+        "/events/event-1/picture-4.webp",
+        "/events/event-1/picture-5.webp",
+       
       ],
     },
     {
-      id: "certification-program",
-      title: "Certification Program",
+      id: "gandola-training",
+      title: "Gandola Training",
       images: [
-        "https://images.unsplash.com/photo-1521737604893-d14cc237f11d",
-        "https://images.unsplash.com/photo-1523580846011-d3a5bc25702b",
-        "https://images.unsplash.com/photo-1524178232363-1fb2b075b655",
+        "/events/event-2/picture-1.webp",
+        "/events/event-2/picture-2.webp",
+        "/events/event-2/picture-3.webp",
+        "/events/event-2/picture-4.webp",
+        "/events/event-2/picture-5.webp",
       ],
     },
     {
-      id: "social-awareness",
-      title: "Social Awareness Event",
+      id: "Mahindra pride classroom",
+      title: "Mahindra pride classroom",
       images: [
-        "https://images.unsplash.com/photo-1503676260728-1c00da094a0b",
-        "https://images.unsplash.com/photo-1497493292307-31c376b6e479",
-        "https://images.unsplash.com/photo-1557804506-669a67965ba0",
+        "/events/event-3/picture-1.webp",
+        "/events/event-3/picture-2.webp",
+        "/events/event-3/picture-3.webp",
+        "/events/event-3/picture-4.webp",
+        "/events/event-3/picture-5.webp",
+      ],
+    },
+    {
+      id: "onground-training",
+      title: "Onground Training",
+      images: [
+        "/events/event-4/picture-1.webp",
+        "/events/event-4/picture-2.webp",
+        "/events/event-4/picture-3.webp",
+        "/events/event-4/picture-4.webp",
+        "/events/event-4/picture-5.webp",
+      ],
+    },
+    {
+      id: "training",
+      title: "Training",
+      images: [
+        "/events/event-5/picture-1.webp",
+        "/events/event-5/picture-2.webp",
+        "/events/event-5/picture-3.webp",
+        "/events/event-5/picture-4.webp",
+        "/events/event-5/picture-5.webp",
+      ],
+    },
+    {
+      id: "seminar",
+      title: "Seminar",
+      images: [
+        "/events/event-6/picture-1.webp",
+        "/events/event-6/picture-2.webp",
+        "/events/event-6/picture-3.webp",
+        "/events/event-6/picture-4.webp",
+        "/events/event-6/picture-5.webp",
+      ],
+    },
+    {
+      id: "Six Sigma College",
+      title: "Six Sigma College",
+      images: [
+        "/events/event-7/picture-1.webp",
+        "/events/event-7/picture-2.webp",
+        "/events/event-7/picture-3.webp",
+        "/events/event-7/picture-4.webp",
+        "/events/event-7/picture-5.webp",
+      ],
+    },
+    {
+      id: "MPC Nandi Foundation",
+      title: "MPC Nandi Foundation",
+      images: [
+        "/events/event-8/picture-1.webp",
+        "/events/event-8/picture-2.webp",
+        "/events/event-8/picture-3.webp",
+        "/events/event-8/picture-4.webp",
+        "/events/event-8/picture-5.webp",
       ],
     },
   ];

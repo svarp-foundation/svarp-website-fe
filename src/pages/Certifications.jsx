@@ -1,16 +1,16 @@
 import React from "react";
 
-import cert1 from "../assets/certifications/certificate-1.png";
-import cert2 from "../assets/certifications/certificate-2.png";
-import cert3 from "../assets/certifications/certificate-3.png";
-import cert4 from "../assets/certifications/certificate-4.png";
-import cert5 from "../assets/certifications/certificate-5.png";
-import cert6 from "../assets/certifications/certificate-6.png";
-import cert7 from "../assets/certifications/certificate-7.png";
-import cert8 from "../assets/certifications/certificate-8.png";
-import cert9 from "../assets/certifications/certificate-9.png";
-import cert10 from "../assets/certifications/certificate-10.png";
-import cert11 from "../assets/certifications/certificate-11.png";
+import cert1 from "../assets/certifications/certificate-1.webp";
+import cert2 from "../assets/certifications/certificate-2.webp";
+import cert3 from "../assets/certifications/certificate-3.webp";
+import cert4 from "../assets/certifications/certificate-4.webp";
+import cert5 from "../assets/certifications/certificate-5.webp";
+import cert6 from "../assets/certifications/certificate-6.webp";
+import cert7 from "../assets/certifications/certificate-7.webp";
+import cert8 from "../assets/certifications/certificate-8.webp";
+import cert9 from "../assets/certifications/certificate-9.webp";
+import cert10 from "../assets/certifications/certificate-10.webp";
+import cert11 from "../assets/certifications/certificate-11.webp";
 
 const styles = {
   container: {
