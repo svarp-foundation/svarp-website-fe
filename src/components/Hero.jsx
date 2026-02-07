@@ -17,7 +17,7 @@ export default function Hero() {
             className="
               max-w-3xl 
               mx-auto md:mx-0
-              backdrop-blur-md bg-white/5 border border-white/10 
+              backdrop-blur- bg-white/5 border border-white/10 
               rounded-3xl 
               p-6 sm:p-8 md:p-14 
               shadow-2xl

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import ImageModal from "../components/ImageModal";
+import Events from "./Events";
 
 export default function EventGallery() {
   const events = [
@@ -12,7 +13,6 @@ export default function EventGallery() {
         "/events/event-1/picture-3.webp",
         "/events/event-1/picture-4.webp",
         "/events/event-1/picture-5.webp",
-       
       ],
     },
     {
@@ -118,12 +118,11 @@ export default function EventGallery() {
           </p>
         </div>
 
-
         <div className="mb-8 md:hidden">
           <select
             value={activeEvent.id}
             onChange={(e) =>
-              setActiveEvent(events.find(ev => ev.id === e.target.value))
+              setActiveEvent(events.find((ev) => ev.id === e.target.value))
             }
             className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-accent"
           >
@@ -134,7 +133,6 @@ export default function EventGallery() {
             ))}
           </select>
         </div>
-
 
         <div className="hidden md:flex flex-wrap gap-4 mb-12">
           {events.map((event) => (
@@ -152,7 +150,6 @@ export default function EventGallery() {
           ))}
         </div>
 
-
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 auto-rows-[180px]">
           {activeEvent.images.map((img, index) => (
             <div
@@ -169,15 +166,13 @@ export default function EventGallery() {
               />
 
               <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
-                <span className="text-white text-sm">
-                  View
-                </span>
+                <span className="text-white text-sm">View</span>
               </div>
             </div>
           ))}
         </div>
       </div>
-
+      <Events />
 
       {selectedImage && (
         <ImageModal
