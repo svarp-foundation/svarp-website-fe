@@ -7,15 +7,19 @@ import santoshSingh from "./images/our-team/santosh-singh.webp";
 import seemaChaudhary from "./images/our-team/seema-chaudhary.webp";
 import vikashKumar from "./images/our-team/vikash-kumar.webp";
 import poonamSingh from "./images/our-team/poonam-singh.webp";
+import swastikSharma from "./images/our-team/swastik-sharma.webp";
+import loadingVideo from "./videos/loading-video.mp4";
 
 export {
-    background,
-    drShilpiBansal,
-    preetiChaudhary,
-    priyankaVerma,
-    rajvirSingh,
-    santoshSingh,
-    seemaChaudhary,
-    poonamSingh,
-    vikashKumar
+  background,
+  drShilpiBansal,
+  preetiChaudhary,
+  priyankaVerma,
+  rajvirSingh,
+  santoshSingh,
+  seemaChaudhary,
+  poonamSingh,
+  vikashKumar,
+  swastikSharma,
+  loadingVideo,
 };

@@ -29,20 +29,28 @@ export default function Navbar() {
           {/* Logo */}
           <NavLink
             to="/"
-            className="text-lg font-semibold tracking-wide text-white"
+            className="flex items-center text-lg font-semibold tracking-wide text-white gap-2"
             onClick={() => setOpen(false)}
           >
+            <img
+              src="/company/svarp-logo.webp"
+              alt="SVARP Foundation"
+              className="h-12 w-auto object-contain transition-transform duration-300"
+            />
             SVARP <span className="text-accent">FOUNDATION</span>
           </NavLink>
 
           {/* Desktop Menu */}
-          <div className="hidden lg:flex items-center gap-6 text-sm text-white">
+          <div className="hidden md:flex items-center gap-6 text-sm text-white">
             {menuItems.map((item) => (
               <NavLink key={item.path} to={item.path} className={linkClass}>
                 {item.name}
               </NavLink>
             ))}
-            <a href="https://www.svarp.org/course-category/global-course/?tutor-course-filter-category=471" target="_blank">
+            <a
+              href="https://www.svarp.org/course-category/global-course/?tutor-course-filter-category=471"
+              target="_blank"
+            >
               Courses
             </a>
             <NavLink
@@ -78,7 +86,11 @@ export default function Navbar() {
                 {item.name}
               </NavLink>
             ))}
-            <a href="https://www.svarp.org/course-category/global-course/?tutor-course-filter-category=471" target="_blank" className="block hover:text-accent">
+            <a
+              href="https://www.svarp.org/course-category/global-course/?tutor-course-filter-category=471"
+              target="_blank"
+              className="block hover:text-accent"
+            >
               Courses
             </a>
 

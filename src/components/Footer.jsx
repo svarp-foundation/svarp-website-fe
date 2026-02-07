@@ -6,9 +6,13 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-6 py-16 grid grid-cols-1 md:grid-cols-4 gap-10">
         {/* Brand */}
         <div>
-          <h2 className="font-bold text-lg mb-4">
-            SVARP <span className="text-accent">Foundation</span>
-          </h2>
+          <NavLink to="/" className="inline-block mb-4">
+            <img
+              src="/company/svarp-logo.webp"
+              alt="SVARP Foundation"
+              className="h-16 w-auto object-contain drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]"
+            />
+          </NavLink>
           <p className="text-sm opacity-80 leading-relaxed">
             Building safer, smarter, sustainable futures through safety,
             sustainability, and social impact. SVARP Foundation works with

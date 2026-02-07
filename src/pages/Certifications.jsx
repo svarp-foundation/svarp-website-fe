@@ -1,5 +1,5 @@
 import React from "react";
-
+import { NavLink } from "react-router-dom";
 import cert1 from "../assets/certifications/certificate-1.webp";
 import cert2 from "../assets/certifications/certificate-2.webp";
 import cert3 from "../assets/certifications/certificate-3.webp";
@@ -12,116 +12,142 @@ import cert9 from "../assets/certifications/certificate-9.webp";
 import cert10 from "../assets/certifications/certificate-10.webp";
 import cert11 from "../assets/certifications/certificate-11.webp";
 
-const styles = {
-  container: {
-    padding: "60px 8%",
-    textAlign: "center",
-  },
-  heading: {
-    fontSize: "36px",
-    marginBottom: "10px",
-  },
-  subHeading: {
-    color: "#666",
-    marginBottom: "40px",
-  },
-  grid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
-    gap: "30px",
-  },
-  card: {
-    background: "#fff",
-    padding: "20px",
-    borderRadius: "12px",
-    boxShadow: "0 10px 30px rgba(0,0,0,0.08)",
-  },
-  image: {
-    width: "100%",
-    height: "220px",
-    objectFit: "contain",
-    marginBottom: "15px",
-  },
-};
+// Removed background image import as user requested plain white background
+
 const certificates = [
   {
     id: 1,
     image: cert2,
-    title: "GST Registration Certificate (Government of India)",
+    title: "GST Registration Certificate",
+    subtitle: "(Government of India)",
     year: "2024",
   },
   {
     id: 2,
     image: cert3,
-    title: "UDYAM Registration (MSME – Micro Enterprise)",
+    title: "UDYAM Registration",
+    subtitle: "(MSME – Micro Enterprise)",
     year: "2024",
   },
   {
     id: 4,
     image: cert6,
-    title: "CSR Registration (Ministry of Corporate Affairs)",
+    title: "CSR Registration",
+    subtitle: "(Ministry of Corporate Affairs)",
     year: "2025",
   },
   {
     id: 5,
     image: cert8,
-    title: "ISO 9001:2015 – Quality Management System",
+    title: "ISO 9001:2015",
+    subtitle: "Quality Management System",
     year: "2025",
   },
   {
     id: 6,
     image: cert9,
-    title: "ISO 14001:2015 – Environmental Management System",
+    title: "ISO 14001:2015",
+    subtitle: "Environmental Management System",
     year: "2025",
   },
   {
     id: 7,
     image: cert10,
-    title: "ISO 45001:2018 – Occupational Health & Safety",
+    title: "ISO 45001:2018",
+    subtitle: "Occupational Health & Safety",
     year: "2025",
   },
   {
     id: 8,
     image: cert11,
-    title: "ISO 50001:2018 – Energy Management System",
+    title: "ISO 50001:2018",
+    subtitle: "Energy Management System",
     year: "2025",
   },
   {
     id: 9,
     image: cert4,
-    title: "NGO DARPAN Enrollment Certificate (Ministry of Social Justice & Empowerment, Govt. of India)",
+    title: "NGO DARPAN Enrollment",
+    subtitle: "(Ministry of Social Justice & Empowerment)",
     year: "2024",
   },
   {
     id: 11,
     image: cert7,
     title: "NGO DARPAN Profile Details",
+    subtitle: "",
     year: "2024",
   },
   {
     id: 10,
     image: cert5,
-    title: "Company Registration Certificate (Section 8 – Companies Act 2013)",
+    title: "Company Registration",
+    subtitle: "(Section 8 – Companies Act 2013)",
     year: "2024",
   },
 ];
 
 export default function Certifications() {
   return (
-    <section style={styles.container}>
-      <h1 style={styles.heading}>Our Certifications & Awards</h1>
-      <p style={styles.subHeading}>
-        Recognitions and certifications received by our organization
-      </p>
+    <section className="min-h-screen bg-gray-50">
+      <div className="max-w-7xl mx-auto px-6 py-24">
+        {/* Header Section */}
+        <div className="text- mb-16 space-y-4">
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 tracking-tight">
+            Our <span className="text-accent">Certifications</span> & Awards
+          </h1>
+          <p className="text-lg text-gray-600 max-w-2xl leading-relaxed">
+            Recognitions and certifications received by our organization,
+            demonstrating our commitment to quality, safety, and compliance.
+          </p>
+        </div>
 
-      <div style={styles.grid}>
-        {certificates.map((cert) => (
-          <div key={cert.id} style={styles.card}>
-            <img src={cert.image} alt={cert.title} style={styles.image} />
-            <h3>{cert.title}</h3>
-            <span>{cert.year}</span>
-          </div>
-        ))}
+        {/* Grid Layout */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {certificates.map((cert) => (
+            <div
+              key={cert.id}
+              className="relative bg-white border border-gray-200 rounded-2xl p-6"
+            >
+              <div className="absolute top-4 right-4 bg-accent/10 text-accent text-xs font-bold px-3 py-1 rounded-full border border-accent/20">
+                {cert.year}
+              </div>
+
+              <div className="h-56 w-full flex items-center justify-center mb-6 bg-gray-50 rounded-xl p-4">
+                <img
+                  src={cert.image}
+                  alt={cert.title}
+                  className="max-h-full max-w-full object-contain filter drop-shadow-md"
+                />
+              </div>
+
+              <div className="text-center">
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                  {cert.title}
+                </h3>
+                {cert.subtitle && (
+                  <p className="text-sm text-gray-500 font-medium">
+                    {cert.subtitle}
+                  </p>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* CTA Section */}
+        <div className="mt-20 text-center">
+          <p className="text-gray-500 mb-6">
+            We are continuously striving for excellence and expanding our
+            credentials.
+          </p>
+          <NavLink
+            to="/contact"
+            className="inline-block bg-accent text-white font-bold px-8 py-3 rounded-full hover:bg-emerald-600 transition-all duration-300 transform hover:scale-105 shadow-lg shadow-accent/20"
+          >
+            Partner With Us
+          </NavLink>
+        </div>
       </div>
     </section>
   );

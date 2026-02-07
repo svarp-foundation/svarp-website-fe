@@ -6,7 +6,8 @@ import {
     santoshSingh,
     seemaChaudhary,
     poonamSingh,
-    vikashKumar
+    vikashKumar,
+    swastikSharma
 } from "../assets/assets";
 
 export default function Team() {
@@ -31,7 +32,7 @@ export default function Team() {
     },
     {
       img: vikashKumar,
-      name: "Vikash Kumar",
+      name: "Mr. Vikash Kumar",
       role: "CEO & Founder",
       bio: "An accomplished HSE leader and global trainer specializing in risk management, safety leadership, sustainability, and professional certification programs.",
     },
@@ -60,9 +61,9 @@ export default function Team() {
       bio: "Dr. Shilpi Bansal, Ph.D. (Environmental Science), brings over 22 years of environmental management and compliance expertise to SVARP Foundation.",
     },
     {
-      img: "https://kgdarcnvrkzjyasdpoab.supabase.co/storage/v1/object/public/Company%20Portal/profile%20images/sales001.jpeg",
-      name: "Swastik",
-      role: "Software Lead",
+      img: swastikSharma,
+      name: "Mr. Swastik Sharma",
+      role: "Head of Software & IT",
       bio: "",
     },
   ];

@@ -1,0 +1,38 @@
+import { useRef, useEffect, useState } from "react";
+import { loadingVideo, background } from "../assets/assets";
+
+export default function Loader({ onComplete }) {
+  const videoRef = useRef(null);
+  const [fading, setFading] = useState(false);
+
+  useEffect(() => {
+    // Preload background image
+    const img = new Image();
+    img.src = background;
+  }, []);
+
+  const handleVideoEnd = () => {
+    setFading(true);
+    setTimeout(onComplete, 1000); // Wait for transition to finish
+  };
+
+  return (
+    <div
+      className={`fixed inset-0 z-[100] flex items-center justify-center bg-white transition-opacity duration-1000 ${
+        fading ? "opacity-0" : "opacity-100"
+      }`}
+    >
+      <video
+        ref={videoRef}
+        src={loadingVideo}
+        className="max-w-full max-h-full w-full h-auto object-contain"
+        autoPlay
+        muted
+        playsInline
+        onEnded={handleVideoEnd}
+      />
+      {/* Hidden image element to ensure browser caches it */}
+      <img src={background} className="hidden" alt="Preload" />
+    </div>
+  );
+}
