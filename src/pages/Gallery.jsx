@@ -26,17 +26,17 @@ export default function EventGallery() {
         "/events/event-2/picture-5.webp",
       ],
     },
-    {
-      id: "Mahindra pride classroom",
-      title: "Mahindra pride classroom",
-      images: [
-        "/events/event-3/picture-1.webp",
-        "/events/event-3/picture-2.webp",
-        "/events/event-3/picture-3.webp",
-        "/events/event-3/picture-4.webp",
-        "/events/event-3/picture-5.webp",
-      ],
-    },
+    // {
+    //   id: "Mahindra pride classroom",
+    //   title: "Mahindra pride classroom",
+    //   images: [
+    //     "/events/event-3/picture-1.webp",
+    //     "/events/event-3/picture-2.webp",
+    //     "/events/event-3/picture-3.webp",
+    //     "/events/event-3/picture-4.webp",
+    //     "/events/event-3/picture-5.webp",
+    //   ],
+    // },
     {
       id: "onground-training",
       title: "Onground Training",
@@ -81,17 +81,17 @@ export default function EventGallery() {
         "/events/event-7/picture-5.webp",
       ],
     },
-    {
-      id: "MPC Nandi Foundation",
-      title: "MPC Nandi Foundation",
-      images: [
-        "/events/event-8/picture-1.webp",
-        "/events/event-8/picture-2.webp",
-        "/events/event-8/picture-3.webp",
-        "/events/event-8/picture-4.webp",
-        "/events/event-8/picture-5.webp",
-      ],
-    },
+    // {
+    //   id: "MPC Nandi Foundation",
+    //   title: "MPC Nandi Foundation",
+    //   images: [
+    //     "/events/event-8/picture-1.webp",
+    //     "/events/event-8/picture-2.webp",
+    //     "/events/event-8/picture-3.webp",
+    //     "/events/event-8/picture-4.webp",
+    //     "/events/event-8/picture-5.webp",
+    //   ],
+    // },
   ];
 
   const [activeEvent, setActiveEvent] = useState(events[0]);
