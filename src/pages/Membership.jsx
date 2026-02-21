@@ -1,4 +1,50 @@
+import { useAuth } from "../context/AuthContext";
+import { useState } from "react";
+
+import { useNavigate } from "react-router-dom";
+
 export default function Membership() {
+  const { user, token } = useAuth();
+  const navigate = useNavigate();
+
+  const loadScript = (src) => {
+    return new Promise((resolve) => {
+      const script = document.createElement("script");
+      script.src = src;
+      script.onload = () => {
+        resolve(true);
+      };
+      script.onerror = () => {
+        resolve(false);
+      };
+      document.body.appendChild(script);
+    });
+  };
+
+  const handleSubscribe = async (planTitle, price, planId) => {
+    if (!user) {
+      alert("Please login to apply for membership");
+      navigate("/login");
+      return;
+    }
+
+    if (!token) {
+      alert("Authentication error. Please login again.");
+      navigate("/login");
+      return;
+    }
+
+    // Redirect to Payment page with plan details
+    navigate("/payment", {
+      state: {
+        plan: {
+          id: planId,
+          title: planTitle,
+          price: price,
+        },
+      },
+    });
+  };
   const plans = [
     {
       title: "Lifetime Membership – ₹25,000 (One-Time Payment)",
@@ -15,6 +61,8 @@ export default function Membership() {
         "Most recommended by experts & alumni",
       ],
       highlight: true,
+      price: 25000,
+      id: 1,
     },
     {
       title: "Yearly Membership – ₹5,000 / Year",
@@ -27,6 +75,8 @@ export default function Membership() {
         "1-year validity with annual renewal",
         "Limited benefits compared to Lifetime Membership",
       ],
+      price: 5000,
+      id: 2,
     },
     {
       title: "Student Membership – ₹1,000 / Year",
@@ -38,6 +88,8 @@ export default function Membership() {
         "Career guidance & startup mentoring",
         "Internship opportunities & real-world project exposure",
       ],
+      price: 1000,
+      id: 3,
     },
     {
       title: "Corporate Membership – from ₹2,50,000 / Year",
@@ -49,6 +101,8 @@ export default function Membership() {
         "High-level networking & industry collaboration",
         "HSE (Health, Safety & Sustainability) implementation support",
       ],
+      price: 250000,
+      id: 4,
     },
   ];
 
@@ -157,43 +211,79 @@ export default function Membership() {
 
         {/* Membership Plans */}
         <div className="grid md:grid-cols-2 gap-10">
-          {plans.map((plan) => (
-            <div
-              key={plan.title}
-              className={`rounded-3xl p-8 shadow-lg transition ${
-                plan.highlight ? "bg-primary text-white scale-105" : "bg-white"
-              }`}
-            >
-              <h3 className="text-xl font-semibold mb-4">{plan.title}</h3>
+          {plans.map((plan) => {
+            const currentMembership = user?.membership?.is_active
+              ? user.membership
+              : null;
+            const currentPlanId = currentMembership?.plan?.id;
+            const currentPlanPrice = currentMembership?.plan?.price;
 
-              <p
-                className={`text-sm leading-relaxed mb-6 ${
-                  plan.highlight ? "opacity-90" : "text-gray-600"
-                }`}
-              >
-                {plan.desc}
-              </p>
+            const isCurrentPlan = currentPlanId === plan.id;
+            const isDowngrade =
+              currentPlanPrice && plan.price < currentPlanPrice;
+            const isUpgrade = currentPlanPrice && plan.price > currentPlanPrice;
 
-              <ul className="space-y-3 text-sm mb-8">
-                {plan.benefits.map((b) => (
-                  <li key={b} className="flex items-start gap-2">
-                    <span className="text-accent">✔</span>
-                    <span>{b}</span>
-                  </li>
-                ))}
-              </ul>
+            let buttonText = "Apply for Membership";
+            let isDisabled = false;
 
-              <button
-                className={`w-full py-3 rounded-full font-medium transition ${
+            if (isCurrentPlan) {
+              buttonText = "Current Plan";
+              isDisabled = true;
+            } else if (isDowngrade) {
+              buttonText = "Not Available (Downgrade)";
+              isDisabled = true;
+            } else if (isUpgrade) {
+              buttonText = "Upgrade Plan";
+            }
+
+            return (
+              <div
+                key={plan.title}
+                className={`rounded-3xl p-8 shadow-lg transition ${
                   plan.highlight
-                    ? "bg-accent text-primary hover:scale-105"
-                    : "bg-primary text-white hover:opacity-90"
+                    ? "bg-primary text-white scale-105"
+                    : "bg-white"
                 }`}
               >
-                Apply for Membership
-              </button>
-            </div>
-          ))}
+                <h3 className="text-xl font-semibold mb-4">{plan.title}</h3>
+
+                <p
+                  className={`text-sm leading-relaxed mb-6 ${
+                    plan.highlight ? "opacity-90" : "text-gray-600"
+                  }`}
+                >
+                  {plan.desc}
+                </p>
+
+                <ul className="space-y-3 text-sm mb-8">
+                  {plan.benefits.map((b) => (
+                    <li key={b} className="flex items-start gap-2">
+                      <span className="text-accent">✔</span>
+                      <span>{b}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                <button
+                  onClick={() =>
+                    handleSubscribe(plan.title, plan.price, plan.id)
+                  }
+                  disabled={isDisabled}
+                  className={`w-full py-3 rounded-full font-medium transition ${
+                    isDisabled
+                      ? plan.highlight
+                        ? "bg-gray-400 text-gray-200 cursor-not-allowed opacity-80"
+                        : "bg-gray-200 text-gray-500 cursor-not-allowed"
+                      : plan.highlight
+                        ? "bg-accent text-primary hover:scale-105"
+                        : "bg-primary text-white hover:opacity-90"
+                  }`}
+                >
+                  {buttonText}
+                </button>
+              </div>
+            );
+          })}
         </div>
 
         <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white mt-24">

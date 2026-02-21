@@ -13,7 +13,7 @@ export default function Loader({ onComplete }) {
 
   const handleVideoEnd = () => {
     setFading(true);
-    setTimeout(onComplete, 1000); // Wait for transition to finish
+    setTimeout(onComplete, 1000); 
   };
 
   return (

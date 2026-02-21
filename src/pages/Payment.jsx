@@ -1,0 +1,414 @@
+import { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+
+export default function Payment() {
+  const { state } = useLocation();
+  const { user, token } = useAuth();
+  const navigate = useNavigate();
+
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    pan_card: "",
+    address: "",
+    city: "",
+    state: "",
+    pincode: "",
+  });
+
+  const [errors, setErrors] = useState({});
+
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (!state?.plan) {
+      navigate("/membership");
+      return;
+    }
+
+    if (user) {
+      setFormData({
+        name: user.full_name || "",
+        email: user.email || "",
+        phone: user.phone_number || "",
+        pan_card: user.pan_card || "",
+        address: user.address || "",
+        city: user.city || "",
+        state: user.state || "",
+        pincode: user.pincode || "",
+      });
+    }
+  }, [user, state, navigate]);
+
+  const loadScript = (src) => {
+    return new Promise((resolve) => {
+      const script = document.createElement("script");
+      script.src = src;
+      script.onload = () => {
+        resolve(true);
+      };
+      script.onerror = () => {
+        resolve(false);
+      };
+      document.body.appendChild(script);
+    });
+  };
+
+  const validate = () => {
+    const newErrors = {};
+
+    if (!formData.name.trim()) newErrors.name = "Name is required";
+    if (!formData.phone.match(/^\d{10}$/))
+      newErrors.phone = "Phone must be 10 digits";
+    if (!formData.pan_card.match(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/))
+      newErrors.pan_card = "Invalid PAN Card format (e.g., ABCDE1234F)";
+    if (!formData.address.trim()) newErrors.address = "Address is required";
+    if (!formData.city.trim()) newErrors.city = "City is required";
+    if (!formData.state.trim()) newErrors.state = "State is required";
+    if (!formData.pincode.match(/^\d{6}$/))
+      newErrors.pincode = "Pincode must be 6 digits";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handlePayment = async (e) => {
+    e.preventDefault();
+
+    if (!validate()) {
+      return;
+    }
+
+    setLoading(true);
+
+    // 1. Update User Profile with billing details (optional, but good for records)
+    try {
+      await fetch(`${import.meta.env.VITE_API_BASE_URL}/auth/me`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          full_name: formData.name,
+          phone_number: formData.phone,
+          pan_card: formData.pan_card,
+          address: formData.address,
+          city: formData.city,
+          state: formData.state,
+          pincode: formData.pincode,
+        }),
+      });
+    } catch (err) {
+      console.warn("Failed to save billing details", err);
+      // Continue to payment even if save fails? verify
+    }
+
+    // 2. Initiate Payment
+    const res = await loadScript(
+      "https://checkout.razorpay.com/v1/checkout.js",
+    );
+
+    if (!res) {
+      alert("Razorpay SDK failed to load. Are you online?");
+      setLoading(false);
+      return;
+    }
+
+    try {
+      // Create Order
+      const response = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/memberships/subscribe`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            membership_id: state.plan.id,
+            amount: state.plan.price,
+            currency: "INR",
+          }),
+        },
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        alert(`Application failed: ${errorData.detail || "Unknown error"}`);
+        setLoading(false);
+        return;
+      }
+
+      const orderData = await response.json();
+
+      const options = {
+        key: orderData.key_id,
+        amount: orderData.amount * 100,
+        currency: orderData.currency,
+        name: orderData.app_name || "SVARP Foundation",
+        description: `Membership: ${state.plan.title}`,
+        image: "https://www.svarp.org/company/svarp-logo.webp",
+        order_id: orderData.razorpay_order_id,
+        handler: async function (response) {
+          const verifyPayload = {
+            razorpay_order_id: response.razorpay_order_id,
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_signature: response.razorpay_signature,
+          };
+
+          try {
+            const verifyRes = await fetch(
+              `${import.meta.env.VITE_API_BASE_URL}/memberships/verify`,
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify(verifyPayload),
+              },
+            );
+
+            if (verifyRes.ok) {
+              navigate("/dashboard");
+            } else {
+              const errorData = await verifyRes.json();
+              alert(`Payment Verification Failed: ${errorData.detail}`);
+            }
+          } catch (error) {
+            console.error("Verification Error", error);
+            alert("Payment verification failed due to network error.");
+          }
+        },
+        prefill: {
+          name: formData.name,
+          email: formData.email,
+          contact: formData.phone,
+        },
+        theme: {
+          color: "#1f3b45",
+        },
+      };
+
+      const paymentObject = new window.Razorpay(options);
+      paymentObject.open();
+      setLoading(false);
+    } catch (error) {
+      console.error("Payment error", error);
+      alert("An error occurred. Please try again.");
+      setLoading(false);
+    }
+  };
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  if (!state?.plan) return null;
+
+  return (
+    <div className="min-h-screen bg-muted py-24 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-8">
+        {/* Billing Details Form */}
+        <div className="bg-white rounded-3xl p-8 shadow-lg">
+          <h2 className="text-2xl font-semibold text-primary mb-6">
+            Billing Details
+          </h2>
+          <form onSubmit={handlePayment} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                {" "}
+                Name{" "}
+              </label>
+              <input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                required
+                className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm p-2 border ${
+                  errors.name ? "border-red-500" : ""
+                }`}
+              />
+              {errors.name && (
+                <p className="text-red-500 text-xs mt-1">{errors.name}</p>
+              )}
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Email
+              </label>
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                disabled
+                className="mt-1 block w-full rounded-md border-gray-300 bg-gray-100 shadow-sm sm:text-sm p-2 border"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                {" "}
+                Phone{" "}
+              </label>
+              <input
+                type="tel"
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                required
+                className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm p-2 border ${
+                  errors.phone ? "border-red-500" : ""
+                }`}
+              />
+              {errors.phone && (
+                <p className="text-red-500 text-xs mt-1">{errors.phone}</p>
+              )}
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                {" "}
+                PAN Card{" "}
+              </label>
+              <input
+                type="text"
+                name="pan_card"
+                value={formData.pan_card}
+                onChange={handleChange}
+                required
+                className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm p-2 border ${
+                  errors.pan_card ? "border-red-500" : ""
+                }`}
+              />
+              {errors.pan_card && (
+                <p className="text-red-500 text-xs mt-1">{errors.pan_card}</p>
+              )}
+            </div>
+            {/* Address Fields */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                {" "}
+                Address{" "}
+              </label>
+              <textarea
+                name="address"
+                value={formData.address}
+                onChange={handleChange}
+                required
+                className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm p-2 border ${
+                  errors.address ? "border-red-500" : ""
+                }`}
+              />
+              {errors.address && (
+                <p className="text-red-500 text-xs mt-1">{errors.address}</p>
+              )}
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
+                  {" "}
+                  City{" "}
+                </label>
+                <input
+                  type="text"
+                  name="city"
+                  value={formData.city}
+                  onChange={handleChange}
+                  required
+                  className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm p-2 border ${
+                    errors.city ? "border-red-500" : ""
+                  }`}
+                />
+                {errors.city && (
+                  <p className="text-red-500 text-xs mt-1">{errors.city}</p>
+                )}
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
+                  {" "}
+                  State{" "}
+                </label>
+                <input
+                  type="text"
+                  name="state"
+                  value={formData.state}
+                  onChange={handleChange}
+                  required
+                  className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm p-2 border ${
+                    errors.state ? "border-red-500" : ""
+                  }`}
+                />
+                {errors.state && (
+                  <p className="text-red-500 text-xs mt-1">{errors.state}</p>
+                )}
+              </div>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                {" "}
+                Pincode{" "}
+              </label>
+              <input
+                type="text"
+                name="pincode"
+                value={formData.pincode}
+                onChange={handleChange}
+                required
+                className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm p-2 border ${
+                  errors.pincode ? "border-red-500" : ""
+                }`}
+              />
+              {errors.pincode && (
+                <p className="text-red-500 text-xs mt-1">{errors.pincode}</p>
+              )}
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-primary text-white py-3 rounded-full font-bold hover:opacity-90 transition mt-6 disabled:opacity-50"
+            >
+              {loading ? "Processing..." : `PAY`}
+            </button>
+          </form>
+        </div>
+
+        {/* Invoice Summary */}
+        <div className="bg-white rounded-3xl p-8 shadow-lg h-fit">
+          <h2 className="text-2xl font-semibold text-primary mb-6">
+            Order Summary
+          </h2>
+          <div className="space-y-4 text-sm text-gray-600">
+            <div className="flex justify-between border-b pb-4">
+              <span>Plan</span>
+              <span className="font-medium text-gray-900">
+                {state.plan.title}
+              </span>
+            </div>
+            <div className="flex justify-between border-b pb-4">
+              <span>Price</span>
+              <span className="font-medium text-gray-900">
+                ₹{state.plan.price}
+              </span>
+            </div>
+            <div className="flex justify-between pt-2 text-lg font-bold text-gray-900">
+              <span>Total</span>
+              <span>₹{state.plan.price}</span>
+            </div>
+          </div>
+
+          <div className="mt-8 bg-blue-50 p-4 rounded-xl text-xs text-blue-800">
+            <p className="font-semibold mb-1">Secure Payment</p>
+            <p>
+              Your payment information is encrypted and processed securely by
+              Razorpay.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

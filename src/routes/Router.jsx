@@ -13,6 +13,10 @@ import Certifications from "../pages/Certifications";
 import Membership from "../pages/Membership";
 import Events from "../pages/Events";
 import Gallery from "../pages/Gallery";
+import Login from "../pages/Login";
+import Register from "../pages/Register";
+import Dashboard from "../pages/Dashboard";
+import Payment from "../pages/Payment";
 
 export default function Router() {
   return (
@@ -30,6 +34,10 @@ export default function Router() {
         <Route path="/not-found" element={<NotFound />} />
         <Route path="/events" element={<Events />} />
         <Route path="/gallery" element={<Gallery />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/payment" element={<Payment />} />
       </Route>
 
       <Route path="*" element={<NotFound />} />
