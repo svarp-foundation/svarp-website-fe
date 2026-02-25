@@ -37,7 +37,7 @@ export default function Navbar() {
             <img
               src="/company/svarp-logo.webp"
               alt="SVARP Foundation"
-              className="h-12 w-auto object-contain transition-transform duration-300"
+              className="h-12 max-md:h-8 w-auto object-contain transition-transform duration-300"
             />
             SVARP <span className="text-accent">FOUNDATION</span>
           </NavLink>
@@ -63,9 +63,58 @@ export default function Navbar() {
               <div className="flex items-center gap-4">
                 <NavLink
                   to="/dashboard"
-                  className="bg-accent/20 p-2 rounded-full hover:bg-accent/40 transition group"
+                  className="bg-accent/20 p-1 rounded-full hover:bg-accent/40 transition group overflow-hidden"
                   title="Dashboard"
                 >
+                  {user.profile_picture_path ? (
+                    <img
+                      src={`${import.meta.env.VITE_API_BASE_URL}${user.profile_picture_path}`}
+                      alt="Profile"
+                      className="w-8 h-8 object-cover rounded-full"
+                    />
+                  ) : (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      className="w-6 h-6 text-white group-hover:text-accent transition"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z"
+                      />
+                    </svg>
+                  )}
+                </NavLink>
+              </div>
+            ) : (
+              <NavLink
+                to="/login"
+                className="bg-accent text-primary px-5 py-2 rounded-full font-medium hover:scale-105 transition"
+              >
+                Login
+              </NavLink>
+            )}
+          </div>
+
+          {/* Mobile Right Section */}
+          <div className="flex lg:hidden items-center gap-3">
+            {user && (
+              <NavLink
+                to="/dashboard"
+                className="bg-accent/20 p-2 rounded-full hover:bg-accent/40 transition group overflow-hidden"
+                title="Dashboard"
+              >
+                {user.profile_picture_path ? (
+                  <img
+                    src={`${import.meta.env.VITE_API_BASE_URL}${user.profile_picture_path}`}
+                    alt="Profile"
+                    className="w-6 h-6 object-cover rounded-full"
+                  />
+                ) : (
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -80,26 +129,17 @@ export default function Navbar() {
                       d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z"
                     />
                   </svg>
-                </NavLink>
-              </div>
-            ) : (
-              <NavLink
-                to="/login"
-                className="bg-accent text-primary px-5 py-2 rounded-full font-medium hover:scale-105 transition"
-              >
-                Login
+                )}
               </NavLink>
             )}
+            <button
+              className="text-white text-2xl"
+              onClick={() => setOpen(!open)}
+              aria-label="Toggle menu"
+            >
+              {open ? "✕" : "☰"}
+            </button>
           </div>
-
-          {/* Mobile Button */}
-          <button
-            className="lg:hidden text-white text-2xl"
-            onClick={() => setOpen(!open)}
-            aria-label="Toggle menu"
-          >
-            {open ? "✕" : "☰"}
-          </button>
         </div>
       </div>
 
@@ -146,7 +186,7 @@ export default function Navbar() {
                   <NavLink
                     to="/dashboard"
                     onClick={() => setOpen(false)}
-                    className="flex items-center justify-center bg-accent/20 p-2 rounded-full hover:bg-accent/40 transition group"
+                    className="flex items-center justify-center bg-accent/20 p-2 rounded-full hover:bg-accent/40 transition group max-lg:hidden"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"

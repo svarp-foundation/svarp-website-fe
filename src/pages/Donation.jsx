@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import useToast from "../hooks/useToast";
+import { usePopup } from "../context/PopupContext";
 import { useAuth } from "../context/AuthContext";
 
 const Donation = () => {
-  const toast = useToast();
+  const { showPopup } = usePopup();
   const navigate = useNavigate();
   const { user, token, loginWithToken } = useAuth();
 
@@ -12,8 +12,7 @@ const Donation = () => {
     name: "",
     email: "",
     phone_number: "",
-    pan_card: "",
-    amount: "",
+    amount: "500",
   });
   const [loading, setLoading] = useState(false);
 
@@ -25,7 +24,6 @@ const Donation = () => {
         name: user.full_name || prev.name,
         email: user.email || prev.email,
         phone_number: user.phone_number || prev.phone_number,
-        pan_card: user.pan_card || prev.pan_card,
       }));
     }
   }, [user]);
@@ -52,7 +50,7 @@ const Donation = () => {
     e.preventDefault();
 
     if (parseFloat(formData.amount) <= 0) {
-      toast.error("Amount must be greater than 0");
+      showPopup("Amount must be greater than 0", "error");
       return;
     }
 
@@ -85,7 +83,7 @@ const Donation = () => {
       );
 
       if (!res) {
-        toast.error("Razorpay SDK failed to load. Are you online?");
+        showPopup("Razorpay SDK failed to load. Are you online?", "error");
         setLoading(false);
         return;
       }
@@ -97,11 +95,12 @@ const Donation = () => {
         currency: orderData.currency,
         name: orderData.app_name || "SVARP",
         description: `Donation by ${formData.name}`,
+        image: "https://www.svarp.org/company/svarp-logo.webp",
         order_id: orderData.razorpay_order_id,
         handler: async function (response) {
           try {
             // 3. Verify Payment
-            toast.info("Payment successful! Verifying...");
+            showPopup("Payment successful! Verifying...", "info");
 
             const verifyResponse = await fetch(
               `${import.meta.env.VITE_API_BASE_URL}/donations/verify`,
@@ -123,7 +122,7 @@ const Donation = () => {
 
             const verifyData = await verifyResponse.json();
 
-            toast.success("Thank you for your donation!");
+            showPopup("Thank you for your donation!", "success");
 
             // Auto Login & Redirect
             if (verifyData.access_token) {
@@ -136,13 +135,12 @@ const Donation = () => {
                 name: user?.full_name || "",
                 email: user?.email || "",
                 phone_number: user?.phone_number || "",
-                pan_card: user?.pan_card || "",
-                amount: "",
+                amount: "500",
               });
             }
           } catch (error) {
             console.error("Verification error:", error);
-            toast.error(error.message || "Failed to verify donation.");
+            showPopup(error.message || "Failed to verify donation.", "error");
           }
         },
         prefill: {
@@ -151,20 +149,20 @@ const Donation = () => {
           contact: formData.phone_number,
         },
         theme: {
-          color: "#4ADE80",
+          color: "#1f3b45",
         },
       };
 
       const rzp = new window.Razorpay(options);
 
       rzp.on("payment.failed", function (response) {
-        toast.error(`Payment failed: ${response.error.description}`);
+        showPopup(`Payment failed: ${response.error.description}`, "error");
       });
 
       rzp.open();
     } catch (error) {
       console.error("Payment error:", error);
-      toast.error(error.message || "An error occurred during payment.");
+      showPopup(error.message || "An error occurred during payment.", "error");
     } finally {
       setLoading(false);
     }
@@ -172,9 +170,9 @@ const Donation = () => {
 
   return (
     <div className="min-h-screen pt-24 bg-gray-50 flex flex-col items-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-xl w-full space-y-8 bg-white p-10 rounded-xl shadow-xl">
+      <div className="max-w-xl w-full space-y-8 md:bg-white p-10 max-md:p-2 rounded-xl md:shadow-xl">
         <div className="text-center">
-          <h2 className="mt-6 text-3xl font-extrabold text-gray-900 tracking-tight">
+          <h2 className="text-3xl font-extrabold text-gray-900 tracking-tight">
             Support Our Cause
           </h2>
           <p className="mt-2 text-sm text-gray-600">
@@ -190,7 +188,7 @@ const Donation = () => {
                 htmlFor="name"
                 className="block text-sm font-medium text-gray-700"
               >
-                Full Name
+                Full Name <span className="text-red-500">*</span>
               </label>
               <input
                 id="name"
@@ -198,7 +196,7 @@ const Donation = () => {
                 type="text"
                 required
                 className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10 sm:text-sm mt-1"
-                placeholder="John Doe"
+                // placeholder="John Doe"
                 value={formData.name}
                 onChange={handleChange}
               />
@@ -209,7 +207,7 @@ const Donation = () => {
                 htmlFor="email"
                 className="block text-sm font-medium text-gray-700"
               >
-                Email Address
+                Email Address <span className="text-red-500">*</span>
               </label>
               <input
                 id="email"
@@ -217,7 +215,7 @@ const Donation = () => {
                 type="email"
                 required
                 className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10 sm:text-sm mt-1"
-                placeholder="john@example.com"
+                // placeholder="john@example.com"
                 value={formData.email}
                 onChange={handleChange}
               />
@@ -228,7 +226,7 @@ const Donation = () => {
                 htmlFor="phone_number"
                 className="block text-sm font-medium text-gray-700"
               >
-                Phone Number
+                Phone Number <span className="text-red-500">*</span>
               </label>
               <input
                 id="phone_number"
@@ -236,26 +234,7 @@ const Donation = () => {
                 type="tel"
                 required
                 className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10 sm:text-sm mt-1"
-                placeholder="+91 9876543210"
                 value={formData.phone_number}
-                onChange={handleChange}
-              />
-            </div>
-
-            <div>
-              <label
-                htmlFor="pan_card"
-                className="block text-sm font-medium text-gray-700"
-              >
-                PAN Card Number (Optional)
-              </label>
-              <input
-                id="pan_card"
-                name="pan_card"
-                type="text"
-                className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10 sm:text-sm mt-1 uppercase"
-                placeholder="ABCDE1234F"
-                value={formData.pan_card}
                 onChange={handleChange}
               />
             </div>
@@ -278,7 +257,6 @@ const Donation = () => {
                   required
                   min="1"
                   className="focus:ring-green-500 focus:border-green-500 block w-full pl-7 pr-12 sm:text-sm border-gray-300 rounded-md py-2 px-3 border"
-                  placeholder="1000"
                   value={formData.amount}
                   onChange={handleChange}
                 />
@@ -318,24 +296,9 @@ const Donation = () => {
             <button
               type="submit"
               disabled={loading}
-              className={`group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200 ${loading ? "opacity-70 cursor-not-allowed" : ""}`}
+              className={`group relative w-full flex justify-center py-2 px-4 border border-transparent text-md font-bold rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200 ${loading ? "opacity-70 cursor-not-allowed" : ""}`}
             >
               {loading ? "Processing..." : "Donate"}
-              {!loading && (
-                <svg
-                  className="ml-2 -mr-1 h-5 w-5"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                  aria-hidden="true"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M3.293 9.707a1 1 0 010-1.414l6-6a1 1 0 011.414 0l6 6a1 1 0 01-1.414 1.414L11 5.414V17a1 1 0 11-2 0V5.414L4.707 9.707a1 1 0 01-1.414 0z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              )}
             </button>
             <p className="mt-3 text-center text-xs text-gray-500 flex items-center justify-center gap-1">
               <svg

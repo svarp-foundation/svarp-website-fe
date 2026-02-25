@@ -35,6 +35,23 @@ export default function Membership() {
       return;
     }
 
+    // Check if mandatory application details are filled
+    const isProfileComplete =
+      user.date_of_birth &&
+      user.government_id_type &&
+      user.government_id_number &&
+      user.government_id_path &&
+      user.profile_picture_path;
+
+    if (!isProfileComplete) {
+      showPopup(
+        "Please complete your Profile Details in the Dashboard first.",
+        "warning",
+      );
+      navigate("/dashboard");
+      return;
+    }
+
     // Redirect to Payment page with plan details
     navigate("/payment", {
       state: {

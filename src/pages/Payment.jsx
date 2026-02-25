@@ -24,6 +24,25 @@ export default function Payment() {
 
   const [loading, setLoading] = useState(false);
 
+  const taxRate = import.meta.env.VITE_TAX_RATE
+    ? parseFloat(import.meta.env.VITE_TAX_RATE)
+    : 18;
+  const taxAmount = state?.plan?.price ? (state.plan.price * taxRate) / 100 : 0;
+  const totalAmount = state?.plan?.price ? state.plan.price + taxAmount : 0;
+
+  const isDisabledName = !!user?.full_name;
+  const isDisabledPhone = !!user?.phone_number;
+  const isDisabledPan = !!(
+    user?.government_id_number ||
+    user?.pan_card ||
+    user?.adhaar_card
+  );
+  const isDisabledAddress = !!user?.address;
+  const isDisabledCity = !!user?.city;
+  const isDisabledState = !!user?.state;
+  const isDisabledPincode = !!user?.pincode;
+  const disabledClass = "bg-gray-100 text-gray-500 cursor-not-allowed";
+
   useEffect(() => {
     if (!state?.plan) {
       navigate("/membership");
@@ -35,7 +54,8 @@ export default function Payment() {
         name: user.full_name || "",
         email: user.email || "",
         phone: user.phone_number || "",
-        pan_card: user.pan_card || "",
+        pan_card:
+          user.government_id_number || user.pan_card || user.adhaar_card || "",
         address: user.address || "",
         city: user.city || "",
         state: user.state || "",
@@ -64,8 +84,8 @@ export default function Payment() {
     if (!formData.name.trim()) newErrors.name = "Name is required";
     if (!formData.phone.match(/^\d{10}$/))
       newErrors.phone = "Phone must be 10 digits";
-    if (!formData.pan_card.match(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/))
-      newErrors.pan_card = "Invalid PAN Card format (e.g., ABCDE1234F)";
+    if (!formData.pan_card.trim())
+      newErrors.pan_card = "Government ID is required";
     if (!formData.address.trim()) newErrors.address = "Address is required";
     if (!formData.city.trim()) newErrors.city = "City is required";
     if (!formData.state.trim()) newErrors.state = "State is required";
@@ -131,7 +151,7 @@ export default function Payment() {
           },
           body: JSON.stringify({
             membership_id: state.plan.id,
-            amount: state.plan.price,
+            amount: totalAmount,
             currency: "INR",
           }),
         },
@@ -239,10 +259,11 @@ export default function Payment() {
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
+                disabled={isDisabledName}
                 required
                 className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm p-2 border ${
                   errors.name ? "border-red-500" : ""
-                }`}
+                } ${isDisabledName ? disabledClass : ""}`}
               />
               {errors.name && (
                 <p className="text-red-500 text-xs mt-1">{errors.name}</p>
@@ -270,10 +291,11 @@ export default function Payment() {
                 name="phone"
                 value={formData.phone}
                 onChange={handleChange}
+                disabled={isDisabledPhone}
                 required
                 className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm p-2 border ${
                   errors.phone ? "border-red-500" : ""
-                }`}
+                } ${isDisabledPhone ? disabledClass : ""}`}
               />
               {errors.phone && (
                 <p className="text-red-500 text-xs mt-1">{errors.phone}</p>
@@ -282,17 +304,18 @@ export default function Payment() {
             <div>
               <label className="block text-sm font-medium text-gray-700">
                 {" "}
-                PAN Card{" "}
+                Government ID Number{" "}
               </label>
               <input
                 type="text"
                 name="pan_card"
                 value={formData.pan_card}
                 onChange={handleChange}
+                disabled={isDisabledPan}
                 required
                 className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm p-2 border ${
                   errors.pan_card ? "border-red-500" : ""
-                }`}
+                } ${isDisabledPan ? disabledClass : ""}`}
               />
               {errors.pan_card && (
                 <p className="text-red-500 text-xs mt-1">{errors.pan_card}</p>
@@ -308,10 +331,11 @@ export default function Payment() {
                 name="address"
                 value={formData.address}
                 onChange={handleChange}
+                disabled={isDisabledAddress}
                 required
                 className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm p-2 border ${
                   errors.address ? "border-red-500" : ""
-                }`}
+                } ${isDisabledAddress ? disabledClass : ""}`}
               />
               {errors.address && (
                 <p className="text-red-500 text-xs mt-1">{errors.address}</p>
@@ -328,10 +352,11 @@ export default function Payment() {
                   name="city"
                   value={formData.city}
                   onChange={handleChange}
+                  disabled={isDisabledCity}
                   required
                   className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm p-2 border ${
                     errors.city ? "border-red-500" : ""
-                  }`}
+                  } ${isDisabledCity ? disabledClass : ""}`}
                 />
                 {errors.city && (
                   <p className="text-red-500 text-xs mt-1">{errors.city}</p>
@@ -347,10 +372,11 @@ export default function Payment() {
                   name="state"
                   value={formData.state}
                   onChange={handleChange}
+                  disabled={isDisabledState}
                   required
                   className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm p-2 border ${
                     errors.state ? "border-red-500" : ""
-                  }`}
+                  } ${isDisabledState ? disabledClass : ""}`}
                 />
                 {errors.state && (
                   <p className="text-red-500 text-xs mt-1">{errors.state}</p>
@@ -367,10 +393,11 @@ export default function Payment() {
                 name="pincode"
                 value={formData.pincode}
                 onChange={handleChange}
+                disabled={isDisabledPincode}
                 required
                 className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm p-2 border ${
                   errors.pincode ? "border-red-500" : ""
-                }`}
+                } ${isDisabledPincode ? disabledClass : ""}`}
               />
               {errors.pincode && (
                 <p className="text-red-500 text-xs mt-1">{errors.pincode}</p>
@@ -426,9 +453,15 @@ export default function Payment() {
                 ₹{state.plan.price}
               </span>
             </div>
+            <div className="flex justify-between border-b pb-4">
+              <span>Tax ({taxRate}%)</span>
+              <span className="font-medium text-gray-900">
+                ₹{taxAmount.toFixed(2)}
+              </span>
+            </div>
             <div className="flex justify-between pt-2 text-lg font-bold text-gray-900">
               <span>Total</span>
-              <span>₹{state.plan.price}</span>
+              <span>₹{totalAmount.toFixed(2)}</span>
             </div>
           </div>
 
