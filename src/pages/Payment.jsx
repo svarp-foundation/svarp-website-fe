@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { usePopup } from "../context/PopupContext";
 
 export default function Payment() {
   const { state } = useLocation();
   const { user, token } = useAuth();
   const navigate = useNavigate();
+  const { showPopup } = usePopup();
 
   const [formData, setFormData] = useState({
     name: "",
@@ -112,7 +114,7 @@ export default function Payment() {
     );
 
     if (!res) {
-      alert("Razorpay SDK failed to load. Are you online?");
+      showPopup("Razorpay SDK failed to load. Are you online?", "error");
       setLoading(false);
       return;
     }
@@ -137,7 +139,10 @@ export default function Payment() {
 
       if (!response.ok) {
         const errorData = await response.json();
-        alert(`Application failed: ${errorData.detail || "Unknown error"}`);
+        showPopup(
+          `Application failed: ${errorData.detail || "Unknown error"}`,
+          "error",
+        );
         setLoading(false);
         return;
       }
@@ -176,11 +181,17 @@ export default function Payment() {
               navigate("/dashboard");
             } else {
               const errorData = await verifyRes.json();
-              alert(`Payment Verification Failed: ${errorData.detail}`);
+              showPopup(
+                `Payment Verification Failed: ${errorData.detail}`,
+                "error",
+              );
             }
           } catch (error) {
             console.error("Verification Error", error);
-            alert("Payment verification failed due to network error.");
+            showPopup(
+              "Payment verification failed due to network error.",
+              "error",
+            );
           }
         },
         prefill: {
@@ -198,7 +209,7 @@ export default function Payment() {
       setLoading(false);
     } catch (error) {
       console.error("Payment error", error);
-      alert("An error occurred. Please try again.");
+      showPopup("An error occurred. Please try again.", "error");
       setLoading(false);
     }
   };

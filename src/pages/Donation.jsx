@@ -301,8 +301,15 @@ const Donation = () => {
                 payment.
               </li>
               <li>
-                A digital certificate will be generated to you upon successful
-                payment. and shpwn on you account dashboard if yiu dont have account it auto generated from email you enter and default pass was "svarp"
+                A digital certificate will be generated upon successful payment
+                and will be available in your account dashboard. If you do not
+                already have an account, one will be automatically created using
+                the email address provided during payment.
+              </li>
+              <li>
+                The default password for first-time login will be "svarp". For
+                security reasons, we strongly recommend changing your password
+                after logging in for the first time.
               </li>
             </ul>
           </div>

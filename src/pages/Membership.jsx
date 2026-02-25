@@ -1,11 +1,12 @@
 import { useAuth } from "../context/AuthContext";
 import { useState } from "react";
-
 import { useNavigate } from "react-router-dom";
+import { usePopup } from "../context/PopupContext";
 
 export default function Membership() {
   const { user, token } = useAuth();
   const navigate = useNavigate();
+  const { showPopup } = usePopup();
 
   const loadScript = (src) => {
     return new Promise((resolve) => {
@@ -23,13 +24,13 @@ export default function Membership() {
 
   const handleSubscribe = async (planTitle, price, planId) => {
     if (!user) {
-      alert("Please login to apply for membership");
+      showPopup("Please login to apply for membership", "warning");
       navigate("/login");
       return;
     }
 
     if (!token) {
-      alert("Authentication error. Please login again.");
+      showPopup("Authentication error. Please login again.", "error");
       navigate("/login");
       return;
     }
