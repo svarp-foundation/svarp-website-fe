@@ -183,6 +183,70 @@ export default function Dashboard() {
             </div>
           </div>
         )}
+
+        {/* My Donations (Optional/If data exists) */}
+        {userData.donations && userData.donations.length > 0 && (
+          <div className="bg-white rounded-3xl p-8 shadow-lg">
+            <h2 className="text-2xl font-semibold text-primary mb-6">
+              My Donations
+            </h2>
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead>
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Date
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Amount
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Status
+                    </th>
+                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Action
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {userData.donations.map((donation) => (
+                    <tr key={donation.id}>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {new Date(donation.created_at).toLocaleDateString()}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        ₹{donation.amount}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm">
+                        <span
+                          className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                            donation.status === "success"
+                              ? "bg-green-100 text-green-800"
+                              : "bg-yellow-100 text-yellow-800"
+                          }`}
+                        >
+                          {donation.status}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm">
+                        {donation.status === "success" && (
+                          <a
+                            href={`${import.meta.env.VITE_API_BASE_URL}/donations/${donation.id}/certificate`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-primary hover:text-green-700 font-medium"
+                          >
+                            Download Certificate
+                          </a>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

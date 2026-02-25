@@ -366,6 +366,27 @@ export default function Payment() {
               )}
             </div>
 
+            {/* Guidelines */}
+            <div className="bg-blue-50 border-l-4 border-blue-400 p-4 rounded-md text-sm text-blue-800 mt-6">
+              <h4 className="font-medium text-blue-900 mb-1">
+                Important Guidelines
+              </h4>
+              <ul className="list-disc pl-5 space-y-1">
+                <li>
+                  Please do not refresh or close the browser window while the
+                  transaction is processing.
+                </li>
+                <li>
+                  Ensure your internet connection is stable before initiating
+                  payment.
+                </li>
+                <li>
+                  Membership benefits will be activated immediately upon
+                  successful payment.
+                </li>
+              </ul>
+            </div>
+
             <button
               type="submit"
               disabled={loading}

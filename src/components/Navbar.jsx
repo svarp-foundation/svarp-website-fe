@@ -5,15 +5,15 @@ import { useAuth } from "../context/AuthContext";
 const linkClass = ({ isActive }) =>
   `relative transition ${
     isActive ? "text-accent after:w-full" : "hover:text-accent after:w-0"
-  } after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:bg-accent after:transition-all`;
+  } after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:bg-accent after:transition-all text-center`;
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const { user, logout } = useAuth();
 
   const menuItems = [
-    { name: "About", path: "/about" },
-    { name: "Our Team", path: "/team" },
+    { name: "About Us", path: "/about" },
+    // { name: "Our Team", path: "/team" },
     { name: "Services", path: "/projects" },
     { name: "Our Certifications", path: "/certifications" },
     { name: "Membership", path: "/membership" },
@@ -27,7 +27,7 @@ export default function Navbar() {
   return (
     <nav className="fixed top-0 w-full z-50">
       <div className="bg-black/50 backdrop-blur-lg border-b border-white/10">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-2 py-4 flex items-center justify-between">
           {/* Logo */}
           <NavLink
             to="/"
@@ -49,18 +49,16 @@ export default function Navbar() {
                 {item.name}
               </NavLink>
             ))}
-            <a
-              href=""
-              target="_blank"
-            >
+            <a href="" target="_blank">
               Courses
             </a>
-            {/* <NavLink
-              to="/contact"
-              className="ml-4 bg-accent text-primary px-5 py-2 rounded-full font-medium hover:scale-105 transition"
+            <NavLink
+              to="/donate"
+              className="bg-green-800 text-white px-5 py-2 rounded-full font-medium hover:bg-green-700 hover:scale-105 transition"
             >
-              Connect
-            </NavLink> */}
+              Donate
+            </NavLink>
+
             {user ? (
               <div className="flex items-center gap-4">
                 <NavLink
@@ -87,7 +85,7 @@ export default function Navbar() {
             ) : (
               <NavLink
                 to="/login"
-                className="ml-4 bg-accent text-primary px-5 py-2 rounded-full font-medium hover:scale-105 transition"
+                className="bg-accent text-primary px-5 py-2 rounded-full font-medium hover:scale-105 transition"
               >
                 Login
               </NavLink>
@@ -126,6 +124,14 @@ export default function Navbar() {
             >
               Courses
             </a>
+
+            <NavLink
+              to="/donate"
+              onClick={() => setOpen(false)}
+              className="block mt-4 bg-green-600 text-white px-5 py-2 rounded-full text-center font-medium"
+            >
+              Donate Now
+            </NavLink>
 
             {/* <NavLink
               to="/contact"

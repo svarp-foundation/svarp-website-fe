@@ -64,6 +64,10 @@ export const AuthProvider = ({ children }) => {
 
     const data = await response.json();
     const accessToken = data.access_token;
+    loginWithToken(accessToken);
+  };
+
+  const loginWithToken = (accessToken) => {
     localStorage.setItem("token", accessToken);
     setToken(accessToken);
     // User will be fetched by useEffect
@@ -101,6 +105,7 @@ export const AuthProvider = ({ children }) => {
     user,
     token,
     login,
+    loginWithToken,
     register,
     logout,
     loading,

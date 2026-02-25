@@ -1,3 +1,5 @@
+import Team from "./Team";
+
 export default function About() {
   return (
     <section className="py-24 bg-white">
@@ -61,6 +63,7 @@ export default function About() {
           </div>
         </div>
       </div>
+      <Team />
     </section>
   );
 }

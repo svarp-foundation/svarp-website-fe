@@ -3,6 +3,7 @@ import "./App.css";
 import Router from "./routes/Router";
 import Loader from "./components/Loader";
 import { AuthProvider } from "./context/AuthContext";
+import { ToastProvider } from "./hooks/useToast";
 
 function App() {
   const [loading, setLoading] = useState(
@@ -15,7 +16,9 @@ function App() {
 
   return (
     <AuthProvider>
-      {loading ? <Loader onComplete={handleLoaderComplete} /> : <Router />}
+      <ToastProvider>
+        {loading ? <Loader onComplete={handleLoaderComplete} /> : <Router />}
+      </ToastProvider>
     </AuthProvider>
   );
 }
