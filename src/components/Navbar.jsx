@@ -19,7 +19,7 @@ export default function Navbar() {
     { name: "Membership", path: "/membership" },
     // { name: "Events", path: "/events" },
     { name: "Gallery & Events", path: "/gallery" },
-    { name: "Stories", path: "/stories" },
+    // { name: "Stories", path: "/stories" },
     // { name: "Reports", path: "/reports" },
     { name: "Contact", path: "/contact" },
   ];
@@ -49,9 +49,9 @@ export default function Navbar() {
                 {item.name}
               </NavLink>
             ))}
-            <a href="" target="_blank">
+            <NavLink to="/courses" className={linkClass}>
               Courses
-            </a>
+            </NavLink>
             <NavLink
               to="/donate"
               className="bg-green-800 text-white px-5 py-2 rounded-full font-medium hover:bg-green-700 hover:scale-105 transition"
@@ -157,13 +157,13 @@ export default function Navbar() {
                 {item.name}
               </NavLink>
             ))}
-            <a
-              href="https://www.svarp.org/course-category/global-course/?tutor-course-filter-category=471"
-              target="_blank"
+            <NavLink
+              to="/courses"
+              onClick={() => setOpen(false)}
               className="block hover:text-accent"
             >
               Courses
-            </a>
+            </NavLink>
 
             <NavLink
               to="/donate"

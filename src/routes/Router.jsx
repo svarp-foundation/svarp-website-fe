@@ -18,6 +18,7 @@ import Register from "../pages/Register";
 import Dashboard from "../pages/Dashboard";
 import Payment from "../pages/Payment";
 import Donation from "../pages/Donation";
+import UnderDevelopment from "../pages/UnderDevelopment";
 
 export default function Router() {
   return (
@@ -40,6 +41,7 @@ export default function Router() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/payment" element={<Payment />} />
         <Route path="/donate" element={<Donation />} />
+        <Route path="/courses" element={<UnderDevelopment />} />
       </Route>
 
       <Route path="*" element={<NotFound />} />

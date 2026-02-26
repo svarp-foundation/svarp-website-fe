@@ -26,13 +26,13 @@ export default function Footer() {
           <h3 className="font-semibold mb-4">Explore</h3>
           <ul className="space-y-2 text-sm opacity-90">
             <li>
-              <NavLink to="/about" className="hover:underline">
-                About Us
+              <NavLink to="/team" className="hover:underline">
+                Our Team
               </NavLink>
             </li>
             <li>
-              <NavLink to="/projects" className="hover:underline">
-                Our Services
+              <NavLink to="/events" className="hover:underline">
+                Our Events
               </NavLink>
             </li>
             <li>
