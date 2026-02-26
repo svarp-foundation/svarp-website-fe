@@ -9,11 +9,14 @@ export default function Loader({ onComplete }) {
     // Preload background image
     const img = new Image();
     img.src = background;
+    if (videoRef.current) {
+      videoRef.current.playbackRate = 2.0;
+    }
   }, []);
 
   const handleVideoEnd = () => {
     setFading(true);
-    setTimeout(onComplete, 1000); 
+    setTimeout(onComplete, 1000);
   };
 
   return (

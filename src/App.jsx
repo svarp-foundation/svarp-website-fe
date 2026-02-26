@@ -17,9 +17,9 @@ function App() {
   return (
     <AuthProvider>
       <PopupProvider>
-          <Router />
-          {/* {loading ? <Loader onComplete={handleLoaderComplete} /> : <Router />} */}
-        </PopupProvider>
+        {/* <Router /> */}
+        {loading ? <Loader onComplete={handleLoaderComplete} /> : <Router />}
+      </PopupProvider>
     </AuthProvider>
   );
 }
