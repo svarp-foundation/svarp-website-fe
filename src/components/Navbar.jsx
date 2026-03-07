@@ -49,7 +49,7 @@ export default function Navbar() {
                 {item.name}
               </NavLink>
             ))}
-            <NavLink to="/courses" className={linkClass}>
+            <NavLink to="https://globalacademy.svarp.org/" className={linkClass}>
               Courses
             </NavLink>
             <NavLink
@@ -158,7 +158,7 @@ export default function Navbar() {
               </NavLink>
             ))}
             <NavLink
-              to="/courses"
+              to="https://globalacademy.svarp.org/"
               onClick={() => setOpen(false)}
               className="block hover:text-accent"
             >
