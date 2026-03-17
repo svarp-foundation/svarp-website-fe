@@ -260,6 +260,10 @@ function ProfileForm({ userData, token }) {
     full_name: userData.full_name || "",
     phone_number: userData.phone_number || "",
     date_of_birth: userData.date_of_birth || "",
+    address: userData.address || "",
+    city: userData.city || "",
+    state: userData.state || "",
+    pincode: userData.pincode || "",
     government_id_type: userData.government_id_type || "",
     government_id_number: userData.government_id_number || "",
     government_id_path: userData.government_id_path || "",
@@ -280,6 +284,10 @@ function ProfileForm({ userData, token }) {
   const isFullNameFilled = !!userData.full_name;
   const isPhoneFilled = !!userData.phone_number;
   const isDobFilled = !!userData.date_of_birth;
+  const isAddressFilled = !!userData.address;
+  const isCityFilled = !!userData.city;
+  const isStateFilled = !!userData.state;
+  const isPincodeFilled = !!userData.pincode;
   const isGovIdTypeFilled = !!userData.government_id_type;
   const isGovIdNumFilled = !!userData.government_id_number;
   const isGovIdPathFilled = !!userData.government_id_path;
@@ -292,6 +300,10 @@ function ProfileForm({ userData, token }) {
     isFullNameFilled &&
     isPhoneFilled &&
     isDobFilled &&
+    isAddressFilled &&
+    isCityFilled &&
+    isStateFilled &&
+    isPincodeFilled &&
     isGovIdTypeFilled &&
     isGovIdNumFilled &&
     isGovIdPathFilled &&
@@ -302,6 +314,10 @@ function ProfileForm({ userData, token }) {
     isFullNameFilled ||
     isPhoneFilled ||
     isDobFilled ||
+    isAddressFilled ||
+    isCityFilled ||
+    isStateFilled ||
+    isPincodeFilled ||
     isGovIdTypeFilled ||
     isGovIdNumFilled ||
     isGovIdPathFilled ||
@@ -314,6 +330,10 @@ function ProfileForm({ userData, token }) {
     formData.full_name !== (userData.full_name || "") ||
     formData.phone_number !== (userData.phone_number || "") ||
     formData.date_of_birth !== (userData.date_of_birth || "") ||
+    formData.address !== (userData.address || "") ||
+    formData.city !== (userData.city || "") ||
+    formData.state !== (userData.state || "") ||
+    formData.pincode !== (userData.pincode || "") ||
     formData.government_id_type !== (userData.government_id_type || "") ||
     formData.government_id_number !== (userData.government_id_number || "") ||
     formData.is_student !== (userData.is_student || false) ||
@@ -477,6 +497,76 @@ function ProfileForm({ userData, token }) {
                 disabled={isDobFilled}
                 className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm p-3 border ${isDobFilled ? disabledClass : ""}`}
                 required
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Address Details Section */}
+        <div className="bg-gray-50 p-6 rounded-2xl space-y-6 border border-gray-100">
+          <h3 className="text-lg font-medium text-gray-900 border-b pb-2">
+            Address Details
+          </h3>
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="md:col-span-2">
+              <label className="block text-sm font-medium text-gray-700">
+                Address *
+              </label>
+              <input
+                type="text"
+                name="address"
+                value={formData.address}
+                onChange={handleChange}
+                disabled={isAddressFilled}
+                className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm p-3 border ${isAddressFilled ? disabledClass : ""}`}
+                placeholder="Street address, apartment, building, etc."
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                City *
+              </label>
+              <input
+                type="text"
+                name="city"
+                value={formData.city}
+                onChange={handleChange}
+                disabled={isCityFilled}
+                className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm p-3 border ${isCityFilled ? disabledClass : ""}`}
+                placeholder="Ex: Mumbai"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                State *
+              </label>
+              <input
+                type="text"
+                name="state"
+                value={formData.state}
+                onChange={handleChange}
+                disabled={isStateFilled}
+                className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm p-3 border ${isStateFilled ? disabledClass : ""}`}
+                placeholder="Ex: Maharashtra"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Pincode *
+              </label>
+              <input
+                type="text"
+                name="pincode"
+                value={formData.pincode}
+                onChange={handleChange}
+                disabled={isPincodeFilled}
+                className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm p-3 border ${isPincodeFilled ? disabledClass : ""}`}
+                placeholder="Ex: 400001"
+                required
+                maxLength={6}
               />
             </div>
           </div>
