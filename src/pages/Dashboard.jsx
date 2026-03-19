@@ -66,10 +66,19 @@ export default function Dashboard() {
         {/* Header */}
         <div className="bg-white rounded-3xl p-8 shadow-lg flex max-lg:flex-col max-lg:gap-4 lg:justify-between lg:items-center">
           <div>
-            <h1 className="text-3xl max-lg:text-2xl font-bold text-primary">
+            <h1 className="text-3xl max-lg:text-2xl font-bold text-primary flex items-center gap-3">
               Hello, {userData.full_name}!
+              {!userData.is_active && (
+                <span className="bg-red-100 text-red-700 text-xs px-3 py-1 rounded-full border border-red-200 animate-pulse font-bold uppercase tracking-wider">
+                  ⚠️ Suspended
+                </span>
+              )}
             </h1>
-            <p className="text-gray-500 mt-1">Welcome to your dashboard.</p>
+            <p className="text-gray-500 mt-1">
+              {userData.is_active
+                ? "Welcome to your dashboard."
+                : "Your account access is currently restricted."}
+            </p>
           </div>
         </div>
 

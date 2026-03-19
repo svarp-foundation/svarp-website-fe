@@ -8,14 +8,14 @@ export const useAuth = () => useContext(AuthContext);
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(localStorage.getItem("token"));
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
     if (token) {
       fetchUser(token);
     } else {
-      setLoading(false);
+      setIsLoading(false);
     }
   }, [token]);
 
@@ -33,14 +33,17 @@ export const AuthProvider = ({ children }) => {
       if (response.ok) {
         const userData = await response.json();
         setUser(userData);
+        return userData;
       } else {
         logout();
+        return null;
       }
     } catch (error) {
       console.error("Failed to fetch user", error);
       logout();
+      return null;
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -64,7 +67,9 @@ export const AuthProvider = ({ children }) => {
 
     const data = await response.json();
     const accessToken = data.access_token;
-    loginWithToken(accessToken);
+    localStorage.setItem("token", accessToken);
+    setToken(accessToken);
+    return await fetchUser(accessToken);
   };
 
   const loginWithToken = (accessToken) => {
@@ -108,7 +113,7 @@ export const AuthProvider = ({ children }) => {
     loginWithToken,
     register,
     logout,
-    loading,
+    isLoading,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

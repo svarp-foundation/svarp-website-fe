@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import MainLayout from "../layouts/MainLayout";
 
 import Home from "../pages/Home";
@@ -19,6 +19,15 @@ import Dashboard from "../pages/Dashboard";
 import Payment from "../pages/Payment";
 import Donation from "../pages/Donation";
 import UnderDevelopment from "../pages/UnderDevelopment";
+
+// Admin Pages
+import AdminLayout from "../pages/admin/AdminLayout";
+import AdminLogin from "../pages/admin/AdminLogin";
+import AdminDashboard from "../pages/admin/AdminDashboard";
+import AdminUsers from "../pages/admin/AdminUsers";
+import AdminPayments from "../pages/admin/AdminPayments";
+import AdminMemberships from "../pages/admin/AdminMemberships";
+import AdminVerifications from "../pages/admin/AdminVerifications";
 
 export default function Router() {
   return (
@@ -42,6 +51,16 @@ export default function Router() {
         <Route path="/payment" element={<Payment />} />
         <Route path="/donate" element={<Donation />} />
         <Route path="/courses" element={<UnderDevelopment />} />
+      </Route>
+
+      {/* Admin Routes */}
+      <Route path="/admin/login" element={<AdminLogin />} />
+      <Route path="/admin" element={<AdminLayout />}>
+        <Route index element={<AdminDashboard />} />
+        <Route path="users" element={<AdminUsers />} />
+        <Route path="payments" element={<AdminPayments />} />
+        <Route path="memberships" element={<AdminMemberships />} />
+        <Route path="verifications" element={<AdminVerifications />} />
       </Route>
 
       <Route path="*" element={<NotFound />} />
