@@ -90,7 +90,7 @@ const certificates = [
 export default function Certifications() {
   return (
     <section className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-6 py-24">
+      <div className="max-w-7xl mx-auto px-6 pt-32 pb-24">
         {/* Header Section */}
         <div className="text- mb-16 space-y-4">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 tracking-tight">

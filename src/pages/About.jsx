@@ -2,7 +2,7 @@ import Team from "./Team";
 
 export default function About() {
   return (
-    <section className="py-24 bg-white">
+    <section className="pt-32 pb-24 bg-white">
       <div className="max-w-6xl mx-auto px-6">
         {/* Header */}
         <div className="max-w-3xl mb-12">

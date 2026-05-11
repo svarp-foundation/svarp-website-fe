@@ -27,7 +27,7 @@ export default function Projects() {
   ];
 
   return (
-    <section className="py-24 bg-muted">
+    <section className="pt-32 pb-24 bg-muted">
       <div className="max-w-7xl mx-auto px-6">
         {/* Header */}
         <div className="max-w-3xl mb-16">

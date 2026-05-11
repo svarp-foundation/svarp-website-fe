@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useAuth } from "../../context/AuthContext";
 
-const API_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
+const API_URL = import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000";
 
 export default function AdminJobs() {
   const { user } = useAuth();
@@ -27,7 +27,7 @@ export default function AdminJobs() {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(`${API_URL}/jobs/`, {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${token}` },
       });
       setJobs(response.data);
     } catch (error) {
@@ -76,11 +76,11 @@ export default function AdminJobs() {
       const token = localStorage.getItem("token");
       if (editingJob) {
         await axios.put(`${API_URL}/jobs/${editingJob.id}`, formData, {
-          headers: { Authorization: `Bearer ${token}` }
+          headers: { Authorization: `Bearer ${token}` },
         });
       } else {
         await axios.post(`${API_URL}/jobs/`, formData, {
-          headers: { Authorization: `Bearer ${token}` }
+          headers: { Authorization: `Bearer ${token}` },
         });
       }
       setShowModal(false);
@@ -92,11 +92,12 @@ export default function AdminJobs() {
   };
 
   const handleDelete = async (jobId) => {
-    if (!window.confirm("Are you sure you want to delete this job post?")) return;
+    if (!window.confirm("Are you sure you want to delete this job post?"))
+      return;
     try {
       const token = localStorage.getItem("token");
       await axios.delete(`${API_URL}/jobs/${jobId}`, {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${token}` },
       });
       fetchJobs();
     } catch (error) {
@@ -107,7 +108,9 @@ export default function AdminJobs() {
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-gray-800">Manage Job Postings</h1>
+        <h1 className="text-2xl font-bold text-gray-800">
+          Manage Job Postings
+        </h1>
         <button
           onClick={() => handleOpenModal()}
           className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
@@ -125,28 +128,44 @@ export default function AdminJobs() {
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Title
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Type
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Location
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Status
+                </th>
+                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Actions
+                </th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {jobs.map((job) => (
                 <tr key={job.id}>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm font-medium text-gray-900">{job.title}</div>
+                    <div className="text-sm font-medium text-gray-900">
+                      {job.title}
+                    </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
                       {job.job_type}
                     </span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{job.location}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {job.location}
+                  </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${job.is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
-                      {job.is_active ? 'Active' : 'Inactive'}
+                    <span
+                      className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${job.is_active ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}
+                    >
+                      {job.is_active ? "Active" : "Inactive"}
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
@@ -173,10 +192,14 @@ export default function AdminJobs() {
       {showModal && (
         <div className="fixed inset-0 z-50 overflow-y-auto bg-black bg-opacity-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl max-w-2xl w-full p-8">
-            <h2 className="text-xl font-bold mb-6">{editingJob ? 'Edit Job Post' : 'Create New Job Post'}</h2>
+            <h2 className="text-xl font-bold mb-6">
+              {editingJob ? "Edit Job Post" : "Create New Job Post"}
+            </h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700">Job Title</label>
+                <label className="block text-sm font-medium text-gray-700">
+                  Job Title
+                </label>
                 <input
                   type="text"
                   name="title"
@@ -188,7 +211,9 @@ export default function AdminJobs() {
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Job Type</label>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Job Type
+                  </label>
                   <select
                     name="job_type"
                     value={formData.job_type}
@@ -202,7 +227,9 @@ export default function AdminJobs() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Location</label>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Location
+                  </label>
                   <input
                     type="text"
                     name="location"
@@ -214,7 +241,9 @@ export default function AdminJobs() {
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700">Salary Range (Optional)</label>
+                <label className="block text-sm font-medium text-gray-700">
+                  Salary Range (Optional)
+                </label>
                 <input
                   type="text"
                   name="salary_range"
@@ -225,7 +254,9 @@ export default function AdminJobs() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700">Job Description</label>
+                <label className="block text-sm font-medium text-gray-700">
+                  Job Description
+                </label>
                 <textarea
                   name="description"
                   required
@@ -243,7 +274,9 @@ export default function AdminJobs() {
                   onChange={handleInputChange}
                   className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
                 />
-                <label className="ml-2 block text-sm text-gray-900">Active (Visible on Careers page)</label>
+                <label className="ml-2 block text-sm text-gray-900">
+                  Active (Visible on Careers page)
+                </label>
               </div>
               <div className="flex justify-end gap-3 pt-4">
                 <button
@@ -257,7 +290,7 @@ export default function AdminJobs() {
                   type="submit"
                   className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700"
                 >
-                  {editingJob ? 'Update' : 'Create'}
+                  {editingJob ? "Update" : "Create"}
                 </button>
               </div>
             </form>

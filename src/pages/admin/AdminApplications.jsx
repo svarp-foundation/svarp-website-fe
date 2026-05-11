@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-const API_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
+const API_URL = import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000";
 
 export default function AdminApplications() {
   const [applications, setApplications] = useState([]);
@@ -15,7 +15,7 @@ export default function AdminApplications() {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(`${API_URL}/jobs/applications/all`, {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${token}` },
       });
       setApplications(response.data);
     } catch (error) {
@@ -28,9 +28,10 @@ export default function AdminApplications() {
   const handleStatusChange = async (appId, newStatus) => {
     try {
       const token = localStorage.getItem("token");
-      await axios.patch(`${API_URL}/jobs/applications/${appId}/status`, 
+      await axios.patch(
+        `${API_URL}/jobs/applications/${appId}/status`,
         { status: newStatus },
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${token}` } },
       );
       fetchApplications();
     } catch (error) {
@@ -40,12 +41,18 @@ export default function AdminApplications() {
 
   const getStatusColor = (status) => {
     switch (status) {
-      case "pending": return "bg-yellow-100 text-yellow-800";
-      case "reviewed": return "bg-blue-100 text-blue-800";
-      case "interviewed": return "bg-purple-100 text-purple-800";
-      case "hired": return "bg-green-100 text-green-800";
-      case "rejected": return "bg-red-100 text-red-800";
-      default: return "bg-gray-100 text-gray-800";
+      case "pending":
+        return "bg-yellow-100 text-yellow-800";
+      case "reviewed":
+        return "bg-blue-100 text-blue-800";
+      case "interviewed":
+        return "bg-purple-100 text-purple-800";
+      case "hired":
+        return "bg-green-100 text-green-800";
+      case "rejected":
+        return "bg-red-100 text-red-800";
+      default:
+        return "bg-gray-100 text-gray-800";
     }
   };
 
@@ -64,29 +71,45 @@ export default function AdminApplications() {
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Applicant</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Job Post</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Resume</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Applied On</th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Applicant
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Job Post
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Resume
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Status
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Applied On
+                </th>
+                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Actions
+                </th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {applications.map((app) => (
                 <tr key={app.id}>
                   <td className="px-6 py-4">
-                    <div className="text-sm font-medium text-gray-900">{app.full_name}</div>
+                    <div className="text-sm font-medium text-gray-900">
+                      {app.full_name}
+                    </div>
                     <div className="text-sm text-gray-500">{app.email}</div>
                     <div className="text-sm text-gray-500">{app.phone}</div>
                   </td>
                   <td className="px-6 py-4">
-                    <div className="text-sm text-gray-900">{app.job?.title || "Unknown Job"}</div>
+                    <div className="text-sm text-gray-900">
+                      {app.job?.title || "Unknown Job"}
+                    </div>
                   </td>
                   <td className="px-6 py-4">
-                    <a 
-                      href={`${API_URL}/${app.resume_path}`} 
-                      target="_blank" 
+                    <a
+                      href={`${API_URL}/${app.resume_path}`}
+                      target="_blank"
                       rel="noopener noreferrer"
                       className="text-indigo-600 hover:text-indigo-900 text-sm font-medium"
                     >
@@ -94,7 +117,9 @@ export default function AdminApplications() {
                     </a>
                   </td>
                   <td className="px-6 py-4">
-                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(app.status)}`}>
+                    <span
+                      className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(app.status)}`}
+                    >
                       {app.status.toUpperCase()}
                     </span>
                   </td>
@@ -104,7 +129,9 @@ export default function AdminApplications() {
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     <select
                       value={app.status}
-                      onChange={(e) => handleStatusChange(app.id, e.target.value)}
+                      onChange={(e) =>
+                        handleStatusChange(app.id, e.target.value)
+                      }
                       className="text-sm border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                     >
                       <option value="pending">Pending</option>

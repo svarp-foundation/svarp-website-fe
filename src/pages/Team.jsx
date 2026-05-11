@@ -72,7 +72,7 @@ export default function Team() {
     "https://ui-avatars.com/api/?background=9bcf9b&color=1f3b45&size=256";
 
   return (
-    <section className="py-24 bg-white">
+    <section className="pt-32 pb-24 bg-white">
       <div className="max-w-7xl mx-auto px-6">
         {/* Header */}
         <div className="max-w-3xl mb-16">

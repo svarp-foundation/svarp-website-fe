@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-const API_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
+const API_URL = import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000";
 
 export default function Careers() {
   const [jobs, setJobs] = useState([]);
@@ -76,14 +76,14 @@ export default function Careers() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-50 pt-32 pb-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-5xl mx-auto">
-        <div className="text-center mb-16">
+        <div className=" mb-16 ">
           <h1 className="text-4xl font-extrabold text-gray-900 sm:text-5xl">
             Join Our Team
           </h1>
           <p className="mt-4 text-xl text-gray-600">
-            Help us build a safer and more sustainable future.
+            Help us build a safer brand more sustainable future.
           </p>
         </div>
 
@@ -93,7 +93,9 @@ export default function Careers() {
           </div>
         ) : jobs.length === 0 ? (
           <div className="text-center py-12 bg-white rounded-xl shadow-sm border border-gray-100">
-            <p className="text-gray-500 text-lg">No open positions at the moment. Check back later!</p>
+            <p className="text-gray-500 text-lg p-2">
+              No open positions at the moment. <br />Check back later!
+            </p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -107,20 +109,28 @@ export default function Careers() {
                     {job.job_type}
                   </span>
                   <span className="text-gray-300 text-xs">|</span>
-                  <span className="text-gray-500 text-xs font-medium">{job.location}</span>
+                  <span className="text-gray-500 text-xs font-medium">
+                    {job.location}
+                  </span>
                 </div>
-                
-                <h2 className="text-xl font-bold text-gray-900 mb-3 line-clamp-1">{job.title}</h2>
-                
+
+                <h2 className="text-xl font-bold text-gray-900 mb-3 line-clamp-1">
+                  {job.title}
+                </h2>
+
                 <p className="text-gray-600 text-sm leading-relaxed mb-6 line-clamp-3">
                   {job.description}
                 </p>
 
                 <div className="mt-auto pt-4 border-t border-gray-50 flex items-center justify-between">
                   {job.salary_range ? (
-                    <span className="text-xs font-semibold text-gray-400">{job.salary_range}</span>
+                    <span className="text-xs font-semibold text-gray-400">
+                      {job.salary_range}
+                    </span>
                   ) : (
-                    <span className="text-xs font-medium text-gray-300 italic">Competitive Salary</span>
+                    <span className="text-xs font-medium text-gray-300 italic">
+                      Competitive Salary
+                    </span>
                   )}
                   <button
                     onClick={() => handleApply(job)}
@@ -137,11 +147,19 @@ export default function Careers() {
         {showForm && (
           <div className="fixed inset-0 z-50 overflow-y-auto">
             <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-              <div className="fixed inset-0 transition-opacity" aria-hidden="true">
+              <div
+                className="fixed inset-0 transition-opacity"
+                aria-hidden="true"
+              >
                 <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
               </div>
 
-              <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+              <span
+                className="hidden sm:inline-block sm:align-middle sm:h-screen"
+                aria-hidden="true"
+              >
+                &#8203;
+              </span>
 
               <div className="inline-block align-bottom bg-white rounded-2xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
                 <div className="bg-white px-8 pt-8 pb-8">
@@ -149,19 +167,31 @@ export default function Careers() {
                     <h3 className="text-2xl font-bold text-gray-900">
                       Apply for {selectedJob?.title}
                     </h3>
-                    <button 
+                    <button
                       onClick={() => setShowForm(false)}
                       className="text-gray-400 hover:text-gray-500"
                     >
-                      <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                      <svg
+                        className="h-6 w-6"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M6 18L18 6M6 6l12 12"
+                        />
                       </svg>
                     </button>
                   </div>
 
                   {!success && (
                     <div className="mb-8 p-4 bg-gray-50 rounded-xl border border-gray-100">
-                      <h4 className="text-sm font-bold text-gray-700 mb-2 uppercase tracking-tight">Job Description</h4>
+                      <h4 className="text-sm font-bold text-gray-700 mb-2 uppercase tracking-tight">
+                        Job Description
+                      </h4>
                       <p className="text-gray-600 text-sm leading-relaxed whitespace-pre-line">
                         {selectedJob?.description}
                       </p>
@@ -171,17 +201,33 @@ export default function Careers() {
                   {success ? (
                     <div className="text-center py-8">
                       <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100 mb-6">
-                        <svg className="h-10 w-10 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                        <svg
+                          className="h-10 w-10 text-green-600"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M5 13l4 4L19 7"
+                          />
                         </svg>
                       </div>
-                      <h4 className="text-xl font-bold text-gray-900 mb-2">Application Sent!</h4>
-                      <p className="text-gray-600">Thank you for applying. We'll be in touch soon.</p>
+                      <h4 className="text-xl font-bold text-gray-900 mb-2">
+                        Application Sent!
+                      </h4>
+                      <p className="text-gray-600">
+                        Thank you for applying. We'll be in touch soon.
+                      </p>
                     </div>
                   ) : (
                     <form onSubmit={handleSubmit} className="space-y-6">
                       <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-1">Full Name</label>
+                        <label className="block text-sm font-semibold text-gray-700 mb-1">
+                          Full Name
+                        </label>
                         <input
                           type="text"
                           name="full_name"
@@ -194,7 +240,9 @@ export default function Careers() {
                       </div>
                       <div className="grid grid-cols-2 gap-4">
                         <div>
-                          <label className="block text-sm font-semibold text-gray-700 mb-1">Email</label>
+                          <label className="block text-sm font-semibold text-gray-700 mb-1">
+                            Email
+                          </label>
                           <input
                             type="email"
                             name="email"
@@ -206,7 +254,9 @@ export default function Careers() {
                           />
                         </div>
                         <div>
-                          <label className="block text-sm font-semibold text-gray-700 mb-1">Phone</label>
+                          <label className="block text-sm font-semibold text-gray-700 mb-1">
+                            Phone
+                          </label>
                           <input
                             type="tel"
                             name="phone"
@@ -219,7 +269,9 @@ export default function Careers() {
                         </div>
                       </div>
                       <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-1">Resume (PDF)</label>
+                        <label className="block text-sm font-semibold text-gray-700 mb-1">
+                          Resume (PDF)
+                        </label>
                         <input
                           type="file"
                           required
@@ -229,7 +281,9 @@ export default function Careers() {
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-1">Cover Letter (Optional)</label>
+                        <label className="block text-sm font-semibold text-gray-700 mb-1">
+                          Cover Letter (Optional)
+                        </label>
                         <textarea
                           name="cover_letter"
                           rows="4"
@@ -246,13 +300,30 @@ export default function Careers() {
                       >
                         {submitting ? (
                           <>
-                            <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
-                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            <svg
+                              className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                            >
+                              <circle
+                                className="opacity-25"
+                                cx="12"
+                                cy="12"
+                                r="10"
+                                stroke="currentColor"
+                                strokeWidth="4"
+                              ></circle>
+                              <path
+                                className="opacity-75"
+                                fill="currentColor"
+                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                              ></path>
                             </svg>
                             Submitting...
                           </>
-                        ) : "Submit Application"}
+                        ) : (
+                          "Submit Application"
+                        )}
                       </button>
                     </form>
                   )}

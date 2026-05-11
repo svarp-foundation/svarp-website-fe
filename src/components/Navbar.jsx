@@ -1,77 +1,153 @@
-import { NavLink } from "react-router-dom";
-import { useState } from "react";
+import { NavLink, useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 
 const linkClass = ({ isActive }) =>
   `relative transition ${
     isActive ? "text-accent after:w-full" : "hover:text-accent after:w-0"
-  } after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:bg-accent after:transition-all text-center`;
+  } after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:bg-accent after:transition-all text-center flex items-center gap-1`;
+
+const dropdownItemClass = ({ isActive }) =>
+  `block px-4 py-2 text-sm transition-colors ${
+    isActive ? "text-accent bg-white/5" : "text-white hover:text-accent hover:bg-white/5"
+  }`;
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
-  const { user, logout } = useAuth();
+  const [activeDropdown, setActiveDropdown] = useState(null);
+  const { user } = useAuth();
+  const location = useLocation();
+
+  useEffect(() => {
+    setOpen(false);
+    setActiveDropdown(null);
+  }, [location]);
 
   const menuItems = [
-    { name: "About Us", path: "/about" },
-    // { name: "Our Team", path: "/team" },
+    {
+      name: "About",
+      submenu: [
+        { name: "About Us", path: "/about" },
+        { name: "Our Team", path: "/team" },
+        { name: "Certifications", path: "/certifications" },
+      ],
+    },
     { name: "Services", path: "/projects" },
-    { name: "Our Certifications", path: "/certifications" },
-    { name: "Membership", path: "/membership" },
-    // { name: "Events", path: "/events" },
-    { name: "Gallery & Events", path: "/gallery" },
-    // { name: "Stories", path: "/stories" },
-    // { name: "Reports", path: "/reports" },
-    { name: "Careers", path: "/careers" },
+    {
+      name: "Community",
+      submenu: [
+        { name: "Membership", path: "/membership" },
+        { name: "Careers", path: "/careers" },
+        { name: "Events", path: "/events" },
+      ],
+    },
+    {
+      name: "Resources",
+      submenu: [
+        { name: "Gallery", path: "/gallery" },
+        { name: "Stories", path: "/stories" },
+        { name: "Reports", path: "/reports" },
+      ],
+    },
     { name: "Contact", path: "/contact" },
   ];
 
+  const isSubmenuActive = (submenu) => {
+    return submenu.some((item) => location.pathname === item.path);
+  };
+
   return (
     <nav className="fixed top-0 w-full z-50">
-      <div className="bg-black/50 backdrop-blur-lg border-b border-white/10">
-        <div className="max-w-7xl mx-auto px-2 py-4 flex items-center justify-between">
+      <div className="bg-black/60 backdrop-blur-xl border-b border-white/10 shadow-2xl">
+        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
           {/* Logo */}
           <NavLink
             to="/"
-            className="flex items-center text-lg font-semibold tracking-wide text-white gap-2"
-            onClick={() => setOpen(false)}
+            className="flex items-center text-lg font-bold tracking-tight text-white gap-3 group"
           >
-            <img
-              src="/company/svarp-logo.webp"
-              alt="SVARP Foundation"
-              className="h-12 max-md:h-8 w-auto object-contain transition-transform duration-300"
-            />
-            SVARP <span className="text-accent">FOUNDATION</span>
+            <div className="relative">
+              <img
+                src="/company/svarp-logo.webp"
+                alt="SVARP Foundation"
+                className="h-12 max-md:h-10 w-auto object-contain transition-transform duration-500 group-hover:scale-110"
+              />
+              <div className="absolute inset-0 bg-accent/20 blur-xl rounded-full -z-10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            </div>
+            <div className="flex flex-col leading-tight">
+              <span className="text-xl tracking-wider">SVARP</span>
+              <span className="text-[10px] text-accent tracking-[0.2em] font-medium">FOUNDATION</span>
+            </div>
           </NavLink>
 
           {/* Desktop Menu */}
-          <div className="hidden md:flex items-center gap-6 text-sm text-white">
+          <div className="hidden lg:flex items-center gap-8 text-[13px] font-medium uppercase tracking-wider text-white">
             {menuItems.map((item) => (
-              <NavLink key={item.path} to={item.path} className={linkClass}>
-                {item.name}
-              </NavLink>
+              item.submenu ? (
+                <div key={item.name} className="relative group py-2">
+                  <button
+                    className={`flex items-center gap-1 transition-colors hover:text-accent ${
+                      isSubmenuActive(item.submenu) ? "text-accent" : ""
+                    }`}
+                  >
+                    {item.name}
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                      className="w-4 h-4 transition-transform group-hover:rotate-180"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </button>
+                  {/* Dropdown Menu */}
+                  <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform group-hover:translate-y-0 translate-y-2">
+                    <div className="bg-zinc-900/95 backdrop-blur-2xl border border-white/10 rounded-xl overflow-hidden min-w-[200px] shadow-2xl">
+                      {item.submenu.map((sub) => (
+                        <NavLink
+                          key={sub.path}
+                          to={sub.path}
+                          className={dropdownItemClass}
+                        >
+                          {sub.name}
+                        </NavLink>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <NavLink key={item.path} to={item.path} className={linkClass}>
+                  {item.name}
+                </NavLink>
+              )
             ))}
-            <NavLink to="https://globalacademy.svarp.org/" className={linkClass}>
+            
+            <NavLink to="https://globalacademy.svarp.org/" target="_blank" className={linkClass}>
               Courses
             </NavLink>
+
             <NavLink
               to="/donate"
-              className="bg-green-800 text-white px-5 py-2 rounded-full font-medium hover:bg-green-700 hover:scale-105 transition"
+              className="bg-green-600/20 text-green-400 border border-green-500/30 px-6 py-2 rounded-full font-bold hover:bg-green-600 hover:text-white transition-all duration-300 shadow-[0_0_15px_rgba(34,197,94,0.2)]"
             >
               Donate
             </NavLink>
 
             {user ? (
-              <div className="flex items-center gap-4">
-                <NavLink
-                  to="/dashboard"
-                  className="bg-accent/20 p-1 rounded-full hover:bg-accent/40 transition group overflow-hidden"
-                  title="Dashboard"
-                >
+              <NavLink
+                to="/dashboard"
+                className="relative group flex items-center justify-center"
+                title="Dashboard"
+              >
+                <div className="w-10 h-10 rounded-full border-2 border-accent/30 p-0.5 group-hover:border-accent transition-all duration-300 overflow-hidden bg-zinc-800">
                   {user.profile_picture_path ? (
                     <img
                       src={`${import.meta.env.VITE_API_BASE_URL}${user.profile_picture_path}`}
                       alt="Profile"
-                      className="w-8 h-8 object-cover rounded-full"
+                      className="w-full h-full object-cover rounded-full"
                     />
                   ) : (
                     <svg
@@ -80,7 +156,7 @@ export default function Navbar() {
                       viewBox="0 0 24 24"
                       strokeWidth={1.5}
                       stroke="currentColor"
-                      className="w-6 h-6 text-white group-hover:text-accent transition"
+                      className="w-full h-full p-1 text-white group-hover:text-accent transition"
                     >
                       <path
                         strokeLinecap="round"
@@ -89,12 +165,12 @@ export default function Navbar() {
                       />
                     </svg>
                   )}
-                </NavLink>
-              </div>
+                </div>
+              </NavLink>
             ) : (
               <NavLink
                 to="/login"
-                className="bg-accent text-primary px-5 py-2 rounded-full font-medium hover:scale-105 transition"
+                className="bg-accent text-primary px-6 py-2 rounded-full font-bold hover:scale-105 active:scale-95 transition-all shadow-lg shadow-accent/20"
               >
                 Login
               </NavLink>
@@ -102,18 +178,17 @@ export default function Navbar() {
           </div>
 
           {/* Mobile Right Section */}
-          <div className="flex lg:hidden items-center gap-3">
+          <div className="flex lg:hidden items-center gap-4">
             {user && (
               <NavLink
                 to="/dashboard"
-                className="bg-accent/20 p-2 rounded-full hover:bg-accent/40 transition group overflow-hidden"
-                title="Dashboard"
+                className="w-9 h-9 rounded-full border border-accent/30 p-0.5 overflow-hidden"
               >
                 {user.profile_picture_path ? (
                   <img
                     src={`${import.meta.env.VITE_API_BASE_URL}${user.profile_picture_path}`}
                     alt="Profile"
-                    className="w-6 h-6 object-cover rounded-full"
+                    className="w-full h-full object-cover rounded-full"
                   />
                 ) : (
                   <svg
@@ -122,7 +197,7 @@ export default function Navbar() {
                     viewBox="0 0 24 24"
                     strokeWidth={1.5}
                     stroke="currentColor"
-                    className="w-6 h-6 text-white group-hover:text-accent transition"
+                    className="w-full h-full p-1 text-white"
                   >
                     <path
                       strokeLinecap="round"
@@ -134,93 +209,91 @@ export default function Navbar() {
               </NavLink>
             )}
             <button
-              className="text-white text-2xl"
+              className="text-white focus:outline-none p-1"
               onClick={() => setOpen(!open)}
               aria-label="Toggle menu"
             >
-              {open ? "✕" : "☰"}
+              <div className="relative w-6 h-6">
+                <span className={`absolute block w-6 h-0.5 bg-white transition-all duration-300 ${open ? "rotate-45 top-3" : "top-1"}`}></span>
+                <span className={`absolute block w-6 h-0.5 bg-white transition-all duration-300 top-3 ${open ? "opacity-0" : "opacity-100"}`}></span>
+                <span className={`absolute block w-6 h-0.5 bg-white transition-all duration-300 ${open ? "-rotate-45 top-3" : "top-5"}`}></span>
+              </div>
             </button>
           </div>
         </div>
       </div>
 
       {/* Mobile Menu */}
-      {open && (
-        <div className="lg:hidden bg-black/95 backdrop-blur-lg border-t border-white/10">
-          <div className="px-6 py-6 space-y-4 text-white text-sm">
-            {menuItems.map((item) => (
-              <NavLink
-                key={item.path}
-                to={item.path}
-                onClick={() => setOpen(false)}
-                className="block hover:text-accent"
-              >
-                {item.name}
-              </NavLink>
-            ))}
-            <NavLink
-              to="https://globalacademy.svarp.org/"
-              onClick={() => setOpen(false)}
-              className="block hover:text-accent"
-            >
-              Courses
-            </NavLink>
+      <div className={`lg:hidden fixed inset-x-0 top-[72px] bg-zinc-950/95 backdrop-blur-2xl border-t border-white/10 transition-all duration-500 overflow-hidden ${open ? "max-h-screen opacity-100" : "max-h-0 opacity-0"}`}>
+        <div className="px-6 py-8 space-y-2 text-white overflow-y-auto max-h-[calc(100vh-80px)]">
+          {menuItems.map((item) => (
+            <div key={item.name} className="border-b border-white/5 last:border-0 pb-2">
+              {item.submenu ? (
+                <>
+                  <button
+                    onClick={() => setActiveDropdown(activeDropdown === item.name ? null : item.name)}
+                    className="w-full flex items-center justify-between py-3 text-lg font-medium text-white/90 hover:text-accent"
+                  >
+                    {item.name}
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                      className={`w-5 h-5 transition-transform duration-300 ${activeDropdown === item.name ? "rotate-180" : ""}`}
+                    >
+                      <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clipRule="evenodd" />
+                    </svg>
+                  </button>
+                  <div className={`pl-4 space-y-1 transition-all duration-300 overflow-hidden ${activeDropdown === item.name ? "max-h-96 opacity-100 mt-1 mb-4" : "max-h-0 opacity-0"}`}>
+                    {item.submenu.map((sub) => (
+                      <NavLink
+                        key={sub.path}
+                        to={sub.path}
+                        className={({ isActive }) => `block py-2 text-[15px] ${isActive ? "text-accent" : "text-white/60"}`}
+                      >
+                        {sub.name}
+                      </NavLink>
+                    ))}
+                  </div>
+                </>
+              ) : (
+                <NavLink
+                  to={item.path}
+                  className={({ isActive }) => `block py-3 text-lg font-medium ${isActive ? "text-accent" : "text-white/90"}`}
+                >
+                  {item.name}
+                </NavLink>
+              )}
+            </div>
+          ))}
 
+          <NavLink
+            to="https://globalacademy.svarp.org/"
+            target="_blank"
+            className="block py-3 text-lg font-medium text-white/90"
+          >
+            Courses
+          </NavLink>
+
+          <div className="pt-6 flex flex-col gap-4">
             <NavLink
               to="/donate"
-              onClick={() => setOpen(false)}
-              className="block mt-4 bg-green-600 text-white px-5 py-2 rounded-full text-center font-medium"
+              className="w-full bg-green-600 text-white px-6 py-3 rounded-xl text-center font-bold shadow-lg shadow-green-900/20"
             >
               Donate Now
             </NavLink>
 
-            {/* <NavLink
-              to="/contact"
-              onClick={() => setOpen(false)}
-              className="block mt-4 bg-accent text-primary px-5 py-2 rounded-full text-center font-medium"
-            >
-              Connect with Us
-            </NavLink> */}
-            {user ? (
-              <>
-                <div className="flex justify-center mt-4 gap-4">
-                  <NavLink
-                    to="/dashboard"
-                    onClick={() => setOpen(false)}
-                    className="flex items-center justify-center bg-accent/20 p-2 rounded-full hover:bg-accent/40 transition group max-lg:hidden"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={1.5}
-                      stroke="currentColor"
-                      className="w-6 h-6 text-white group-hover:text-accent transition"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z"
-                      />
-                    </svg>
-                    <span className="ml-2 text-white group-hover:text-accent">
-                      Dashboard
-                    </span>
-                  </NavLink>
-                </div>
-              </>
-            ) : (
+            {!user && (
               <NavLink
                 to="/login"
-                onClick={() => setOpen(false)}
-                className="block mt-4 bg-accent text-primary px-5 py-2 rounded-full text-center font-medium"
+                className="w-full bg-accent text-primary px-6 py-3 rounded-xl text-center font-bold"
               >
                 Login
               </NavLink>
             )}
           </div>
         </div>
-      )}
+      </div>
     </nav>
   );
 }
