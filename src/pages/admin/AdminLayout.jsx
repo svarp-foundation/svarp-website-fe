@@ -25,6 +25,8 @@ const AdminLayout = () => {
     { name: "Payments", path: "/admin/payments", icon: "💳" },
     { name: "Memberships", path: "/admin/memberships", icon: "🏆" },
     { name: "Verifications", path: "/admin/verifications", icon: "🛡️" },
+    { name: "Jobs", path: "/admin/jobs", icon: "💼" },
+    { name: "Applications", path: "/admin/applications", icon: "📝" },
   ];
 
   return (

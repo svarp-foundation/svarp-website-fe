@@ -18,6 +18,7 @@ import Register from "../pages/Register";
 import Dashboard from "../pages/Dashboard";
 import Payment from "../pages/Payment";
 import Donation from "../pages/Donation";
+import Careers from "../pages/Careers";
 import UnderDevelopment from "../pages/UnderDevelopment";
 
 // Admin Pages
@@ -28,6 +29,8 @@ import AdminUsers from "../pages/admin/AdminUsers";
 import AdminPayments from "../pages/admin/AdminPayments";
 import AdminMemberships from "../pages/admin/AdminMemberships";
 import AdminVerifications from "../pages/admin/AdminVerifications";
+import AdminJobs from "../pages/admin/AdminJobs";
+import AdminApplications from "../pages/admin/AdminApplications";
 
 export default function Router() {
   return (
@@ -39,6 +42,7 @@ export default function Router() {
         <Route path="/stories" element={<Stories />} />
         <Route path="/reports" element={<Reports />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/careers" element={<Careers />} />
         <Route path="/team" element={<Team />} />
         <Route path="/certifications" element={<Certifications />} />
         <Route path="/membership" element={<Membership />} />
@@ -61,6 +65,8 @@ export default function Router() {
         <Route path="payments" element={<AdminPayments />} />
         <Route path="memberships" element={<AdminMemberships />} />
         <Route path="verifications" element={<AdminVerifications />} />
+        <Route path="jobs" element={<AdminJobs />} />
+        <Route path="applications" element={<AdminApplications />} />
       </Route>
 
       <Route path="*" element={<NotFound />} />
