@@ -39,7 +39,7 @@ export default function Hero() {
             </p>
 
             <p className="mt-5 sm:mt-6 text-accent font-script text-2xl sm:text-3xl">
-              safety • sustainability • social impact
+              Safety • Sustainability • Social Impact
             </p>
 
             {/* CTA */}
