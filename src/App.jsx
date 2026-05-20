@@ -7,10 +7,10 @@ import { PopupProvider } from "./context/PopupContext";
 
 function App() {
   const [loading, setLoading] = useState(
-    !sessionStorage.getItem("videoPlayed"),
+    !localStorage.getItem("videoPlayed"),
   );
   const handleLoaderComplete = () => {
-    sessionStorage.setItem("videoPlayed", "true");
+    localStorage.setItem("videoPlayed", "true");
     setLoading(false);
   };
 

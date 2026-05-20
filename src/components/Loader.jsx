@@ -33,6 +33,7 @@ export default function Loader({ onComplete }) {
         muted
         playsInline
         onEnded={handleVideoEnd}
+        onError={handleVideoEnd}
       />
       {/* Hidden image element to ensure browser caches it */}
       <img src={background} className="hidden" alt="Preload" />
