@@ -1,15 +1,134 @@
 import { NavLink } from "react-router-dom";
-import { background } from "../assets/assets";
 
 export default function Hero() {
+  const row1Unique = [
+    "/company/images/IMG-1.webp",
+    "/company/images/IMG-2.webp",
+    "/company/images/IMG-3.webp",
+    "/company/images/IMG-4.webp",
+    "/company/images/IMG-5.webp",
+    "/company/images/IMG-6.webp",
+  ];
+  const row2Unique = [
+    "/company/images/IMG-7.webp",
+    "/company/images/IMG-8.webp",
+    "/company/images/IMG-9.webp",
+    "/company/images/IMG-10.webp",
+    "/company/images/IMG-11.webp",
+    "/company/images/IMG-1.webp",
+  ];
+  const row3Unique = [
+    "/company/images/IMG-5.webp",
+    "/company/images/IMG-3.webp",
+    "/company/images/IMG-8.webp",
+    "/company/images/IMG-2.webp",
+    "/company/images/IMG-11.webp",
+    "/company/images/IMG-4.webp",
+  ];
+  const row4Unique = [
+    "/company/images/IMG-6.webp",
+    "/company/images/IMG-9.webp",
+    "/company/images/IMG-1.webp",
+    "/company/images/IMG-10.webp",
+    "/company/images/IMG-7.webp",
+    "/company/images/IMG-3.webp",
+  ];
+  const row5Unique = [
+    "/company/images/IMG-2.webp",
+    "/company/images/IMG-8.webp",
+    "/company/images/IMG-5.webp",
+    "/company/images/IMG-11.webp",
+    "/company/images/IMG-6.webp",
+    "/company/images/IMG-1.webp",
+  ];
+
+  const row1Images = [...row1Unique, ...row1Unique];
+  const row2Images = [...row2Unique, ...row2Unique];
+  const row3Images = [...row3Unique, ...row3Unique];
+  const row4Images = [...row4Unique, ...row4Unique];
+  const row5Images = [...row5Unique, ...row5Unique];
+
   return (
-    <section
-      className="relative min-h-[100dvh] flex items-center bg-cover bg-center"
-      style={{
-        backgroundImage: `url(${background})`,
-      }}
-    >
-      <div className="absolute inset-0 bg-gradient-to-br from-black/70 via-black/40 to-black/70" />
+    <section className="relative min-h-[100dvh] flex items-center bg-zinc-950 overflow-hidden">
+      {/* Slanted Background Moving Collage */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+        <div className="absolute inset-[-15%] flex flex-col gap-3 sm:gap-6 transform -rotate-3 sm:-rotate-6 scale-115 justify-center h-[130%]">
+          
+          {/* Row 1: Left-moving */}
+          <div className="flex overflow-hidden w-full select-none flex-shrink-0">
+            <div className="flex gap-3 sm:gap-5 whitespace-nowrap animate-marquee-left">
+              {row1Images.map((img, idx) => (
+                <div
+                  key={idx}
+                  className="w-[240px] sm:w-[380px] h-[150px] sm:h-[240px] flex-shrink-0 overflow-hidden rounded-xl sm:rounded-3xl shadow-xl border border-white/5 bg-zinc-900"
+                >
+                  <img src={img} alt="" className="w-full h-full object-cover select-none" />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Row 2: Right-moving */}
+          <div className="flex overflow-hidden w-full select-none flex-shrink-0">
+            <div className="flex gap-3 sm:gap-5 whitespace-nowrap animate-marquee-right">
+              {row2Images.map((img, idx) => (
+                <div
+                  key={idx}
+                  className="w-[240px] sm:w-[380px] h-[150px] sm:h-[240px] flex-shrink-0 overflow-hidden rounded-xl sm:rounded-3xl shadow-xl border border-white/5 bg-zinc-900"
+                >
+                  <img src={img} alt="" className="w-full h-full object-cover select-none" />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Row 3: Left-moving */}
+          <div className="flex overflow-hidden w-full select-none flex-shrink-0">
+            <div className="flex gap-3 sm:gap-5 whitespace-nowrap animate-marquee-left">
+              {row3Images.map((img, idx) => (
+                <div
+                  key={idx}
+                  className="w-[240px] sm:w-[380px] h-[150px] sm:h-[240px] flex-shrink-0 overflow-hidden rounded-xl sm:rounded-3xl shadow-xl border border-white/5 bg-zinc-900"
+                >
+                  <img src={img} alt="" className="w-full h-full object-cover select-none" />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Row 4: Right-moving */}
+          <div className="flex overflow-hidden w-full select-none flex-shrink-0">
+            <div className="flex gap-3 sm:gap-5 whitespace-nowrap animate-marquee-right">
+              {row4Images.map((img, idx) => (
+                <div
+                  key={idx}
+                  className="w-[240px] sm:w-[380px] h-[150px] sm:h-[240px] flex-shrink-0 overflow-hidden rounded-xl sm:rounded-3xl shadow-xl border border-white/5 bg-zinc-900"
+                >
+                  <img src={img} alt="" className="w-full h-full object-cover select-none" />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Row 5: Left-moving */}
+          <div className="flex overflow-hidden w-full select-none flex-shrink-0">
+            <div className="flex gap-3 sm:gap-5 whitespace-nowrap animate-marquee-left">
+              {row5Images.map((img, idx) => (
+                <div
+                  key={idx}
+                  className="w-[240px] sm:w-[380px] h-[150px] sm:h-[240px] flex-shrink-0 overflow-hidden rounded-xl sm:rounded-3xl shadow-xl border border-white/5 bg-zinc-900"
+                >
+                  <img src={img} alt="" className="w-full h-full object-cover select-none" />
+                </div>
+              ))}
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      {/* Dark Ambient Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br from-black/50 via-black/15 to-black/50 z-0" />
 
       <div className="relative z-10 w-full pt-20 sm:pt-0">
         <div className="max-w-6xl mx-auto px-5 sm:px-6">
@@ -17,10 +136,10 @@ export default function Hero() {
             className="
               max-w-3xl 
               mx-auto md:mx-0
-              rounded-2xl sm:rounded-3xl 
-              bg-black/30 backdrop-blur-sm sm:bg-transparent sm:backdrop-blur-none
-              p-6 sm:p-8 md:p-14 
-              md:shadow-2xl
+              rounded-3xl 
+              bg-black/45 backdrop-blur-sm sm:backdrop-blur-md border border-white/10
+              p-6 sm:p-8 md:p-12 
+              shadow-2xl
               text-center md:text-left
             "
           >

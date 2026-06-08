@@ -100,3 +100,30 @@ html.lenis, html.lenis body {
 .lenis.lenis-scrolling iframe {
   pointer-events: none;
 }
+
+/* ─── Infinite Marquee Rows ─── */
+@keyframes marquee-left {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@keyframes marquee-right {
+  0% {
+    transform: translate3d(-50%, 0, 0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.animate-marquee-left {
+  animation: marquee-left 40s linear infinite;
+}
+
+.animate-marquee-right {
+  animation: marquee-right 40s linear infinite;
+}
