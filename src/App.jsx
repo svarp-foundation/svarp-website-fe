@@ -53,6 +53,53 @@ function App() {
     }
   }, [location]);
 
+  // Update document title and meta description dynamically based on route
+  useEffect(() => {
+    const routeTitles = {
+      "/": "SVARP Global | Safety Leadership & EHS Solutions",
+      "/about": "About Us | SVARP Global",
+      "/services": "Our Services | SVARP Global",
+      "/certifications": "Certifications | SVARP Global",
+      "/stories": "Impact Stories & Testimonials | SVARP Global",
+      "/team": "Our Team | SVARP Global",
+      "/contact": "Contact Us | SVARP Global",
+      "/careers": "Careers | SVARP Global",
+      "/donation": "Support Our Initiatives | SVARP Global",
+      "/login": "Sign In | SVARP Global Partner Portal",
+      "/register": "Create Account | SVARP Global",
+      "/dashboard": "Partner Dashboard | SVARP Global",
+    };
+
+    const routeDescriptions = {
+      "/": "SVARP Global is a premier provider of safety leadership training, EHS advisory, community wellness programs, and sustainability initiatives.",
+      "/about": "Learn about SVARP Global's mission, values, and our commitment to building safer, sustainable, and empowered communities.",
+      "/services": "Explore SVARP Global's services, including safety training, occupational health advisory, risk audits, and compliance consulting.",
+      "/certifications": "Verify and apply for occupational safety, EHS, and sustainability certifications from SVARP Global.",
+      "/stories": "Read real impact stories and testimonials from professionals, partners, and organizations working with SVARP Global.",
+      "/team": "Meet the board members, safety experts, and educators guiding SVARP Global's mission.",
+      "/contact": "Get in touch with SVARP Global for safety training programs, consulting queries, and corporate wellness advisory.",
+      "/careers": "Join a purpose-driven team at SVARP Global and build a rewarding career in safety, environment, and social impact.",
+      "/donation": "Support SVARP Global's social initiatives, environmental drives, and community safety awareness campaigns.",
+      "/login": "Access your SVARP Global partner and training dashboard.",
+      "/register": "Register for SVARP Global courses, audits, and certification tracking.",
+      "/dashboard": "Manage your EHS certifications, view training schedules, and monitor audit progress.",
+    };
+
+    const path = location.pathname;
+    const title = routeTitles[path] || "SVARP Global | Safety Leadership & EHS Solutions";
+    const desc = routeDescriptions[path] || "SVARP Global is a premier provider of safety leadership training, EHS advisory, community wellness programs, and sustainability initiatives.";
+
+    document.title = title;
+
+    let metaDesc = document.querySelector('meta[name="description"]');
+    if (!metaDesc) {
+      metaDesc = document.createElement("meta");
+      metaDesc.name = "description";
+      document.head.appendChild(metaDesc);
+    }
+    metaDesc.setAttribute("content", desc);
+  }, [location]);
+
   return (
     <AuthProvider>
       <PopupProvider>
