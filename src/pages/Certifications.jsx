@@ -89,31 +89,31 @@ const certificates = [
 
 export default function Certifications() {
   return (
-    <section className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-6 pt-32 pb-24">
+    <section className="min-h-dvh bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-24 sm:pt-32 pb-16 sm:pb-24">
         {/* Header Section */}
-        <div className="text- mb-16 space-y-4">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 tracking-tight">
+        <div className="mb-10 sm:mb-16 space-y-3 sm:space-y-4">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 tracking-tight">
             Our <span className="text-accent">Certifications</span> & Awards
           </h1>
-          <p className="text-lg text-gray-600 max-w-2xl leading-relaxed">
+          <p className="text-base sm:text-lg text-gray-600 max-w-2xl leading-relaxed">
             Recognitions and certifications received by our organization,
             demonstrating our commitment to quality, safety, and compliance.
           </p>
         </div>
 
         {/* Grid Layout */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-8">
           {certificates.map((cert) => (
             <div
               key={cert.id}
-              className="relative bg-white border border-gray-200 rounded-2xl p-6"
+              className="relative bg-white border border-gray-200 rounded-xl sm:rounded-2xl p-4 sm:p-6"
             >
-              <div className="absolute top-4 right-4 bg-accent/10 text-accent text-xs font-bold px-3 py-1 rounded-full border border-accent/20">
+              <div className="absolute top-3 right-3 sm:top-4 sm:right-4 bg-accent/10 text-accent text-xs font-bold px-2.5 sm:px-3 py-1 rounded-full border border-accent/20">
                 {cert.year}
               </div>
 
-              <div className="h-56 w-full flex items-center justify-center mb-6 bg-gray-50 rounded-xl p-4">
+              <div className="h-44 sm:h-56 w-full flex items-center justify-center mb-4 sm:mb-6 bg-gray-50 rounded-lg sm:rounded-xl p-3 sm:p-4">
                 <img
                   src={cert.image}
                   alt={cert.title}
@@ -122,11 +122,11 @@ export default function Certifications() {
               </div>
 
               <div className="text-center">
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                <h3 className="text-base sm:text-xl font-semibold text-gray-900 mb-1 sm:mb-2">
                   {cert.title}
                 </h3>
                 {cert.subtitle && (
-                  <p className="text-sm text-gray-500 font-medium">
+                  <p className="text-xs sm:text-sm text-gray-500 font-medium">
                     {cert.subtitle}
                   </p>
                 )}
@@ -136,14 +136,14 @@ export default function Certifications() {
         </div>
 
         {/* CTA Section */}
-        <div className="mt-20 text-center">
-          <p className="text-gray-500 mb-6">
+        <div className="mt-14 sm:mt-20 text-center">
+          <p className="text-gray-500 mb-4 sm:mb-6 text-sm sm:text-base">
             We are continuously striving for excellence and expanding our
             credentials.
           </p>
           <NavLink
             to="/contact"
-            className="inline-block bg-accent text-white font-bold px-8 py-3 rounded-full hover:bg-emerald-600 transition-all duration-300 transform hover:scale-105 shadow-lg shadow-accent/20"
+            className="inline-block w-full sm:w-auto bg-accent text-white font-bold px-8 py-3 rounded-full hover:bg-emerald-600 transition-all duration-300 transform hover:scale-105 shadow-lg shadow-accent/20 text-center"
           >
             Partner With Us
           </NavLink>

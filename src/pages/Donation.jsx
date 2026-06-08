@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { usePopup } from "../context/PopupContext";
 import { useAuth } from "../context/AuthContext";
@@ -14,6 +14,7 @@ const Donation = () => {
     phone_number: "",
     amount: "500",
   });
+  const [activePreset, setActivePreset] = useState("500");
   const [loading, setLoading] = useState(false);
 
   // Auto-fill form if user is logged in
@@ -44,6 +45,19 @@ const Donation = () => {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    if (e.target.name === "amount") {
+      const val = e.target.value;
+      if (["500", "1000", "2500", "5000"].includes(val)) {
+        setActivePreset(val);
+      } else {
+        setActivePreset("custom");
+      }
+    }
+  };
+
+  const handlePresetClick = (amount) => {
+    setActivePreset(amount);
+    setFormData((prev) => ({ ...prev, amount }));
   };
 
   const handlePayment = async (e) => {
@@ -93,7 +107,7 @@ const Donation = () => {
         key: orderData.key_id,
         amount: orderData.amount,
         currency: orderData.currency,
-        name: orderData.app_name || "SVARP",
+        name: orderData.app_name || "SVARP Global",
         description: `Donation by ${formData.name}`,
         image: "https://www.svarp.org/company/svarp-logo.webp",
         order_id: orderData.razorpay_order_id,
@@ -137,6 +151,7 @@ const Donation = () => {
                 phone_number: user?.phone_number || "",
                 amount: "500",
               });
+              setActivePreset("500");
             }
           } catch (error) {
             console.error("Verification error:", error);
@@ -168,157 +183,219 @@ const Donation = () => {
     }
   };
 
+  const causes = [
+    {
+      icon: "🚗",
+      title: "Community Road Safety",
+      desc: "Funding emergency road drills, warning markers, and local safety booklets.",
+    },
+    {
+      icon: "🌱",
+      title: "School Eco-Clubs",
+      desc: "Delivering sustainability toolkits and recycling resource boxes to youth centers.",
+    },
+    {
+      icon: "🤝",
+      title: "Empowerment & Livelihood",
+      desc: "Providing adaptive safety courses and startup resources to local communities.",
+    },
+  ];
+
   return (
-    <div className="min-h-screen pt-24 bg-gray-50 flex flex-col items-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-xl w-full space-y-8 md:bg-white p-10 max-md:p-2 rounded-xl md:shadow-xl">
-        <div className="text-center">
-          <h2 className="text-3xl font-extrabold text-gray-900 tracking-tight">
-            Support Our Cause
-          </h2>
-          <p className="mt-2 text-sm text-gray-600">
-            Your generous donation helps us make a difference. Thank you for
-            your support.
-          </p>
-        </div>
+    <div className="min-h-dvh pt-24 sm:pt-32 pb-16 bg-muted px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+      {/* Visual Depth Blobs */}
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#9bcf9b]/5 rounded-full blur-3xl pointer-events-none -z-10" />
+      <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-[#1f3b45]/5 rounded-full blur-3xl pointer-events-none -z-10" />
 
-        <form className="mt-8 space-y-6" onSubmit={handlePayment}>
-          <div className="rounded-md shadow-sm space-y-4 text-left">
-            <div>
-              <label
-                htmlFor="name"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Full Name <span className="text-red-500">*</span>
-              </label>
-              <input
-                id="name"
-                name="name"
-                type="text"
-                required
-                className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10 sm:text-sm mt-1"
-                // placeholder="John Doe"
-                value={formData.name}
-                onChange={handleChange}
-              />
-            </div>
+      <div className="max-w-5xl mx-auto">
+        <div className="grid lg:grid-cols-5 gap-8 items-start">
+          
+          {/* Left Column: Causes Overview (2 cols) */}
+          <div className="lg:col-span-2 space-y-6">
+            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-gray-100 shadow-sm space-y-6">
+              <div>
+                <span className="text-xs sm:text-sm font-semibold tracking-wider text-primary uppercase bg-muted px-4 py-1.5 rounded-full inline-block mb-3">
+                  Support Our Mission
+                </span>
+                <h1 className="text-2xl sm:text-3xl font-extrabold text-primary tracking-tight">
+                  Empower Change
+                </h1>
+                <p className="text-sm text-gray-500 mt-2 leading-relaxed">
+                  Your donations fund grassroots programs that foster environmental sustainability and safety awareness across local communities.
+                </p>
+              </div>
 
-            <div>
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Email Address <span className="text-red-500">*</span>
-              </label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                required
-                className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10 sm:text-sm mt-1"
-                // placeholder="john@example.com"
-                value={formData.email}
-                onChange={handleChange}
-              />
-            </div>
-
-            <div>
-              <label
-                htmlFor="phone_number"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Phone Number <span className="text-red-500">*</span>
-              </label>
-              <input
-                id="phone_number"
-                name="phone_number"
-                type="tel"
-                required
-                className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10 sm:text-sm mt-1"
-                value={formData.phone_number}
-                onChange={handleChange}
-              />
-            </div>
-
-            <div>
-              <label
-                htmlFor="amount"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Donation Amount (INR)
-              </label>
-              <div className="mt-1 relative rounded-md shadow-sm">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <span className="text-gray-500 sm:text-sm">₹</span>
-                </div>
-                <input
-                  type="number"
-                  name="amount"
-                  id="amount"
-                  required
-                  min="1"
-                  className="focus:ring-green-500 focus:border-green-500 block w-full pl-7 pr-12 sm:text-sm border-gray-300 rounded-md py-2 px-3 border"
-                  value={formData.amount}
-                  onChange={handleChange}
-                />
+              {/* List of Causes */}
+              <div className="space-y-4 pt-4 border-t border-gray-50">
+                {causes.map((c, i) => (
+                  <div key={i} className="flex gap-4 items-start">
+                    <div className="w-10 h-10 rounded-xl bg-accent/15 flex items-center justify-center shrink-0 text-lg">
+                      {c.icon}
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-sm text-primary">{c.title}</h4>
+                      <p className="text-xs text-gray-500 leading-relaxed mt-0.5">{c.desc}</p>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
 
-          {/* Guidelines */}
-          <div className="bg-blue-50 border-l-4 border-blue-400 p-4 rounded-md text-sm text-blue-800">
-            <h4 className="font-medium text-blue-900 mb-1">
-              Important Guidelines
-            </h4>
-            <ul className="list-disc pl-5 space-y-1">
-              <li>
-                Please do not refresh or close the browser window while the
-                transaction is processing.
-              </li>
-              <li>
-                Ensure your internet connection is stable before initiating
-                payment.
-              </li>
-              <li>
-                A digital certificate will be generated upon successful payment
-                and will be available in your account dashboard. If you do not
-                already have an account, one will be automatically created using
-                the email address provided during payment.
-              </li>
-              <li>
-                The default password for first-time login will be "svarp". For
-                security reasons, we strongly recommend changing your password
-                after logging in for the first time.
-              </li>
-            </ul>
+          {/* Right Column: Donation Form Container (3 cols) */}
+          <div className="lg:col-span-3 space-y-6">
+            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-gray-100 shadow-sm">
+              <h2 className="text-xl font-bold text-primary mb-6">Enter Donation Details</h2>
+              
+              <form onSubmit={handlePayment} className="space-y-5">
+                <div className="space-y-4">
+                  {/* Name field */}
+                  <div>
+                    <label className="block text-xs font-bold text-primary mb-1 uppercase tracking-wider">
+                      Full Name
+                    </label>
+                    <input
+                      name="name"
+                      type="text"
+                      required
+                      className="block w-full px-4 py-3 bg-slate-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-accent focus:bg-white text-sm transition"
+                      placeholder="John Doe"
+                      value={formData.name}
+                      onChange={handleChange}
+                    />
+                  </div>
+
+                  {/* Email & Phone Grid */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-bold text-primary mb-1 uppercase tracking-wider">
+                        Email Address
+                      </label>
+                      <input
+                        name="email"
+                        type="email"
+                        required
+                        className="block w-full px-4 py-3 bg-slate-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-accent focus:bg-white text-sm transition"
+                        placeholder="john@company.com"
+                        value={formData.email}
+                        onChange={handleChange}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-primary mb-1 uppercase tracking-wider">
+                        Phone Number
+                      </label>
+                      <input
+                        name="phone_number"
+                        type="tel"
+                        required
+                        className="block w-full px-4 py-3 bg-slate-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-accent focus:bg-white text-sm transition"
+                        placeholder="+91 99999 88888"
+                        value={formData.phone_number}
+                        onChange={handleChange}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Quick Preset Amount Selector */}
+                  <div>
+                    <label className="block text-xs font-bold text-primary mb-2 uppercase tracking-wider">
+                      Select Amount (INR)
+                    </label>
+                    <div className="grid grid-cols-5 gap-2">
+                      {["500", "1000", "2500", "5000"].map((amt) => (
+                        <button
+                          key={amt}
+                          type="button"
+                          onClick={() => handlePresetClick(amt)}
+                          className={`py-2 rounded-xl text-xs font-bold border transition-all ${
+                            activePreset === amt
+                              ? "bg-primary text-white border-transparent shadow-sm"
+                              : "bg-slate-50 text-gray-600 border-gray-200 hover:bg-slate-100"
+                          }`}
+                        >
+                          ₹{amt}
+                        </button>
+                      ))}
+                      <button
+                        type="button"
+                        onClick={() => handlePresetClick("custom")}
+                        className={`py-2 rounded-xl text-xs font-bold border transition-all ${
+                          activePreset === "custom"
+                            ? "bg-primary text-white border-transparent shadow-sm"
+                            : "bg-slate-50 text-gray-600 border-gray-200 hover:bg-slate-100"
+                        }`}
+                      >
+                        Custom
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Amount Value Input Box */}
+                  <div>
+                    <label className="block text-xs font-bold text-primary mb-1 uppercase tracking-wider">
+                      Donation Value
+                    </label>
+                    <div className="relative rounded-xl shadow-sm">
+                      <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-500 font-semibold text-sm">
+                        ₹
+                      </div>
+                      <input
+                        type="number"
+                        name="amount"
+                        required
+                        min="1"
+                        disabled={activePreset !== "custom"}
+                        className={`block w-full pl-8 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-accent text-sm transition ${
+                          activePreset !== "custom" ? "bg-slate-100 text-gray-500 cursor-not-allowed" : "bg-slate-50"
+                        }`}
+                        value={formData.amount}
+                        onChange={handleChange}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Important Guidelines box */}
+                <div className="bg-slate-50 border-l-4 border-accent p-4 rounded-xl text-xs text-primary/80 space-y-2">
+                  <h4 className="font-bold text-primary uppercase tracking-wider text-[10px]">
+                    Information Guidelines
+                  </h4>
+                  <ul className="list-disc pl-4 space-y-1">
+                    <li>Do not close the page or reload during the verification spinner.</li>
+                    <li>A safety certificate is generated and logged inside your Dashboard immediately.</li>
+                    <li>If you don't have an account, one is generated using your email with password "svarp".</li>
+                  </ul>
+                </div>
+
+                {/* Donate CTA button */}
+                <div className="pt-2">
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="w-full flex justify-center items-center py-3.5 px-4 bg-primary text-white text-sm font-bold rounded-xl hover:bg-accent hover:text-primary transition-all duration-200 shadow-md disabled:opacity-50"
+                  >
+                    {loading ? (
+                      <>
+                        <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                        </svg>
+                        Initiating Transaction...
+                      </>
+                    ) : (
+                      "Donate Now"
+                    )}
+                  </button>
+                  <p className="mt-3 text-center text-[10px] text-gray-400 flex items-center justify-center gap-1 font-semibold uppercase tracking-wider">
+                    🔒 Payments are safely processed via Razorpay SDK
+                  </p>
+                </div>
+              </form>
+            </div>
           </div>
 
-          <div>
-            <button
-              type="submit"
-              disabled={loading}
-              className={`group relative w-full flex justify-center py-2 px-4 border border-transparent text-md font-bold rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200 ${loading ? "opacity-70 cursor-not-allowed" : ""}`}
-            >
-              {loading ? "Processing..." : "Donate"}
-            </button>
-            <p className="mt-3 text-center text-xs text-gray-500 flex items-center justify-center gap-1">
-              <svg
-                className="w-4 h-4 text-green-500"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-                ></path>
-              </svg>
-              Payments are securely processed via Razorpay.
-            </p>
-          </div>
-        </form>
+        </div>
       </div>
     </div>
   );

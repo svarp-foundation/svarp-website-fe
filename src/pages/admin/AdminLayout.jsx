@@ -14,7 +14,7 @@ const AdminLayout = () => {
 
   if (isLoading || !user)
     return (
-      <div className="flex items-center justify-center min-h-screen bg-muted text-primary">
+      <div className="flex items-center justify-center min-h-dvh bg-muted text-primary">
         Loading Admin...
       </div>
     );
@@ -30,9 +30,9 @@ const AdminLayout = () => {
   ];
 
   return (
-    <div className="flex min-h-screen bg-muted font-sans text-primary">
+    <div className="flex min-h-dvh bg-muted font-sans text-primary">
       {/* Sidebar */}
-      <aside className="w-64 bg-primary text-white fixed h-screen border-r border-white/5 flex flex-col z-50 transition-all duration-300 max-md:w-0 max-md:overflow-hidden">
+      <aside className="w-64 bg-primary text-white fixed h-dvh border-r border-white/5 flex flex-col z-50 transition-all duration-300 max-md:w-0 max-md:overflow-hidden">
         <div className="p-8 flex items-center gap-3">
           <h2 className="text-2xl font-extrabold tracking-tight text-accent">
             SVARP

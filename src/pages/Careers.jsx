@@ -76,67 +76,79 @@ export default function Careers() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-32 pb-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-5xl mx-auto">
-        <div className=" mb-16 ">
-          <h1 className="text-4xl font-extrabold text-gray-900 sm:text-5xl">
+    <div className="min-h-dvh bg-muted pt-24 sm:pt-32 pb-16 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+      {/* Decorative Brand blobs */}
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#9bcf9b]/5 rounded-full blur-3xl pointer-events-none -z-10" />
+      <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-[#1f3b45]/5 rounded-full blur-3xl pointer-events-none -z-10" />
+
+      <div className="max-w-6xl mx-auto">
+        {/* Header Section */}
+        <div className="max-w-3xl mb-12 sm:mb-16">
+          <span className="text-xs sm:text-sm font-semibold tracking-wider text-primary uppercase bg-white px-4 py-1.5 rounded-full inline-block mb-3 sm:mb-4 shadow-sm">
+            Careers at SVARP Global
+          </span>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-primary tracking-tight">
             Join Our Team
           </h1>
-          <p className="mt-4 text-xl text-gray-600">
-            Help us build a safer brand more sustainable future.
+          <p className="mt-3 sm:mt-4 text-base sm:text-lg text-gray-600 leading-relaxed">
+            Help us build a safer, smarter, and more sustainable future. Browse our current open roles or send in a speculative application.
           </p>
         </div>
 
         {loading ? (
-          <div className="flex justify-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+          <div className="flex justify-center py-20">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
           </div>
         ) : jobs.length === 0 ? (
-          <div className="text-center py-12 bg-white rounded-xl shadow-sm border border-gray-100">
-            <p className="text-gray-500 text-lg p-2">
-              No open positions at the moment. <br />Check back later!
+          <div className="text-center py-16 bg-white rounded-3xl border border-gray-100 shadow-sm">
+            <span className="text-4xl mb-4 inline-block">💼</span>
+            <p className="text-gray-500 text-base sm:text-lg">
+              No open positions at the moment. <br />Please check back later!
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             {jobs.map((job) => (
               <div
                 key={job.id}
-                className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col hover:shadow-lg transition-all duration-300"
+                className="group bg-white rounded-3xl border border-gray-100 p-6 flex flex-col justify-between hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300"
               >
-                <div className="flex items-center gap-2 mb-4">
-                  <span className="px-3 py-1 bg-indigo-50 text-indigo-700 text-[10px] font-bold rounded-full uppercase tracking-widest">
-                    {job.job_type}
-                  </span>
-                  <span className="text-gray-300 text-xs">|</span>
-                  <span className="text-gray-500 text-xs font-medium">
-                    {job.location}
-                  </span>
+                <div>
+                  {/* Job Header Badges */}
+                  <div className="flex items-center gap-2 mb-4 flex-wrap">
+                    <span className="px-3 py-1 bg-accent/20 text-primary text-[10px] font-bold rounded-full uppercase tracking-wider">
+                      {job.job_type}
+                    </span>
+                    <span className="text-gray-300 text-xs">|</span>
+                    <span className="text-gray-500 text-xs font-semibold flex items-center gap-1">
+                      📍 {job.location}
+                    </span>
+                  </div>
+
+                  <h2 className="text-xl font-bold text-primary group-hover:text-accent transition-colors duration-200 mb-3 line-clamp-1">
+                    {job.title}
+                  </h2>
+
+                  <p className="text-gray-600 text-sm leading-relaxed mb-6 line-clamp-3">
+                    {job.description}
+                  </p>
                 </div>
 
-                <h2 className="text-xl font-bold text-gray-900 mb-3 line-clamp-1">
-                  {job.title}
-                </h2>
-
-                <p className="text-gray-600 text-sm leading-relaxed mb-6 line-clamp-3">
-                  {job.description}
-                </p>
-
-                <div className="mt-auto pt-4 border-t border-gray-50 flex items-center justify-between">
+                <div className="pt-4 border-t border-gray-50 flex items-center justify-between mt-auto">
                   {job.salary_range ? (
-                    <span className="text-xs font-semibold text-gray-400">
-                      {job.salary_range}
+                    <span className="text-xs font-bold text-gray-400">
+                      💰 {job.salary_range}
                     </span>
                   ) : (
-                    <span className="text-xs font-medium text-gray-300 italic">
+                    <span className="text-xs font-semibold text-gray-400 italic">
                       Competitive Salary
                     </span>
                   )}
                   <button
                     onClick={() => handleApply(job)}
-                    className="text-sm font-bold text-indigo-600 hover:text-indigo-800 transition-colors"
+                    className="text-xs font-bold text-primary group-hover:text-accent transition-all duration-200 flex items-center gap-1"
                   >
-                    View & Apply →
+                    View & Apply <span className="group-hover:translate-x-1 transition-transform">&rarr;</span>
                   </button>
                 </div>
               </div>
@@ -144,190 +156,162 @@ export default function Careers() {
           </div>
         )}
 
+        {/* Application Modal Popup */}
         {showForm && (
-          <div className="fixed inset-0 z-50 overflow-y-auto">
-            <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-              <div
-                className="fixed inset-0 transition-opacity"
-                aria-hidden="true"
+          <div className="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+            <div className="bg-white rounded-3xl max-w-lg w-full max-h-[90vh] overflow-y-auto shadow-2xl relative animate-in fade-in zoom-in-95 duration-200" onClick={(e) => e.stopPropagation()}>
+              {/* Close Icon */}
+              <button
+                onClick={() => setShowForm(false)}
+                className="absolute top-4 right-4 z-20 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-gray-500 flex items-center justify-center transition"
+                aria-label="Close form"
               >
-                <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
-              </div>
+                ✕
+              </button>
 
-              <span
-                className="hidden sm:inline-block sm:align-middle sm:h-screen"
-                aria-hidden="true"
-              >
-                &#8203;
-              </span>
+              <div className="p-6 sm:p-8">
+                <div className="mb-6">
+                  <h3 className="text-xl sm:text-2xl font-bold text-primary">
+                    Apply: {selectedJob?.title}
+                  </h3>
+                  <p className="text-xs text-gray-500 mt-1 uppercase tracking-wider font-semibold">
+                    {selectedJob?.job_type} • {selectedJob?.location}
+                  </p>
+                </div>
 
-              <div className="inline-block align-bottom bg-white rounded-2xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-                <div className="bg-white px-8 pt-8 pb-8">
-                  <div className="flex justify-between items-center mb-6">
-                    <h3 className="text-2xl font-bold text-gray-900">
-                      Apply for {selectedJob?.title}
-                    </h3>
-                    <button
-                      onClick={() => setShowForm(false)}
-                      className="text-gray-400 hover:text-gray-500"
-                    >
-                      <svg
-                        className="h-6 w-6"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M6 18L18 6M6 6l12 12"
-                        />
-                      </svg>
-                    </button>
+                {!success && (
+                  <div className="mb-6 p-4 bg-slate-50 rounded-2xl border border-gray-100/50">
+                    <h4 className="text-xs font-bold text-primary mb-1 uppercase tracking-wider">
+                      Role Overview
+                    </h4>
+                    <p className="text-gray-600 text-xs leading-relaxed whitespace-pre-line">
+                      {selectedJob?.description}
+                    </p>
                   </div>
+                )}
 
-                  {!success && (
-                    <div className="mb-8 p-4 bg-gray-50 rounded-xl border border-gray-100">
-                      <h4 className="text-sm font-bold text-gray-700 mb-2 uppercase tracking-tight">
-                        Job Description
-                      </h4>
-                      <p className="text-gray-600 text-sm leading-relaxed whitespace-pre-line">
-                        {selectedJob?.description}
-                      </p>
+                {success ? (
+                  <div className="text-center py-10 space-y-4">
+                    <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100 text-green-600 text-2xl">
+                      ✓
                     </div>
-                  )}
+                    <h4 className="text-xl font-bold text-primary">
+                      Application Sent!
+                    </h4>
+                    <p className="text-sm text-gray-600 max-w-sm mx-auto">
+                      Thank you for your interest in SVARP Global. Our HR team will evaluate your CV and reach out soon.
+                    </p>
+                  </div>
+                ) : (
+                  <form onSubmit={handleSubmit} className="space-y-4">
+                    {/* Name input */}
+                    <div>
+                      <label className="block text-xs font-bold text-primary mb-1 uppercase tracking-wider">
+                        Full Name
+                      </label>
+                      <input
+                        type="text"
+                        name="full_name"
+                        required
+                        value={formData.full_name}
+                        onChange={handleInputChange}
+                        className="block w-full px-4 py-3 bg-slate-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-accent focus:bg-white text-sm transition"
+                        placeholder="John Doe"
+                      />
+                    </div>
 
-                  {success ? (
-                    <div className="text-center py-8">
-                      <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100 mb-6">
-                        <svg
-                          className="h-10 w-10 text-green-600"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            d="M5 13l4 4L19 7"
-                          />
-                        </svg>
-                      </div>
-                      <h4 className="text-xl font-bold text-gray-900 mb-2">
-                        Application Sent!
-                      </h4>
-                      <p className="text-gray-600">
-                        Thank you for applying. We'll be in touch soon.
-                      </p>
-                    </div>
-                  ) : (
-                    <form onSubmit={handleSubmit} className="space-y-6">
+                    {/* Email and Phone Grid */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-1">
-                          Full Name
+                        <label className="block text-xs font-bold text-primary mb-1 uppercase tracking-wider">
+                          Email
                         </label>
                         <input
-                          type="text"
-                          name="full_name"
+                          type="email"
+                          name="email"
                           required
-                          value={formData.full_name}
+                          value={formData.email}
                           onChange={handleInputChange}
-                          className="block w-full px-4 py-3 rounded-xl border-gray-200 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                          placeholder="John Doe"
+                          className="block w-full px-4 py-3 bg-slate-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-accent focus:bg-white text-sm transition"
+                          placeholder="john@company.com"
                         />
                       </div>
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
-                          <label className="block text-sm font-semibold text-gray-700 mb-1">
-                            Email
-                          </label>
-                          <input
-                            type="email"
-                            name="email"
-                            required
-                            value={formData.email}
-                            onChange={handleInputChange}
-                            className="block w-full px-4 py-3 rounded-xl border-gray-200 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                            placeholder="john@example.com"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-semibold text-gray-700 mb-1">
-                            Phone
-                          </label>
-                          <input
-                            type="tel"
-                            name="phone"
-                            required
-                            value={formData.phone}
-                            onChange={handleInputChange}
-                            className="block w-full px-4 py-3 rounded-xl border-gray-200 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                            placeholder="+91 98765 43210"
-                          />
-                        </div>
-                      </div>
                       <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-1">
-                          Resume (PDF)
+                        <label className="block text-xs font-bold text-primary mb-1 uppercase tracking-wider">
+                          Phone
                         </label>
+                        <input
+                          type="tel"
+                          name="phone"
+                          required
+                          value={formData.phone}
+                          onChange={handleInputChange}
+                          className="block w-full px-4 py-3 bg-slate-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-accent focus:bg-white text-sm transition"
+                          placeholder="+91 99999 88888"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Styled Custom File Upload Zone */}
+                    <div>
+                      <label className="block text-xs font-bold text-primary mb-1.5 uppercase tracking-wider">
+                        Resume (PDF)
+                      </label>
+                      <div className="relative border-2 border-dashed border-gray-200 rounded-2xl hover:border-accent transition bg-slate-50/50 p-4 text-center cursor-pointer">
                         <input
                           type="file"
                           required
                           accept=".pdf,.doc,.docx"
                           onChange={handleFileChange}
-                          className="block w-full text-sm text-gray-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
+                          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                         />
+                        <div className="space-y-1">
+                          <span className="text-2xl mb-1 inline-block">📤</span>
+                          <p className="text-xs font-bold text-primary">
+                            {resume ? resume.name : "Click or Drag to Upload CV"}
+                          </p>
+                          <p className="text-[10px] text-gray-400">
+                            PDF, DOC, DOCX up to 10MB
+                          </p>
+                        </div>
                       </div>
-                      <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-1">
-                          Cover Letter (Optional)
-                        </label>
-                        <textarea
-                          name="cover_letter"
-                          rows="4"
-                          value={formData.cover_letter}
-                          onChange={handleInputChange}
-                          className="block w-full px-4 py-3 rounded-xl border-gray-200 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                          placeholder="Tell us why you're a good fit..."
-                        ></textarea>
-                      </div>
-                      <button
-                        type="submit"
-                        disabled={submitting}
-                        className="w-full inline-flex justify-center items-center px-8 py-4 border border-transparent text-base font-semibold rounded-xl text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 transition-all duration-200"
-                      >
-                        {submitting ? (
-                          <>
-                            <svg
-                              className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                            >
-                              <circle
-                                className="opacity-25"
-                                cx="12"
-                                cy="12"
-                                r="10"
-                                stroke="currentColor"
-                                strokeWidth="4"
-                              ></circle>
-                              <path
-                                className="opacity-75"
-                                fill="currentColor"
-                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                              ></path>
-                            </svg>
-                            Submitting...
-                          </>
-                        ) : (
-                          "Submit Application"
-                        )}
-                      </button>
-                    </form>
-                  )}
-                </div>
+                    </div>
+
+                    {/* Cover letter */}
+                    <div>
+                      <label className="block text-xs font-bold text-primary mb-1 uppercase tracking-wider">
+                        Cover Letter (Optional)
+                      </label>
+                      <textarea
+                        name="cover_letter"
+                        rows="3"
+                        value={formData.cover_letter}
+                        onChange={handleInputChange}
+                        className="block w-full px-4 py-3 bg-slate-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-accent focus:bg-white text-sm transition"
+                        placeholder="Introduce yourself and tell us why you are a good match..."
+                      ></textarea>
+                    </div>
+
+                    {/* Submit Button */}
+                    <button
+                      type="submit"
+                      disabled={submitting}
+                      className="w-full inline-flex justify-center items-center px-6 py-3.5 bg-primary text-white border border-transparent font-bold rounded-xl hover:bg-accent hover:text-primary transition shadow-md disabled:opacity-50 mt-4"
+                    >
+                      {submitting ? (
+                        <>
+                          <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                          </svg>
+                          Submitting Application...
+                        </>
+                      ) : (
+                        "Submit Application"
+                      )}
+                    </button>
+                  </form>
+                )}
               </div>
             </div>
           </div>

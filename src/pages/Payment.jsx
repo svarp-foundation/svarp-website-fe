@@ -173,7 +173,7 @@ export default function Payment() {
         key: orderData.key_id,
         amount: orderData.amount * 100,
         currency: orderData.currency,
-        name: orderData.app_name || "SVARP Foundation",
+        name: orderData.app_name || "SVARP Global",
         description: `Membership: ${state.plan.title}`,
         image: "https://www.svarp.org/company/svarp-logo.webp",
         order_id: orderData.razorpay_order_id,
@@ -241,11 +241,11 @@ export default function Payment() {
   if (!state?.plan) return null;
 
   return (
-    <div className="min-h-screen bg-muted py-24 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-8">
+    <div className="min-h-dvh bg-muted py-20 sm:py-24 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
         {/* Billing Details Form */}
-        <div className="bg-white rounded-3xl p-8 shadow-lg">
-          <h2 className="text-2xl font-semibold text-primary mb-6">
+        <div className="bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-lg">
+          <h2 className="text-xl sm:text-2xl font-semibold text-primary mb-4 sm:mb-6">
             Billing Details
           </h2>
           <form onSubmit={handlePayment} className="space-y-4">
@@ -436,8 +436,8 @@ export default function Payment() {
         </div>
 
         {/* Invoice Summary */}
-        <div className="bg-white rounded-3xl p-8 shadow-lg h-fit">
-          <h2 className="text-2xl font-semibold text-primary mb-6">
+        <div className="bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-lg h-fit">
+          <h2 className="text-xl sm:text-2xl font-semibold text-primary mb-4 sm:mb-6">
             Order Summary
           </h2>
           <div className="space-y-4 text-sm text-gray-600">

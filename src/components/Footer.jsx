@@ -3,19 +3,19 @@ import { NavLink } from "react-router-dom";
 export default function Footer() {
   return (
     <footer className="bg-primary text-white">
-      <div className="max-w-7xl mx-auto px-6 py-16 grid grid-cols-1 md:grid-cols-4 gap-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10 sm:py-16 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 sm:gap-10">
         {/* Brand */}
         <div>
           <NavLink to="/" className="inline-block mb-4">
             <img
               src="/company/svarp-logo.webp"
-              alt="SVARP Foundation"
-              className="h-16 w-auto object-contain drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]"
+              alt="SVARP Global"
+              className="h-14 sm:h-16 w-auto object-contain drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]"
             />
           </NavLink>
           <p className="text-sm opacity-80 leading-relaxed">
             Building safer, smarter, sustainable futures through safety,
-            sustainability, and social impact. SVARP Foundation works with
+            sustainability, and social impact. SVARP Global works with
             individuals, organizations, and communities to drive meaningful,
             long-term change.
           </p>
@@ -23,7 +23,7 @@ export default function Footer() {
 
         {/* Quick Links */}
         <div>
-          <h3 className="font-semibold mb-4">Explore</h3>
+          <h3 className="font-semibold mb-3 sm:mb-4">Explore</h3>
           <ul className="space-y-2 text-sm opacity-90">
             <li>
               <NavLink to="/team" className="hover:underline">
@@ -55,7 +55,7 @@ export default function Footer() {
 
         {/* Contact */}
         <div>
-          <h3 className="font-semibold mb-4">Contact</h3>
+          <h3 className="font-semibold mb-3 sm:mb-4">Contact</h3>
           <p className="text-sm opacity-80 leading-relaxed">
             A-200, Shatabdi Nagar, Sector 2, MDA <br />
             Meerut, Uttar Pradesh – 250103 <br />
@@ -70,7 +70,7 @@ export default function Footer() {
 
         {/* CTA */}
         <div>
-          <h3 className="font-semibold mb-4">Get Involved</h3>
+          <h3 className="font-semibold mb-3 sm:mb-4">Get Involved</h3>
           <p className="text-sm opacity-80 mb-4">
             Join the movement for safety, sustainability, and social change.
           </p>
@@ -84,8 +84,8 @@ export default function Footer() {
       </div>
 
       {/* Bottom Bar */}
-      <div className="border-t border-white/20 text-center py-4 text-sm opacity-70">
-        © {new Date().getFullYear()} SVARP Foundation. All rights reserved.
+      <div className="border-t border-white/20 text-center py-4 px-4 text-xs sm:text-sm opacity-70">
+        © {new Date().getFullYear()} SVARP Global. All rights reserved.
       </div>
     </footer>
   );

@@ -105,20 +105,21 @@ export default function EventGallery() {
   }, []);
 
   return (
-    <section className="pt-32 pb-24 bg-white">
-      <div className="max-w-7xl mx-auto px-6">
+    <section className="pt-24 sm:pt-32 pb-16 sm:pb-24 bg-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
         {/* Header */}
-        <div className="max-w-3xl mb-10">
-          <h1 className="text-4xl md:text-5xl font-semibold mb-4">
+        <div className="max-w-3xl mb-6 sm:mb-10">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold mb-3 sm:mb-4">
             Event Gallery
           </h1>
-          <p className="text-gray-600 text-lg">
-            Explore moments from SVARP Foundation’s corporate, certification,
+          <p className="text-gray-600 text-base sm:text-lg">
+            Explore moments from SVARP Global's corporate, certification,
             and social events.
           </p>
         </div>
 
-        <div className="mb-8 md:hidden">
+        {/* Mobile dropdown selector */}
+        <div className="mb-6 sm:mb-8 md:hidden">
           <select
             value={activeEvent.id}
             onChange={(e) =>
@@ -134,12 +135,13 @@ export default function EventGallery() {
           </select>
         </div>
 
-        <div className="hidden md:flex flex-wrap gap-4 mb-12">
+        {/* Desktop tabs */}
+        <div className="hidden md:flex flex-wrap gap-3 sm:gap-4 mb-8 sm:mb-12">
           {events.map((event) => (
             <button
               key={event.id}
               onClick={() => setActiveEvent(event)}
-              className={`px-6 py-2 rounded-full text-sm font-medium transition ${
+              className={`px-5 sm:px-6 py-2 rounded-full text-sm font-medium transition ${
                 activeEvent.id === event.id
                   ? "bg-accent text-primary"
                   : "bg-muted hover:bg-gray-200"
@@ -150,13 +152,14 @@ export default function EventGallery() {
           ))}
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 auto-rows-[180px]">
+        {/* Gallery grid */}
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-4 auto-rows-[140px] sm:auto-rows-[180px]">
           {activeEvent.images.map((img, index) => (
             <div
               key={index}
               onClick={() => setSelectedImage(img)}
-              className={`relative overflow-hidden rounded-2xl cursor-pointer group ${
-                index === 0 ? "md:col-span-2 md:row-span-2" : ""
+              className={`relative overflow-hidden rounded-xl sm:rounded-2xl cursor-pointer group ${
+                index === 0 ? "col-span-2 row-span-2" : ""
               }`}
             >
               <img

@@ -2,11 +2,11 @@ import { NavLink } from "react-router-dom";
 
 export default function NotFound() {
   return (
-    <section className="h-screen flex items-center justify-center bg-muted">
-      <div className="text-center max-w-lg px-6">
+    <section className="h-dvh flex items-center justify-center bg-muted px-4">
+      <div className="text-center max-w-lg">
         {/* Glass Card */}
-        <div className="bg-white/80 backdrop-blur border border-gray-200 rounded-3xl p-12 shadow-2xl">
-          <h1 className="text-7xl md:text-8xl font-bold mb-6 bg-gradient-to-r from-accent to-emerald-400 bg-clip-text text-transparent">
+        <div className="bg-white/80 backdrop-blur border border-gray-200 rounded-2xl sm:rounded-3xl p-8 sm:p-12 shadow-2xl">
+          <h1 className="text-6xl sm:text-7xl md:text-8xl font-bold mb-4 sm:mb-6 bg-gradient-to-r from-accent to-emerald-400 bg-clip-text text-transparent">
             404
           </h1>
 

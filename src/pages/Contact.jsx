@@ -49,111 +49,167 @@ export default function Contact() {
   };
 
   return (
-    <section className="pt-32 pb-24 bg-muted">
-      <div className="max-w-7xl mx-auto px-6">
-        {/* Header */}
-        <div className="max-w-3xl mb-16">
-          <h1 className="text-4xl md:text-5xl font-semibold mb-6">
-            Contact SVARP Foundation
+    <section className="pt-24 sm:pt-32 pb-16 sm:pb-24 bg-muted relative overflow-hidden">
+      {/* Decorative ambient background blur blobs */}
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#9bcf9b]/5 rounded-full blur-3xl pointer-events-none -z-10" />
+      <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-[#1f3b45]/5 rounded-full blur-3xl pointer-events-none -z-10" />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-12">
+        {/* Header Section */}
+        <div className="max-w-3xl">
+          <span className="text-xs sm:text-sm font-semibold tracking-wider text-primary uppercase bg-white px-4 py-1.5 rounded-full inline-block mb-3 sm:mb-4 shadow-sm">
+            Get in Touch
+          </span>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6 text-primary tracking-tight">
+            Connect with SVARP Global
           </h1>
-          <p className="text-lg text-gray-600">
-            Connect with us to learn more about our training programs,
-            certifications, advisory services, and social impact initiatives.
+          <p className="text-base sm:text-lg text-gray-600 leading-relaxed">
+            Have questions about our safety leadership courses, EHS audits, or youth empowerment drives? Let us know how we can assist you.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-12">
-          {/* Contact Details */}
-          <div className="bg-white rounded-3xl p-8 shadow-lg space-y-6">
-            <div>
-              <h3 className="font-semibold text-lg mb-2">Address</h3>
-              <p className="text-gray-700">
-                A-200, Shatabdi Nagar, Sector 2, MDA <br />
-                Meerut, Uttar Pradesh – 250103 <br />
-                India
-              </p>
+        {/* Main Grid: Details (Left) & Form (Right) */}
+        <div className="grid lg:grid-cols-2 gap-8 items-stretch">
+          {/* Left Column: Info Cards Grid */}
+          <div className="flex flex-col justify-between gap-6">
+            {/* Address Card */}
+            <div className="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-gray-100 flex gap-4 items-start hover:shadow-md transition duration-300">
+              <div className="w-12 h-12 rounded-2xl bg-accent/15 flex items-center justify-center text-primary shrink-0">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+              </div>
+              <div className="space-y-1.5">
+                <h3 className="font-extrabold text-primary text-base">Office Address</h3>
+                <p className="text-gray-600 text-sm leading-relaxed">
+                  A-200, Shatabdi Nagar, Sector 2, MDA <br />
+                  Meerut, Uttar Pradesh – 250103 <br />
+                  India
+                </p>
+              </div>
             </div>
 
-            <div>
-              <h3 className="font-semibold text-lg mb-2">Email</h3>
-              <p className="text-gray-700">info@svarp.org</p>
+            {/* Email & Phone Card */}
+            <div className="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-gray-100 flex gap-4 items-start hover:shadow-md transition duration-300">
+              <div className="w-12 h-12 rounded-2xl bg-accent/15 flex items-center justify-center text-primary shrink-0">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.94.725l.548 2.2a1 1 0 01-.321.988l-1.305.98a10.582 10.582 0 004.872 4.872l.98-1.305a1 1 0 01.988-.321l2.2.548a1 1 0 01.725.94V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                </svg>
+              </div>
+              <div className="space-y-2">
+                <h3 className="font-extrabold text-primary text-base">Direct Channels</h3>
+                <div className="flex flex-col gap-1 text-sm text-gray-600">
+                  <div className="flex items-center gap-1.5">
+                    <span className="font-semibold text-primary">Phone:</span>
+                    <a href="tel:+919917759966" className="hover:text-accent transition">+91-9917759966</a>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <span className="font-semibold text-primary">Email:</span>
+                    <a href="mailto:info@svarp.org" className="hover:text-accent transition">info@svarp.org</a>
+                  </div>
+                </div>
+              </div>
             </div>
 
-            <div>
-              <h3 className="font-semibold text-lg mb-2">Phone</h3>
-              <p className="text-gray-700">+91-9917759966</p>
-            </div>
-
-            <div>
-              <h3 className="font-semibold text-lg mb-2">Follow Us</h3>
-              <div className="flex gap-4 text-sm">
-                <a
-                  href="https://www.facebook.com/share/17zG3oSPaT/?mibextid=wwXIfr"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-blue-600 cursor-pointer"
-                >
-                  Facebook
-                </a>
-                <a
-                  href="https://www.instagram.com/svarpfoundation?igsh=NDg0MzFmZmI2ZnI0&utm_source=qr"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-purple-600 cursor-pointer"
-                >
-                  Instagram
-                </a>
-                <span className="hover:text-blue-600 cursor-pointer">
-                  LinkedIn
-                </span>
+            {/* Socials & Hours Card */}
+            <div className="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-gray-100 flex gap-4 items-start hover:shadow-md transition duration-300">
+              <div className="w-12 h-12 rounded-2xl bg-accent/15 flex items-center justify-center text-primary shrink-0">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div className="space-y-3 flex-1">
+                <h3 className="font-extrabold text-primary text-base">Hours & Networking</h3>
+                <p className="text-gray-500 text-xs leading-relaxed">
+                  Monday – Friday: 9:00 AM – 6:00 PM <br />
+                  Saturday: 10:00 AM – 4:00 PM
+                </p>
+                <div className="flex flex-wrap gap-2 pt-2">
+                  <a
+                    href="https://www.facebook.com/share/17zG3oSPaT/?mibextid=wwXIfr"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-muted hover:bg-blue-50 text-gray-600 hover:text-blue-600 px-3.5 py-1.5 rounded-xl text-xs font-bold transition duration-200"
+                  >
+                    Facebook
+                  </a>
+                  <a
+                    href="https://www.instagram.com/svarpfoundation?igsh=NDg0MzFmZmI2ZnI0&utm_source=qr"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-muted hover:bg-purple-50 text-gray-600 hover:text-purple-600 px-3.5 py-1.5 rounded-xl text-xs font-bold transition duration-200"
+                  >
+                    Instagram
+                  </a>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Contact Form */}
-          <form
-            onSubmit={handleSubmit}
-            className="bg-white rounded-3xl p-8 shadow-lg space-y-5"
-          >
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              required
-              placeholder="Full Name"
-              className="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent"
-            />
+          {/* Right Column: Contact Form */}
+          <div className="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-gray-100 flex flex-col justify-center">
+            <h2 className="text-xl font-bold text-primary mb-6">Send Us a Message</h2>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  required
+                  placeholder="Your Full Name"
+                  className="w-full border border-gray-200 bg-slate-50/50 p-3.5 rounded-xl focus:outline-none focus:ring-2 focus:ring-accent focus:bg-white text-sm transition"
+                />
+              </div>
 
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-              placeholder="Email Address"
-              className="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent"
-            />
+              <div>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                  placeholder="Your Email Address"
+                  className="w-full border border-gray-200 bg-slate-50/50 p-3.5 rounded-xl focus:outline-none focus:ring-2 focus:ring-accent focus:bg-white text-sm transition"
+                />
+              </div>
 
-            <textarea
-              name="message"
-              value={formData.message}
-              onChange={handleChange}
-              required
-              placeholder="Your Message"
-              rows="5"
-              className="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent"
-            />
+              <div>
+                <textarea
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
+                  required
+                  placeholder="How can we help you?"
+                  rows="4"
+                  className="w-full border border-gray-200 bg-slate-50/50 p-3.5 rounded-xl focus:outline-none focus:ring-2 focus:ring-accent focus:bg-white text-sm transition"
+                />
+              </div>
 
-            <button
-              type="submit"
-              disabled={loading}
-              className={`bg-accent text-primary px-8 py-3 rounded-full font-medium transition ${loading ? "opacity-70 cursor-not-allowed" : "hover:scale-105"}`}
-            >
-              {loading ? "Sending..." : "Send Message"}
-            </button>
-          </form>
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full sm:w-auto bg-primary text-white hover:bg-accent hover:text-primary border border-transparent px-8 py-3.5 rounded-full font-bold shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-95 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loading ? "Sending..." : "Send Message"}
+              </button>
+            </form>
+          </div>
         </div>
+
+        {/* Full Width Google Map Section */}
+        <div className="bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100 h-80 sm:h-96 relative">
+          <iframe
+            title="SVARP Global Location Map"
+            src="https://maps.google.com/maps?q=Shatabdi%20Nagar,%20Meerut,%20Uttar%20Pradesh&t=&z=14&ie=UTF8&iwloc=&output=embed"
+            className="w-full h-full border-0 grayscale hover:grayscale-0 transition-all duration-500"
+            allowFullScreen=""
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+          ></iframe>
+        </div>
+
       </div>
     </section>
   );

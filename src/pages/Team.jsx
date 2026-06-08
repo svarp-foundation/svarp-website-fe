@@ -1,4 +1,4 @@
-import { 
+import {
     drShilpiBansal,
     preetiChaudhary,
     priyankaVerma,
@@ -16,7 +16,7 @@ export default function Team() {
       img: rajvirSingh,
       name: "Late Mr. Rajvir Singh",
       role: "Former Director",
-      bio: "A distinguished leader with over 40 years of experience in Central Government governance, administration, and public policy. His vision laid the foundation for SVARP Foundation’s values of integrity and service.",
+      bio: "A distinguished leader with over 40 years of experience in Central Government governance, administration, and public policy. His vision laid the foundation for SVARP Global's values of integrity and service.",
     },
     {
       img: santoshSingh,
@@ -58,7 +58,7 @@ export default function Team() {
       img: drShilpiBansal,
       name: "Dr. Shilpi Bansal",
       role: "Project Director",
-      bio: "Dr. Shilpi Bansal, Ph.D. (Environmental Science), brings over 22 years of environmental management and compliance expertise to SVARP Foundation.",
+      bio: "Dr. Shilpi Bansal, Ph.D. (Environmental Science), brings over 22 years of environmental management and compliance expertise to SVARP Global.",
     },
     {
       img: swastikSharma,
@@ -72,38 +72,38 @@ export default function Team() {
     "https://ui-avatars.com/api/?background=9bcf9b&color=1f3b45&size=256";
 
   return (
-    <section className="pt-32 pb-24 bg-white">
-      <div className="max-w-7xl mx-auto px-6">
+    <section className="pt-16 sm:pt-32 pb-16 sm:pb-24 bg-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
         {/* Header */}
-        <div className="max-w-3xl mb-16">
-          <h1 className="text-4xl md:text-5xl font-semibold mb-6">
+        <div className="max-w-3xl mb-10 sm:mb-16">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold mb-4 sm:mb-6">
             Our Team
           </h1>
-          <p className="text-lg text-gray-600">
-            SVARP Foundation is guided by experienced professionals, educators,
+          <p className="text-base sm:text-lg text-gray-600">
+            SVARP Global is guided by experienced professionals, educators,
             and social leaders committed to safety, sustainability, and
             community empowerment.
           </p>
         </div>
 
         {/* Team Grid */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-10">
           {team.map((member) => (
             <div
               key={member.name}
-              className="group bg-muted rounded-3xl p-8 shadow-lg hover:shadow-2xl transition"
+              className="group bg-muted rounded-2xl sm:rounded-3xl p-6 sm:p-8 shadow-lg hover:shadow-2xl transition"
             >
               <img
                 src={member.img || defaultImg}
                 alt={member.name}
-                className="w-24 h-24 rounded-xl object-cover mb-6 border border-gray-300"
+                className="w-20 h-20 sm:w-24 sm:h-24 rounded-xl object-cover mb-4 sm:mb-6 border border-gray-300"
               />
 
-              <h3 className="text-xl font-semibold mb-1">
+              <h3 className="text-lg sm:text-xl font-semibold mb-1">
                 {member.name}
               </h3>
 
-              <p className="text-sm text-accent font-medium mb-4">
+              <p className="text-sm text-accent font-medium mb-3 sm:mb-4">
                 {member.role}
               </p>
 
@@ -115,14 +115,14 @@ export default function Team() {
         </div>
 
         {/* Values Strip */}
-        <div className="mt-20 bg-muted rounded-3xl p-10 text-center">
-          <p className="text-lg text-gray-700 max-w-4xl mx-auto">
+        <div className="mt-12 sm:mt-20 bg-muted rounded-2xl sm:rounded-3xl p-6 sm:p-10 text-center">
+          <p className="text-base sm:text-lg text-gray-700 max-w-4xl mx-auto">
             Our team brings together expertise in education, safety leadership,
             sustainability, wellness, and social development to create
             meaningful, measurable impact across industries and communities.
           </p>
 
-          <p className="mt-6 text-accent font-script text-3xl">
+          <p className="mt-4 sm:mt-6 text-accent font-script text-2xl sm:text-3xl">
             leadership with purpose
           </p>
         </div>

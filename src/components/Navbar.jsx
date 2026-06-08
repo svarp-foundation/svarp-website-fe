@@ -68,14 +68,14 @@ export default function Navbar() {
             <div className="relative">
               <img
                 src="/company/svarp-logo.webp"
-                alt="SVARP Foundation"
+                alt="SVARP Global"
                 className="h-12 max-md:h-10 w-auto object-contain transition-transform duration-500 group-hover:scale-110"
               />
               <div className="absolute inset-0 bg-accent/20 blur-xl rounded-full -z-10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
             </div>
             <div className="flex flex-col leading-tight">
               <span className="text-xl tracking-wider">SVARP</span>
-              <span className="text-[10px] text-accent tracking-[0.2em] font-medium">FOUNDATION</span>
+              <span className="text-[10px] text-accent tracking-[0.2em] font-medium">GLOBAL</span>
             </div>
           </NavLink>
 
@@ -125,9 +125,14 @@ export default function Navbar() {
               )
             ))}
             
-            <NavLink to="https://globalacademy.svarp.org/" target="_blank" className={linkClass}>
+            <a
+              href="https://globalacademy.svarp.org/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="relative transition hover:text-accent after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:bg-accent after:transition-all text-center flex items-center gap-1 after:w-0"
+            >
               Courses
-            </NavLink>
+            </a>
 
             <NavLink
               to="/donate"
@@ -224,32 +229,32 @@ export default function Navbar() {
       </div>
 
       {/* Mobile Menu */}
-      <div className={`lg:hidden fixed inset-x-0 top-[72px] bg-zinc-950/95 backdrop-blur-2xl border-t border-white/10 transition-all duration-500 overflow-hidden ${open ? "max-h-screen opacity-100" : "max-h-0 opacity-0"}`}>
-        <div className="px-6 py-8 space-y-2 text-white overflow-y-auto max-h-[calc(100vh-80px)]">
+      <div className={`lg:hidden fixed inset-x-0 top-[64px] sm:top-[72px] bottom-0 bg-zinc-950/95 backdrop-blur-2xl border-t border-white/10 transition-all duration-500 overflow-hidden ${open ? "opacity-100 visible" : "opacity-0 invisible pointer-events-none"}`}>
+        <div className="px-4 py-4 space-y-1.5 text-white overflow-y-auto h-full pb-[env(safe-area-inset-bottom,20px)]">
           {menuItems.map((item) => (
-            <div key={item.name} className="border-b border-white/5 last:border-0 pb-2">
+            <div key={item.name} className="border-b border-white/5 last:border-0 pb-1">
               {item.submenu ? (
                 <>
                   <button
                     onClick={() => setActiveDropdown(activeDropdown === item.name ? null : item.name)}
-                    className="w-full flex items-center justify-between py-3 text-lg font-medium text-white/90 hover:text-accent"
+                    className="w-full flex items-center justify-between py-2 text-sm font-semibold text-white/90 hover:text-accent"
                   >
                     {item.name}
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 20 20"
                       fill="currentColor"
-                      className={`w-5 h-5 transition-transform duration-300 ${activeDropdown === item.name ? "rotate-180" : ""}`}
+                      className={`w-4 h-4 transition-transform duration-300 ${activeDropdown === item.name ? "rotate-180" : ""}`}
                     >
                       <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clipRule="evenodd" />
                     </svg>
                   </button>
-                  <div className={`pl-4 space-y-1 transition-all duration-300 overflow-hidden ${activeDropdown === item.name ? "max-h-96 opacity-100 mt-1 mb-4" : "max-h-0 opacity-0"}`}>
+                  <div className={`pl-4 space-y-0.5 transition-all duration-300 overflow-hidden ${activeDropdown === item.name ? "max-h-96 opacity-100 mt-0.5 mb-2" : "max-h-0 opacity-0"}`}>
                     {item.submenu.map((sub) => (
                       <NavLink
                         key={sub.path}
                         to={sub.path}
-                        className={({ isActive }) => `block py-2 text-[15px] ${isActive ? "text-accent" : "text-white/60"}`}
+                        className={({ isActive }) => `block py-1 text-xs ${isActive ? "text-accent" : "text-white/60"}`}
                       >
                         {sub.name}
                       </NavLink>
@@ -259,7 +264,7 @@ export default function Navbar() {
               ) : (
                 <NavLink
                   to={item.path}
-                  className={({ isActive }) => `block py-3 text-lg font-medium ${isActive ? "text-accent" : "text-white/90"}`}
+                  className={({ isActive }) => `block py-2 text-sm font-semibold ${isActive ? "text-accent" : "text-white/90"}`}
                 >
                   {item.name}
                 </NavLink>
@@ -267,18 +272,19 @@ export default function Navbar() {
             </div>
           ))}
 
-          <NavLink
-            to="https://globalacademy.svarp.org/"
+          <a
+            href="https://globalacademy.svarp.org/"
             target="_blank"
-            className="block py-3 text-lg font-medium text-white/90"
+            rel="noopener noreferrer"
+            className="block py-2 text-sm font-semibold text-white/90 hover:text-accent transition-colors"
           >
             Courses
-          </NavLink>
+          </a>
 
-          <div className="pt-6 flex flex-col gap-4">
+          <div className="pt-4 flex flex-col gap-2.5">
             <NavLink
               to="/donate"
-              className="w-full bg-green-600 text-white px-6 py-3 rounded-xl text-center font-bold shadow-lg shadow-green-900/20"
+              className="w-full bg-green-600 text-white px-4 py-2.5 rounded-xl text-center text-xs font-bold shadow-lg shadow-green-900/20"
             >
               Donate Now
             </NavLink>
@@ -286,7 +292,7 @@ export default function Navbar() {
             {!user && (
               <NavLink
                 to="/login"
-                className="w-full bg-accent text-primary px-6 py-3 rounded-xl text-center font-bold"
+                className="w-full bg-accent text-primary px-4 py-2.5 rounded-xl text-center text-xs font-bold"
               >
                 Login
               </NavLink>

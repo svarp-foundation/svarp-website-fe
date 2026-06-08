@@ -213,22 +213,22 @@ export default function Membership() {
   ];
 
   return (
-    <section className="pt-32 pb-24 bg-muted">
-      <div className="max-w-7xl mx-auto px-6">
+    <section className="pt-24 sm:pt-32 pb-16 sm:pb-24 bg-muted">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
         {/* Header */}
-        <div className="max-w-3xl mb-16">
-          <h1 className="text-4xl md:text-5xl font-semibold mb-6">
+        <div className="max-w-3xl mb-10 sm:mb-16">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold mb-4 sm:mb-6">
             Membership
           </h1>
-          <p className="text-lg text-gray-600">
-            SVARP Foundation membership connects individuals, organizations, and
+          <p className="text-base sm:text-lg text-gray-600">
+            SVARP Global membership connects individuals, organizations, and
             institutions to a credible network focused on safety,
             sustainability, professional excellence, and social impact.
           </p>
         </div>
 
         {/* Membership Plans */}
-        <div className="grid md:grid-cols-2 gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-10">
           {plans.map((plan) => {
             const currentMembership = user?.membership?.is_active
               ? user.membership
@@ -257,44 +257,67 @@ export default function Membership() {
             return (
               <div
                 key={plan.title}
-                className={`rounded-3xl p-8 shadow-lg transition ${
+                className={`rounded-2xl sm:rounded-3xl p-6 sm:p-8 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between ${
                   plan.highlight
-                    ? "bg-primary text-white scale-105"
-                    : "bg-white"
+                    ? "bg-gradient-to-br from-primary to-primary-dark text-white md:scale-105 ring-4 ring-accent/30"
+                    : "bg-white border border-gray-100"
                 }`}
               >
-                <h3 className="text-xl font-semibold mb-4">{plan.title}</h3>
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-lg sm:text-xl font-bold">{plan.title.split("–")[0].trim()}</h3>
+                    {plan.highlight && (
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-primary bg-accent px-2.5 py-1 rounded-md">
+                        Best Value
+                      </span>
+                    )}
+                  </div>
 
-                <p
-                  className={`text-sm leading-relaxed mb-6 ${
-                    plan.highlight ? "opacity-90" : "text-gray-600"
-                  }`}
-                >
-                  {plan.desc}
-                </p>
+                  <p
+                    className={`text-sm leading-relaxed mb-6 font-medium ${
+                      plan.highlight ? "text-white/90" : "text-gray-500"
+                    }`}
+                  >
+                    {plan.desc}
+                  </p>
 
-                <ul className="space-y-3 text-sm mb-8">
-                  {plan.benefits.map((b) => (
-                    <li key={b} className="flex items-start gap-2">
-                      <span className="text-accent">✔</span>
-                      <span>{b}</span>
-                    </li>
-                  ))}
-                </ul>
+                  <div className="text-2xl sm:text-3xl font-extrabold mb-6 flex items-baseline gap-1">
+                    {plan.price === 250000 ? (
+                      <span className="text-xl">from ₹2,50,000<span className="text-sm font-semibold">/year</span></span>
+                    ) : plan.price === 25000 ? (
+                      <span>₹25,000<span className="text-sm font-semibold"> (one-time)</span></span>
+                    ) : plan.price === 5000 ? (
+                      <span>₹5,000<span className="text-sm font-semibold">/year</span></span>
+                    ) : (
+                      <span>₹1,000<span className="text-sm font-semibold">/year</span></span>
+                    )}
+                  </div>
+
+                  <ul className="space-y-3 text-sm mb-8">
+                    {plan.benefits.map((b) => (
+                      <li key={b} className="flex items-start gap-2.5">
+                        <svg className={`w-4 h-4 flex-shrink-0 mt-0.5 ${plan.highlight ? "text-accent" : "text-primary"}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span className={plan.highlight ? "text-white/90" : "text-gray-700"}>{b}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
 
                 <button
                   onClick={() =>
                     handleSubscribe(plan.title, plan.price, plan.id)
                   }
                   disabled={isDisabled}
-                  className={`w-full py-3 rounded-full font-medium transition ${
+                  className={`w-full py-3.5 rounded-full font-bold transition-all duration-300 shadow-sm hover:shadow-md hover:scale-[1.02] active:scale-95 ${
                     isDisabled
                       ? plan.highlight
                         ? "bg-gray-400 text-gray-200 cursor-not-allowed opacity-80"
                         : "bg-gray-200 text-gray-500 cursor-not-allowed"
                       : plan.highlight
-                        ? "bg-accent text-primary hover:scale-105"
-                        : "bg-primary text-white hover:opacity-90"
+                        ? "bg-accent text-primary hover:bg-white hover:text-primary"
+                        : "bg-primary text-white hover:bg-accent hover:text-primary"
                   }`}
                 >
                   {buttonText}
@@ -304,7 +327,8 @@ export default function Membership() {
           })}
         </div>
 
-        <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white mt-24">
+        <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white mt-16 sm:mt-24 -mx-4 sm:mx-0">
+          <div className="sm:hidden text-xs text-gray-400 text-center mb-2 px-4">← Scroll to see all plans →</div>
           <table className="min-w-full border-collapse text-sm">
             {/* HEADER */}
             <thead>
@@ -345,30 +369,30 @@ export default function Membership() {
         </div>
 
         {/* Why Join */}
-        <div className="mt-24 bg-white rounded-3xl p-12 shadow-lg text-center">
-          <h2 className="text-3xl font-semibold mb-6">
-            Why Join SVARP Foundation?
+        <div className="mt-16 sm:mt-24 bg-white rounded-2xl sm:rounded-3xl p-6 sm:p-12 shadow-lg text-center">
+          <h2 className="text-2xl sm:text-3xl font-semibold mb-4 sm:mb-6">
+            Why Join SVARP Global?
           </h2>
 
-          <p className="text-gray-700 max-w-4xl mx-auto leading-relaxed mb-8">
+          <p className="text-gray-700 max-w-4xl mx-auto leading-relaxed mb-6 sm:mb-8 text-sm sm:text-base">
             As a SVARP member, you become part of a credible, impact-driven
             network committed to building safer workplaces, sustainable
             practices, and empowered communities through collaboration,
             innovation, and professional excellence.
           </p>
 
-          <p className="text-accent font-script text-3xl">
+          <p className="text-accent font-script text-2xl sm:text-3xl">
             together for a safer tomorrow
           </p>
         </div>
 
         {/* CTA */}
-        <div className="mt-20 text-center">
-          <p className="text-gray-700 text-lg mb-6">
+        <div className="mt-14 sm:mt-20 text-center">
+          <p className="text-gray-700 text-base sm:text-lg mb-4 sm:mb-6">
             Ready to become a member and create meaningful impact?
           </p>
 
-          <button className="bg-accent text-primary px-10 py-3 rounded-full font-medium hover:scale-105 transition">
+          <button className="w-full sm:w-auto bg-accent text-primary px-10 py-3 rounded-full font-medium hover:scale-105 transition">
             Get Started
           </button>
         </div>

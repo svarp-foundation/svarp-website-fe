@@ -35,14 +35,14 @@ const AdminLogin = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-muted font-sans p-5">
+    <div className="min-h-dvh flex items-center justify-center bg-muted font-sans p-5">
       <div className="w-full max-w-md bg-white rounded-3xl p-10 border border-slate-200 shadow-xl">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-extrabold mb-2 text-accent">
             Admin Portal
           </h1>
           <p className="text-slate-500 text-sm">
-            Sign in to manage SVARP Foundation
+            Sign in to manage SVARP Global
           </p>
         </div>
 
