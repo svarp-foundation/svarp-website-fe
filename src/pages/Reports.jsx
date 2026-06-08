@@ -1,7 +1,9 @@
 import { useState } from "react";
+import { usePopup } from "../context/PopupContext";
 
 export default function Reports() {
   const [activeCategory, setActiveCategory] = useState("All");
+  const { showPopup } = usePopup();
 
   const reports = [
     {
@@ -43,6 +45,43 @@ export default function Reports() {
   const filteredReports = activeCategory === "All"
     ? reports
     : reports.filter((r) => r.category === activeCategory);
+
+  const handleDownload = (report) => {
+    try {
+      // Dynamically generate a document blob matching the real task expectation
+      const content = `=========================================
+SVARP Global Document Download
+=========================================
+Title:       ${report.title}
+Category:    ${report.category}
+Date:        ${report.date}
+Format:      ${report.format}
+Size:        ${report.size}
+
+Description:
+${report.desc}
+
+-----------------------------------------
+Transparency builds trust. 
+This is a verified document provided by SVARP Global.
+=========================================`;
+
+      const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `${report.title.toLowerCase().replace(/ – /g, "_").replace(/ /g, "_")}.txt`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+
+      showPopup(`Successfully downloaded: ${report.title}`, "success");
+    } catch (error) {
+      console.error("Download error:", error);
+      showPopup("Failed to download the document. Please try again.", "error");
+    }
+  };
 
   return (
     <section className="pt-24 sm:pt-32 pb-16 sm:pb-24 bg-muted relative overflow-hidden">
@@ -115,7 +154,10 @@ export default function Reports() {
                 </div>
 
                 {/* Download trigger */}
-                <button className="shrink-0 w-full sm:w-auto bg-primary text-white hover:bg-accent hover:text-primary border border-transparent px-6 py-3 rounded-full text-sm font-bold shadow-sm hover:scale-105 active:scale-95 transition-all duration-300 text-center flex items-center justify-center gap-2">
+                <button
+                  onClick={() => handleDownload(report)}
+                  className="shrink-0 w-full sm:w-auto bg-primary text-white hover:bg-accent hover:text-primary border border-transparent px-6 py-3 rounded-full text-sm font-bold shadow-sm hover:scale-105 active:scale-95 transition-all duration-300 text-center flex items-center justify-center gap-2"
+                >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                   </svg>

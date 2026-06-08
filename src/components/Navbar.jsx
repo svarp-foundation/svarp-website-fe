@@ -8,8 +8,8 @@ const linkClass = ({ isActive }) =>
   } after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:bg-accent after:transition-all text-center flex items-center gap-1`;
 
 const dropdownItemClass = ({ isActive }) =>
-  `block px-4 py-2 text-sm transition-colors ${
-    isActive ? "text-accent bg-white/5" : "text-white hover:text-accent hover:bg-white/5"
+  `block px-4 py-2 text-xs transition-colors ${
+    isActive ? "text-accent bg-white/5" : "text-slate-300 hover:text-accent hover:bg-white/5"
   }`;
 
 export default function Navbar() {
@@ -24,6 +24,7 @@ export default function Navbar() {
   }, [location]);
 
   const menuItems = [
+    { name: "Home", path: "/" },
     {
       name: "About",
       submenu: [
@@ -49,6 +50,7 @@ export default function Navbar() {
         { name: "Reports", path: "/reports" },
       ],
     },
+    { name: "Courses", path: "https://globalacademy.svarp.org/" },
     { name: "Contact", path: "/contact" },
   ];
 
@@ -57,9 +59,9 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="fixed top-0 w-full z-50">
+    <nav className="fixed top-0 left-0 right-0 z-50">
       <div className="bg-black/60 backdrop-blur-xl border-b border-white/10 shadow-2xl">
-        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+        <div className="w-full max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
           {/* Logo */}
           <NavLink
             to="/"
@@ -80,7 +82,7 @@ export default function Navbar() {
           </NavLink>
 
           {/* Desktop Menu */}
-          <div className="hidden lg:flex items-center gap-8 text-[13px] font-medium uppercase tracking-wider text-white">
+          <div className="hidden lg:flex items-center gap-3 xl:gap-6 text-[11px] xl:text-[12px] font-semibold uppercase tracking-wider text-white">
             {menuItems.map((item) => (
               item.submenu ? (
                 <div key={item.name} className="relative group py-2">
@@ -94,7 +96,7 @@ export default function Navbar() {
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 20 20"
                       fill="currentColor"
-                      className="w-4 h-4 transition-transform group-hover:rotate-180"
+                      className="w-3.5 h-3.5 transition-transform group-hover:rotate-180"
                     >
                       <path
                         fillRule="evenodd"
@@ -105,7 +107,7 @@ export default function Navbar() {
                   </button>
                   {/* Dropdown Menu */}
                   <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform group-hover:translate-y-0 translate-y-2">
-                    <div className="bg-zinc-900/95 backdrop-blur-2xl border border-white/10 rounded-xl overflow-hidden min-w-[200px] shadow-2xl">
+                    <div className="bg-zinc-900/95 backdrop-blur-2xl border border-white/10 rounded-xl overflow-hidden min-w-[180px] shadow-2xl">
                       {item.submenu.map((sub) => (
                         <NavLink
                           key={sub.path}
@@ -124,22 +126,7 @@ export default function Navbar() {
                 </NavLink>
               )
             ))}
-            
-            <a
-              href="https://globalacademy.svarp.org/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="relative transition hover:text-accent after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:bg-accent after:transition-all text-center flex items-center gap-1 after:w-0"
-            >
-              Courses
-            </a>
 
-            <NavLink
-              to="/donate"
-              className="bg-green-600/20 text-green-400 border border-green-500/30 px-6 py-2 rounded-full font-bold hover:bg-green-600 hover:text-white transition-all duration-300 shadow-[0_0_15px_rgba(34,197,94,0.2)]"
-            >
-              Donate
-            </NavLink>
 
             {user ? (
               <NavLink
@@ -147,7 +134,7 @@ export default function Navbar() {
                 className="relative group flex items-center justify-center"
                 title="Dashboard"
               >
-                <div className="w-10 h-10 rounded-full border-2 border-accent/30 p-0.5 group-hover:border-accent transition-all duration-300 overflow-hidden bg-zinc-800">
+                <div className="w-9 h-9 rounded-full border-2 border-accent/30 p-0.5 group-hover:border-accent transition-all duration-300 overflow-hidden bg-zinc-800">
                   {user.profile_picture_path ? (
                     <img
                       src={`${import.meta.env.VITE_API_BASE_URL}${user.profile_picture_path}`}
@@ -173,12 +160,20 @@ export default function Navbar() {
                 </div>
               </NavLink>
             ) : (
-              <NavLink
-                to="/login"
-                className="bg-accent text-primary px-6 py-2 rounded-full font-bold hover:scale-105 active:scale-95 transition-all shadow-lg shadow-accent/20"
-              >
-                Login
-              </NavLink>
+              <div className="flex items-center gap-3">
+                <NavLink
+                  to="/login"
+                  className="bg-accent text-primary px-4 py-1.5 rounded-full font-bold hover:scale-105 active:scale-95 transition-all shadow-lg shadow-accent/10 text-[11px]"
+                >
+                  Login
+                </NavLink>
+                <NavLink
+                  to="/register"
+                  className="text-white hover:text-accent font-semibold text-[11px] transition"
+                >
+                  Register
+                </NavLink>
+              </div>
             )}
           </div>
 
@@ -272,30 +267,23 @@ export default function Navbar() {
             </div>
           ))}
 
-          <a
-            href="https://globalacademy.svarp.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block py-2 text-sm font-semibold text-white/90 hover:text-accent transition-colors"
-          >
-            Courses
-          </a>
-
           <div className="pt-4 flex flex-col gap-2.5">
-            <NavLink
-              to="/donate"
-              className="w-full bg-green-600 text-white px-4 py-2.5 rounded-xl text-center text-xs font-bold shadow-lg shadow-green-900/20"
-            >
-              Donate Now
-            </NavLink>
 
             {!user && (
-              <NavLink
-                to="/login"
-                className="w-full bg-accent text-primary px-4 py-2.5 rounded-xl text-center text-xs font-bold"
-              >
-                Login
-              </NavLink>
+              <>
+                <NavLink
+                  to="/login"
+                  className="w-full bg-accent text-primary px-4 py-2.5 rounded-xl text-center text-xs font-bold"
+                >
+                  Login
+                </NavLink>
+                <NavLink
+                  to="/register"
+                  className="w-full bg-white/10 text-white border border-white/10 px-4 py-2.5 rounded-xl text-center text-xs font-bold"
+                >
+                  Register
+                </NavLink>
+              </>
             )}
           </div>
         </div>

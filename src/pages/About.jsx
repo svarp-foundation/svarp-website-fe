@@ -2,7 +2,7 @@ import Team from "./Team";
 
 export default function About({ showTeam = true }) {
   return (
-    <section className="pt-12 sm:pt-16 pb-12 sm:pb-16 bg-white">
+    <section className={`pb-12 sm:pb-16 bg-white ${showTeam ? "pt-24 sm:pt-32" : "pt-12 sm:pt-16"}`}>
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         {/* Header */}
         <div className="max-w-3xl mb-10 sm:mb-16">

@@ -33,7 +33,10 @@ export default function WhatWeDo() {
   ];
 
   return (
-    <section className="py-12 sm:py-16 bg-white">
+    <section className="py-12 sm:py-16 bg-muted relative overflow-hidden">
+      {/* Decorative Brand Ambient Glow */}
+      <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-[#9bcf9b]/5 rounded-full blur-3xl pointer-events-none -z-10" />
+      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-[#1f3b45]/5 rounded-full blur-3xl pointer-events-none -z-10" />
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         {/* Header */}
         <div className="max-w-3xl mb-10 sm:mb-16">

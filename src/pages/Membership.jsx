@@ -392,7 +392,10 @@ export default function Membership() {
             Ready to become a member and create meaningful impact?
           </p>
 
-          <button className="w-full sm:w-auto bg-accent text-primary px-10 py-3 rounded-full font-medium hover:scale-105 transition">
+          <button
+            onClick={() => window.scrollTo({ top: 200, behavior: 'smooth' })}
+            className="w-full sm:w-auto bg-accent text-primary px-10 py-3 rounded-full font-bold hover:scale-105 active:scale-95 transition shadow-lg shadow-accent/10"
+          >
             Get Started
           </button>
         </div>

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
+import { NavLink } from "react-router-dom";
 
-export default function Stories() {
+export default function Stories({ isStandalone = false }) {
   const stories = [
     {
       name: "Ravi Malhotra",
@@ -49,8 +50,11 @@ export default function Stories() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [visibleCount, setVisibleCount] = useState(3);
   const [isHovered, setIsHovered] = useState(false);
-  const [touchStartX, setTouchStartX] = useState(null);
-  const [touchEndX, setTouchEndX] = useState(null);
+
+  // Dragging / Swiping State
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [dragDistance, setDragDistance] = useState(0);
 
   // Responsive logic to handle visible cards based on screen size
   useEffect(() => {
@@ -98,25 +102,60 @@ export default function Stories() {
   };
 
   // Swipe gesture handlers for mobile devices
+  const startDrag = (clientX) => {
+    setIsDragging(true);
+    setStartX(clientX);
+    setDragDistance(0);
+  };
+
+  const moveDrag = (clientX) => {
+    if (!isDragging) return;
+    setDragDistance(startX - clientX);
+  };
+
+  const endDrag = () => {
+    if (!isDragging) return;
+    setIsDragging(false);
+    const minDragDistance = 50;
+
+    if (dragDistance > minDragDistance) {
+      handleNext();
+    } else if (dragDistance < -minDragDistance) {
+      handlePrev();
+    }
+    setDragDistance(0);
+  };
+
+  const handleMouseDown = (e) => {
+    if (e.button !== 0) return; // Left click only
+    startDrag(e.clientX);
+  };
+
+  const handleMouseMove = (e) => {
+    moveDrag(e.clientX);
+  };
+
+  const handleMouseUp = () => {
+    endDrag();
+  };
+
+  const handleMouseLeave = () => {
+    if (isDragging) {
+      setIsDragging(false);
+      setDragDistance(0);
+    }
+  };
+
   const handleTouchStart = (e) => {
-    setTouchEndX(null);
-    setTouchStartX(e.targetTouches[0].clientX);
+    startDrag(e.touches[0].clientX);
   };
 
   const handleTouchMove = (e) => {
-    setTouchEndX(e.targetTouches[0].clientX);
+    moveDrag(e.touches[0].clientX);
   };
 
   const handleTouchEnd = () => {
-    if (!touchStartX || !touchEndX) return;
-    const distance = touchStartX - touchEndX;
-    const minSwipeDistance = 50;
-
-    if (distance > minSwipeDistance) {
-      handleNext();
-    } else if (distance < -minSwipeDistance) {
-      handlePrev();
-    }
+    endDrag();
   };
 
   // Get initials for profile placeholder
@@ -133,7 +172,7 @@ export default function Stories() {
   const totalDots = maxIndex + 1;
 
   return (
-    <section className="pt-12 sm:pt-16 pb-12 sm:pb-16 bg-white relative overflow-hidden">
+    <section className={`pb-12 sm:pb-16 bg-white relative overflow-hidden ${isStandalone ? "pt-24 sm:pt-32" : "pt-12 sm:pt-16"}`}>
       {/* Decorative premium background blobs */}
       <div className="absolute top-1/4 right-0 w-80 h-80 bg-[#9bcf9b]/10 rounded-full blur-3xl pointer-events-none -z-10" />
       <div className="absolute bottom-1/4 left-0 w-96 h-96 bg-[#1f3b45]/5 rounded-full blur-3xl pointer-events-none -z-10" />
@@ -180,9 +219,15 @@ export default function Stories() {
 
         {/* Carousel Container */}
         <div
-          className="relative px-1"
+          className="relative px-1 select-none cursor-grab active:cursor-grabbing"
           onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
+          onMouseLeave={() => {
+            setIsHovered(false);
+            handleMouseLeave();
+          }}
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
@@ -191,9 +236,9 @@ export default function Stories() {
           <div className="overflow-hidden">
             {/* Slider Track */}
             <div
-              className="flex transition-transform duration-500 ease-out"
+              className={`flex ${isDragging ? "transition-none" : "transition-transform duration-500 ease-out"}`}
               style={{
-                transform: `translateX(-${currentIndex * (100 / visibleCount)}%)`,
+                transform: `translate3d(calc(-${currentIndex * (100 / visibleCount)}% - ${dragDistance}px), 0px, 0px)`,
               }}
             >
               {stories.map((s, i) => (
@@ -309,9 +354,12 @@ export default function Stories() {
             futures with SVARP Global.
           </p>
 
-          <button className="w-full sm:w-auto bg-primary text-white border border-transparent hover:bg-white hover:text-primary hover:border-primary px-8 py-3.5 rounded-full font-medium shadow-md hover:shadow-lg transition-all duration-300 hover:scale-[1.02] active:scale-95">
+          <NavLink
+            to="/contact"
+            className="inline-block w-full sm:w-auto bg-primary text-white border border-transparent hover:bg-white hover:text-primary hover:border-primary px-8 py-3.5 rounded-full font-medium shadow-md hover:shadow-lg transition-all duration-300 hover:scale-[1.02] active:scale-95"
+          >
             Partner with SVARP
-          </button>
+          </NavLink>
         </div>
       </div>
     </section>

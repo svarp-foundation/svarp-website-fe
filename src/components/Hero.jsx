@@ -52,10 +52,10 @@ export default function Hero() {
               </NavLink>
 
               <NavLink
-                to="/certifications"
+                to="/donate"
                 className="w-full sm:w-auto border border-white/40 text-white px-7 py-3 rounded-full hover:bg-white/10 transition text-center text-sm sm:text-base"
               >
-                Get Certified
+                Donate
               </NavLink>
             </div>
           </div>

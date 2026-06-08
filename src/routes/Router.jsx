@@ -39,11 +39,11 @@ export default function Router() {
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/projects" element={<Projects />} />
-        <Route path="/stories" element={<Stories />} />
+        <Route path="/stories" element={<Stories isStandalone={true} />} />
         <Route path="/reports" element={<Reports />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/careers" element={<Careers />} />
-        <Route path="/team" element={<Team />} />
+        <Route path="/team" element={<Team isStandalone={true} />} />
         <Route path="/certifications" element={<Certifications />} />
         <Route path="/membership" element={<Membership />} />
         <Route path="/not-found" element={<NotFound />} />
