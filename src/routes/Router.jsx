@@ -19,6 +19,7 @@ import Dashboard from "../pages/Dashboard";
 import Payment from "../pages/Payment";
 import Donation from "../pages/Donation";
 import Careers from "../pages/Careers";
+import JobDetails from "../pages/JobDetails";
 import UnderDevelopment from "../pages/UnderDevelopment";
 
 // Admin Pages
@@ -43,6 +44,7 @@ export default function Router() {
         <Route path="/reports" element={<Reports />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/careers" element={<Careers />} />
+        <Route path="/careers/:jobId" element={<JobDetails />} />
         <Route path="/team" element={<Team isStandalone={true} />} />
         <Route path="/certifications" element={<Certifications />} />
         <Route path="/membership" element={<Membership />} />

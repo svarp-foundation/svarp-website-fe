@@ -101,7 +101,7 @@ export default function Membership() {
 
   const columns = [
     { key: "feature", label: "Features" },
-    { key: "lifetime", label: "Lifetime 🏆" },
+    { key: "lifetime", label: "Lifetime" },
     { key: "yearly", label: "Yearly" },
     { key: "student", label: "Student" },
     { key: "corporate", label: "Corporate" },
@@ -334,7 +334,13 @@ export default function Membership() {
                           : "text-center"
                       }`}
                     >
-                      {row[col.key]}
+                      {row[col.key] === "✅" ? (
+                        <span className="text-emerald-500 font-bold text-base">✓</span>
+                      ) : row[col.key] === "❌" ? (
+                        <span className="text-slate-300 text-base">—</span>
+                      ) : (
+                        row[col.key]
+                      )}
                     </td>
                   ))}
                 </tr>

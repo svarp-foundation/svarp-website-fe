@@ -258,8 +258,8 @@ const AdminMemberships = () => {
                           className={`${user.membership ? "text-primary hover:text-accent" : "bg-accent text-primary px-4 py-1.5 rounded-lg hover:shadow-lg hover:shadow-accent/20"} font-bold text-xs active:scale-95 transition-all outline-none flex items-center gap-1`}
                         >
                           {user.membership
-                            ? "🔄 Change Plan"
-                            : "➕ Assign Membership"}
+                            ? "Change Plan"
+                            : "Assign Membership"}
                         </button>
                       </div>
                     </td>
@@ -315,7 +315,7 @@ const AdminMemberships = () => {
                 onClick={() => setEditingPlan(plan)}
                 className="w-full bg-slate-900 text-white py-2.5 rounded-xl text-xs font-bold hover:bg-primary transition-all active:scale-[0.98]"
               >
-                ✏️ Edit Plan Details
+                Edit Plan Details
               </button>
             </div>
           ))}
