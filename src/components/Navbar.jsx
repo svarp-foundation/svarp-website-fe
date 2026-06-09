@@ -75,9 +75,9 @@ export default function Navbar() {
               />
               <div className="absolute inset-0 bg-accent/20 blur-xl rounded-full -z-10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
             </div>
-            <div className="flex flex-col leading-tight">
+            <div className="flex gap-1">
               <span className="text-xl tracking-wider">SVARP</span>
-              <span className="text-[10px] text-accent tracking-[0.2em] font-medium">GLOBAL</span>
+              <span className="text-xl tracking-wider text-accent">GLOBAL</span>
             </div>
           </NavLink>
 
@@ -120,6 +120,16 @@ export default function Navbar() {
                     </div>
                   </div>
                 </div>
+              ) : item.path.startsWith("http") ? (
+                <a
+                  key={item.path}
+                  href={item.path}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="relative text-white transition hover:text-white text-center flex items-center gap-1"
+                >
+                  {item.name}
+                </a>
               ) : (
                 <NavLink key={item.path} to={item.path} className={linkClass}>
                   {item.name}
@@ -163,13 +173,13 @@ export default function Navbar() {
               <div className="flex items-center gap-3">
                 <NavLink
                   to="/login"
-                  className="bg-accent text-primary px-4 py-1.5 rounded-full font-bold hover:scale-105 active:scale-95 transition-all shadow-lg shadow-accent/10 text-[11px]"
+                  className="border border-white/20 text-white hover:border-accent hover:text-accent px-4 py-1.5 rounded-full font-semibold transition text-[11px] hover:scale-105 active:scale-95"
                 >
                   Login
                 </NavLink>
                 <NavLink
                   to="/register"
-                  className="text-white hover:text-accent font-semibold text-[11px] transition"
+                  className="bg-accent text-primary px-4 py-1.5 rounded-full font-bold hover:scale-105 active:scale-95 transition-all shadow-lg shadow-accent/10 text-[11px]"
                 >
                   Register
                 </NavLink>
@@ -256,6 +266,15 @@ export default function Navbar() {
                     ))}
                   </div>
                 </>
+              ) : item.path.startsWith("http") ? (
+                <a
+                  href={item.path}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block py-2 text-sm font-semibold text-white transition hover:text-white"
+                >
+                  {item.name}
+                </a>
               ) : (
                 <NavLink
                   to={item.path}

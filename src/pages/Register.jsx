@@ -51,9 +51,9 @@ const Register = () => {
               alt="SVARP Global"
               className="h-12 w-auto object-contain drop-shadow-[0_0_8px_rgba(255,255,255,0.3)] transition-transform duration-500 group-hover:scale-105"
             />
-            <div className="flex flex-col leading-tight">
-              <span className="text-xl font-bold tracking-wider">SVARP</span>
-              <span className="text-[10px] text-accent tracking-[0.2em] font-bold">GLOBAL</span>
+            <div className="flex flex-col justify-center">
+              <span className="text-xl font-extrabold tracking-wide text-white leading-none">SVARP</span>
+              <span className="text-[9px] font-black text-accent tracking-[0.3em] mt-0.5">GLOBAL</span>
             </div>
           </Link>
         </div>
@@ -94,8 +94,8 @@ const Register = () => {
               />
             </Link>
             <div className="text-center">
-              <h1 className="text-xl font-bold text-white tracking-wider">SVARP GLOBAL</h1>
-              <p className="text-[10px] text-accent tracking-[0.2em] font-semibold uppercase">Safety • Sustainability</p>
+              <h1 className="text-xl font-extrabold text-white tracking-wide leading-none">SVARP</h1>
+              <p className="text-[9px] font-black text-accent tracking-[0.3em] mt-1 uppercase">GLOBAL</p>
             </div>
           </div>
 
