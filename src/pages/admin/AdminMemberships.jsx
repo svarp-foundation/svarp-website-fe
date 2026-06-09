@@ -8,6 +8,56 @@ const AdminMemberships = () => {
   const [filter, setFilter] = useState("active"); // active, none
   const { token } = useAuth();
 
+  const [editingPlan, setEditingPlan] = useState(null);
+  const [editForm, setEditForm] = useState({
+    name: "",
+    price: 0,
+    features: "",
+    duration_days: 0,
+    description: "",
+    highlight: false,
+  });
+
+  useEffect(() => {
+    if (editingPlan) {
+      setEditForm({
+        name: editingPlan.name || "",
+        price: editingPlan.price || 0,
+        features: editingPlan.features || "",
+        duration_days: editingPlan.duration_days || 365,
+        description: editingPlan.description || "",
+        highlight: editingPlan.highlight || false,
+      });
+    }
+  }, [editingPlan]);
+
+  const handleUpdatePlan = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/memberships/${editingPlan.id}`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(editForm),
+        }
+      );
+      if (response.ok) {
+        alert("Membership plan updated successfully!");
+        setEditingPlan(null);
+        fetchData();
+      } else {
+        const err = await response.json();
+        alert(`Error: ${err.detail}`);
+      }
+    } catch (error) {
+      console.error("Update plan failed", error);
+    }
+  };
+
   const fetchData = async () => {
     setIsLoading(true);
     try {
@@ -220,6 +270,155 @@ const AdminMemberships = () => {
           </table>
         </div>
       </div>
+
+      {/* Manage Membership Plans Section */}
+      <div className="mt-12 bg-slate-50/50 rounded-2xl border border-slate-200 p-6 sm:p-8">
+        <h2 className="text-2xl font-bold text-primary mb-2">Membership Plans Settings</h2>
+        <p className="text-slate-500 mb-8 text-sm">Modify plan descriptions, prices, benefits, or highlight status stored in the database.</p>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {plans.map((plan) => (
+            <div key={plan.id} className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm flex flex-col justify-between">
+              <div>
+                <div className="flex justify-between items-start mb-4">
+                  <h3 className="text-lg font-bold text-primary">{plan.name}</h3>
+                  {plan.highlight ? (
+                    <span className="text-[10px] font-extrabold bg-accent text-primary px-2.5 py-1 rounded-md uppercase tracking-wider">
+                      Highlighted
+                    </span>
+                  ) : (
+                    <span className="text-[10px] font-semibold bg-slate-100 text-slate-500 px-2.5 py-1 rounded-md">
+                      Regular
+                    </span>
+                  )}
+                </div>
+                <div className="text-xl font-black text-primary mb-2">
+                  ₹{plan.price.toLocaleString()} <span className="text-xs text-slate-400 font-semibold">({plan.duration_days} days)</span>
+                </div>
+                <p className="text-sm text-slate-500 mb-4 line-clamp-2">{plan.description || "No description provided."}</p>
+                <div className="space-y-1 mb-6">
+                  <span className="text-xs font-bold text-slate-400 uppercase tracking-wider block">Benefits Checklist</span>
+                  <div className="max-h-24 overflow-y-auto border border-slate-100 rounded-lg p-2 bg-slate-50/50">
+                    {plan.features ? (
+                      plan.features.split(",").map((feat, idx) => (
+                        <div key={idx} className="text-xs text-slate-600 flex items-center gap-1.5 py-0.5">
+                          <span className="text-emerald-500 font-bold">✓</span> {feat.trim()}
+                        </div>
+                      ))
+                    ) : (
+                      <span className="text-xs text-slate-400 italic">No benefits defined</span>
+                    )}
+                  </div>
+                </div>
+              </div>
+              <button
+                onClick={() => setEditingPlan(plan)}
+                className="w-full bg-slate-900 text-white py-2.5 rounded-xl text-xs font-bold hover:bg-primary transition-all active:scale-[0.98]"
+              >
+                ✏️ Edit Plan Details
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Editing Plan Modal */}
+      {editingPlan && (
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl max-w-xl w-full p-6 sm:p-8 shadow-2xl border border-slate-100 animate-in zoom-in duration-300 relative overflow-hidden max-h-[90vh] overflow-y-auto">
+            <h3 className="text-xl font-bold text-primary mb-1">Edit Plan: {editingPlan.name}</h3>
+            <p className="text-xs text-slate-400 mb-6">Update membership metadata stored in the database.</p>
+            
+            <form onSubmit={handleUpdatePlan} className="space-y-4">
+              <div>
+                <label className="block text-xs font-extrabold text-slate-600 uppercase tracking-wider mb-1">Plan Display Name</label>
+                <input
+                  type="text"
+                  required
+                  value={editForm.name}
+                  onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
+                  className="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-accent outline-none text-sm text-primary font-medium"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-extrabold text-slate-600 uppercase tracking-wider mb-1">Price (INR)</label>
+                  <input
+                    type="number"
+                    required
+                    value={editForm.price}
+                    onChange={(e) => setEditForm({ ...editForm, price: parseFloat(e.target.value) || 0 })}
+                    className="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-accent outline-none text-sm text-primary font-medium"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-extrabold text-slate-600 uppercase tracking-wider mb-1">Duration (Days)</label>
+                  <input
+                    type="number"
+                    required
+                    value={editForm.duration_days}
+                    onChange={(e) => setEditForm({ ...editForm, duration_days: parseInt(e.target.value) || 0 })}
+                    className="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-accent outline-none text-sm text-primary font-medium"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-extrabold text-slate-600 uppercase tracking-wider mb-1">Tagline Description</label>
+                <textarea
+                  rows="2"
+                  required
+                  value={editForm.description}
+                  onChange={(e) => setEditForm({ ...editForm, description: e.target.value })}
+                  className="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-accent outline-none text-sm text-primary font-medium resize-none"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-extrabold text-slate-600 uppercase tracking-wider mb-1">Benefits (Comma-separated)</label>
+                <textarea
+                  rows="3"
+                  required
+                  value={editForm.features}
+                  onChange={(e) => setEditForm({ ...editForm, features: e.target.value })}
+                  placeholder="e.g. Free Certifications, Unlimited access, Priority support"
+                  className="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-accent outline-none text-xs text-primary font-medium resize-none"
+                />
+              </div>
+
+              <div className="flex items-center gap-3 py-2">
+                <input
+                  type="checkbox"
+                  id="highlight"
+                  checked={editForm.highlight}
+                  onChange={(e) => setEditForm({ ...editForm, highlight: e.target.checked })}
+                  className="w-4 h-4 rounded text-primary focus:ring-accent border-slate-200 accent-primary"
+                />
+                <label htmlFor="highlight" className="text-xs font-bold text-slate-700 select-none cursor-pointer">
+                  Highlight this plan (e.g. "Best Value" flag in plans display)
+                </label>
+              </div>
+
+              <div className="flex gap-3 justify-end pt-4 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => setEditingPlan(null)}
+                  className="px-5 py-2.5 border border-slate-200 text-slate-500 rounded-xl text-xs font-bold hover:bg-slate-50 active:scale-[0.98] transition-all"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-6 py-2.5 bg-accent text-primary rounded-xl text-xs font-bold hover:shadow-lg hover:shadow-accent/20 active:scale-[0.98] transition-all"
+                >
+                  Save Changes
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

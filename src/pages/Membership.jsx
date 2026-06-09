@@ -1,5 +1,5 @@
 import { useAuth } from "../context/AuthContext";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { usePopup } from "../context/PopupContext";
 
@@ -7,6 +7,33 @@ export default function Membership() {
   const { user, token } = useAuth();
   const navigate = useNavigate();
   const { showPopup } = usePopup();
+  const [plans, setPlans] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchPlans = async () => {
+      try {
+        const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/memberships/`);
+        if (res.ok) {
+          const data = await res.json();
+          const formatted = data.map(p => ({
+            id: p.id,
+            title: p.name,
+            desc: p.description || "",
+            benefits: p.features ? p.features.split(",").map(f => f.trim()).filter(Boolean) : [],
+            highlight: p.highlight,
+            price: p.price
+          })).sort((a, b) => a.price - b.price);
+          setPlans(formatted);
+        }
+      } catch (err) {
+        console.error("Error fetching memberships", err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchPlans();
+  }, []);
 
   const loadScript = (src) => {
     return new Promise((resolve) => {
@@ -63,66 +90,14 @@ export default function Membership() {
       },
     });
   };
-  const plans = [
-    {
-      title: "Lifetime Membership – ₹25,000 (One-Time Payment)",
-      desc: "One membership. Lifelong learning, growth, and recognition with maximum long-term value.",
-      benefits: [
-        "Full access to all online & offline courses (including diplomas)",
-        "Priority access to new courses & annual training calendar",
-        "Free samples of all new products & services",
-        "Invitations to premium networking events",
-        "Access to workshops, seminars & expert presentations",
-        "Exclusive discounts on certifications & premium programs",
-        "Recognized as a Lifetime Core Member",
-        "No renewals, no hassle – lifelong access",
-        "Most recommended by experts & alumni",
-      ],
-      highlight: true,
-      price: 25000,
-      id: 1,
-    },
-    {
-      title: "Yearly Membership – ₹5,000 / Year",
-      desc: "Ideal for short-term access and periodic learning with essential benefits.",
-      benefits: [
-        "Access to online courses (excluding diplomas)",
-        "Free samples of select products & services",
-        "Invitations to networking meetups & events",
-        "Access to selected workshops & sessions",
-        "1-year validity with annual renewal",
-        "Limited benefits compared to Lifetime Membership",
-      ],
-      price: 5000,
-      id: 2,
-    },
-    {
-      title: "Student Membership – ₹1,000 / Year",
-      desc: "Designed for students and young innovators focused on learning, projects, and career growth.",
-      benefits: [
-        "All benefits of Yearly Membership",
-        "Special student discounts on diplomas & offline courses",
-        "Project recognition, awards & certifications",
-        "Career guidance & startup mentoring",
-        "Internship opportunities & real-world project exposure",
-      ],
-      price: 1000,
-      id: 3,
-    },
-    {
-      title: "Corporate Membership – from ₹2,50,000 / Year",
-      desc: "Tailored for MSMEs (turnover under ₹100 Cr) to drive innovation, safety, and business growth.",
-      benefits: [
-        "Full access to all training & certification programs",
-        "R&D support and innovation assistance",
-        "Business growth, branding & expansion strategy",
-        "High-level networking & industry collaboration",
-        "HSE (Health, Safety & Sustainability) implementation support",
-      ],
-      price: 250000,
-      id: 4,
-    },
-  ];
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-muted flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
 
   const columns = [
     { key: "feature", label: "Features" },
