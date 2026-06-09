@@ -57,9 +57,9 @@ export default function AdminApplications() {
   };
 
   return (
-    <div className="p-6">
+    <div className="space-y-6">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-gray-800">Job Applications</h1>
+        <h1 className="text-xl md:text-2xl font-bold text-gray-800">Job Applications</h1>
       </div>
 
       {loading ? (
@@ -67,7 +67,7 @@ export default function AdminApplications() {
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
         </div>
       ) : (
-        <div className="bg-white rounded-xl shadow overflow-hidden">
+        <div className="bg-white rounded-xl shadow overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>

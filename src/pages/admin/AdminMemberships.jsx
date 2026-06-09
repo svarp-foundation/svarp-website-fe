@@ -149,25 +149,25 @@ const AdminMemberships = () => {
 
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
-      <div className="flex justify-between items-end">
+      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-primary">
+          <h1 className="text-2xl md:text-3xl font-bold text-primary">
             Membership Management
           </h1>
           <p className="text-slate-500">
             Monitor active subscriptions or assign new ones manually.
           </p>
         </div>
-        <div className="flex bg-white rounded-xl border border-slate-200 p-1">
+        <div className="flex bg-white rounded-xl border border-slate-200 p-1 w-full lg:w-auto justify-center">
           <button
             onClick={() => setFilter("active")}
-            className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${filter === "active" ? "bg-accent text-primary shadow-sm" : "text-slate-500 hover:text-primary"}`}
+            className={`flex-1 lg:flex-none text-center px-4 py-2 rounded-lg text-sm font-bold transition-all ${filter === "active" ? "bg-accent text-primary shadow-sm" : "text-slate-500 hover:text-primary"}`}
           >
             Active Members
           </button>
           <button
             onClick={() => setFilter("none")}
-            className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${filter === "none" ? "bg-accent text-primary shadow-sm" : "text-slate-500 hover:text-primary"}`}
+            className={`flex-1 lg:flex-none text-center px-4 py-2 rounded-lg text-sm font-bold transition-all ${filter === "none" ? "bg-accent text-primary shadow-sm" : "text-slate-500 hover:text-primary"}`}
           >
             No Membership
           </button>
@@ -273,7 +273,7 @@ const AdminMemberships = () => {
 
       {/* Manage Membership Plans Section */}
       <div className="mt-12 bg-slate-50/50 rounded-2xl border border-slate-200 p-6 sm:p-8">
-        <h2 className="text-2xl font-bold text-primary mb-2">Membership Plans Settings</h2>
+        <h2 className="text-xl md:text-2xl font-bold text-primary mb-2">Membership Plans Settings</h2>
         <p className="text-slate-500 mb-8 text-sm">Modify plan descriptions, prices, benefits, or highlight status stored in the database.</p>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -341,7 +341,7 @@ const AdminMemberships = () => {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-extrabold text-slate-600 uppercase tracking-wider mb-1">Price (INR)</label>
                   <input
