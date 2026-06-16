@@ -43,20 +43,8 @@ const Register = () => {
       >
         <div className="absolute inset-0 bg-gradient-to-br from-zinc-950/90 via-zinc-900/40 to-zinc-950/90" />
         
-        {/* Brand Header */}
-        <div className="relative z-10">
-          <Link to="/" className="flex items-center gap-3 group">
-            <img
-              src="/company/svarp-logo.webp"
-              alt="SVARP Global"
-              className="h-12 w-auto object-contain drop-shadow-[0_0_8px_rgba(255,255,255,0.3)] transition-transform duration-500 group-hover:scale-105"
-            />
-            <div className="flex flex-col justify-center">
-              <span className="text-xl font-extrabold tracking-wide text-white leading-none">SVARP</span>
-              <span className="text-[9px] font-black text-accent tracking-[0.3em] mt-0.5">GLOBAL</span>
-            </div>
-          </Link>
-        </div>
+        {/* Spacer to keep layout balanced below fixed Navbar */}
+        <div className="relative z-10 h-12" />
 
         {/* Motivational Text */}
         <div className="relative z-10 max-w-md space-y-4">
@@ -84,21 +72,6 @@ const Register = () => {
         <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none" />
 
         <div className="w-full max-w-md space-y-8 bg-zinc-900/50 backdrop-blur-xl border border-white/10 p-8 sm:p-10 rounded-3xl shadow-2xl relative z-10">
-          {/* Mobile Brand Header */}
-          <div className="lg:hidden flex flex-col items-center justify-center space-y-3 mb-6">
-            <Link to="/">
-              <img
-                src="/company/svarp-logo.webp"
-                alt="SVARP Global"
-                className="h-14 w-auto object-contain drop-shadow-[0_0_8px_rgba(255,255,255,0.2)]"
-              />
-            </Link>
-            <div className="text-center">
-              <h1 className="text-xl font-extrabold text-white tracking-wide leading-none">SVARP</h1>
-              <p className="text-[9px] font-black text-accent tracking-[0.3em] mt-1 uppercase">GLOBAL</p>
-            </div>
-          </div>
-
           <div className="space-y-2 text-center lg:text-left">
             <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
               Create Account
