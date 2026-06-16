@@ -69,13 +69,13 @@ export default function SvarpPillars() {
         {/* Interactive Split Grid */}
         <div className="grid lg:grid-cols-12 gap-8 items-center max-w-5xl mx-auto">
           {/* Left Column: Interactive Selector */}
-          <div className="lg:col-span-5 flex flex-row lg:flex-col justify-between items-center gap-2 sm:gap-3 border-b lg:border-b-0 lg:border-r border-gray-100 pb-6 lg:pb-0 lg:pr-8">
+          <div className="lg:col-span-5 flex flex-row lg:flex-col justify-center lg:justify-start items-center gap-2 sm:gap-4 lg:gap-3 border-b lg:border-b-0 lg:border-r border-gray-100 pb-6 lg:pb-0 lg:pr-8">
             {pillars.map((pillar, index) => (
               <button
                 key={pillar.letter}
                 onMouseEnter={() => setHoveredIndex(index)}
                 onClick={() => setHoveredIndex(index)}
-                className={`w-full flex items-center justify-center lg:justify-start gap-4 p-3.5 rounded-2xl transition-all duration-300 ${
+                className={`w-auto lg:w-full flex items-center justify-center lg:justify-start gap-4 p-2 sm:p-2.5 lg:p-3.5 rounded-2xl transition-all duration-300 ${
                   hoveredIndex === index
                     ? "bg-white shadow-sm border border-gray-100"
                     : "hover:bg-white/40 border border-transparent"
