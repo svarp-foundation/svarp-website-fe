@@ -35,48 +35,53 @@ const AdminLogin = () => {
   };
 
   return (
-    <div className="min-h-dvh flex items-center justify-center bg-muted font-sans p-5">
-      <div className="w-full max-w-md bg-white rounded-3xl p-10 border border-slate-200 shadow-xl">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-extrabold mb-2 text-accent">
+    <div className="min-h-dvh flex items-center justify-center bg-muted font-sans p-4">
+      <div className="w-full max-w-sm bg-white rounded-xl p-6 border border-slate-200 shadow-sm">
+        <div className="text-center mb-5 flex flex-col items-center">
+          <img
+            src="/company/svarp-logo.webp"
+            alt="SVARP Global Logo"
+            className="h-14 w-auto object-contain mb-2.5"
+          />
+          <h1 className="text-base font-bold text-primary mb-0.5">
             Admin Portal
           </h1>
-          <p className="text-slate-500 text-sm">
+          <p className="text-slate-500 text-[10px]">
             Sign in to manage SVARP Global
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="space-y-2">
-            <label className="block text-sm font-semibold text-primary">
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="space-y-1">
+            <label className="block text-xs font-bold text-primary">
               Admin Email
             </label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-primary outline-none focus:border-accent focus:ring-4 focus:ring-accent/10 transition-all"
+              className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs font-semibold text-primary outline-none focus:border-accent transition-all"
               placeholder="admin@example.com"
               required
             />
           </div>
 
-          <div className="space-y-2">
-            <label className="block text-sm font-semibold text-primary">
+          <div className="space-y-1">
+            <label className="block text-xs font-bold text-primary">
               Password
             </label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-primary outline-none focus:border-accent focus:ring-4 focus:ring-accent/10 transition-all"
+              className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs font-semibold text-primary outline-none focus:border-accent transition-all"
               placeholder="••••••••"
               required
             />
           </div>
 
           {error && (
-            <div className="bg-red-50 text-red-600 text-xs p-3 rounded-lg border border-red-100">
+            <div className="bg-red-50 text-red-600 text-[10px] p-2 rounded border border-red-100 font-bold">
               {error}
             </div>
           )}
@@ -84,7 +89,7 @@ const AdminLogin = () => {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full bg-accent text-primary font-bold py-4 rounded-xl hover:-translate-y-0.5 hover:shadow-lg hover:shadow-accent/30 active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-primary text-white font-bold py-2 rounded-lg text-xs hover:bg-slate-900 active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed text-center"
           >
             {isLoading ? "Signing in..." : "Login to Dashboard"}
           </button>

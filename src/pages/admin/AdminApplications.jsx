@@ -39,112 +39,115 @@ export default function AdminApplications() {
     }
   };
 
-  const getStatusColor = (status) => {
+  const getStatusStyle = (status) => {
     switch (status) {
       case "pending":
-        return "bg-yellow-100 text-yellow-800";
+        return "bg-yellow-50 text-yellow-600 border-yellow-100";
       case "reviewed":
-        return "bg-blue-100 text-blue-800";
+        return "bg-blue-50 text-blue-600 border-blue-100";
       case "interviewed":
-        return "bg-purple-100 text-purple-800";
+        return "bg-purple-50 text-purple-600 border-purple-100";
       case "hired":
-        return "bg-green-100 text-green-800";
+        return "bg-emerald-50 text-emerald-600 border-emerald-100";
       case "rejected":
-        return "bg-red-100 text-red-800";
+        return "bg-red-50 text-red-600 border-red-100";
       default:
-        return "bg-gray-100 text-gray-800";
+        return "bg-slate-50 text-slate-600 border-slate-100";
     }
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-xl md:text-2xl font-bold text-gray-800">Job Applications</h1>
+    <div className="space-y-4 font-sans">
+      <div className="pb-2 border-b border-slate-200">
+        <h1 className="text-xl font-bold text-primary">Job Applications</h1>
+        <p className="text-xs text-slate-500">
+          Review details of candidates applying for public job vacancies.
+        </p>
       </div>
 
       {loading ? (
-        <div className="flex justify-center p-12">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+        <div className="flex justify-center p-8">
+          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
         </div>
       ) : (
-        <div className="bg-white rounded-xl shadow overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Applicant
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Job Post
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Resume
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Status
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Applied On
-                </th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {applications.map((app) => (
-                <tr key={app.id}>
-                  <td className="px-6 py-4">
-                    <div className="text-sm font-medium text-gray-900">
-                      {app.full_name}
-                    </div>
-                    <div className="text-sm text-gray-500">{app.email}</div>
-                    <div className="text-sm text-gray-500">{app.phone}</div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="text-sm text-gray-900">
-                      {app.job?.title || "Unknown Job"}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <a
-                      href={`${API_URL}/${app.resume_path}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-indigo-600 hover:text-indigo-900 text-sm font-medium"
-                    >
-                      View Resume
-                    </a>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span
-                      className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(app.status)}`}
-                    >
-                      {app.status.toUpperCase()}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {new Date(app.created_at).toLocaleDateString()}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <select
-                      value={app.status}
-                      onChange={(e) =>
-                        handleStatusChange(app.id, e.target.value)
-                      }
-                      className="text-sm border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                    >
-                      <option value="pending">Pending</option>
-                      <option value="reviewed">Reviewed</option>
-                      <option value="interviewed">Interviewed</option>
-                      <option value="hired">Hired</option>
-                      <option value="rejected">Rejected</option>
-                    </select>
-                  </td>
+        <div className="bg-white rounded-xl border border-slate-200 shadow-xs overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="bg-slate-50 border-b border-slate-200">
+                  <th className="px-4 py-2.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                    Applicant
+                  </th>
+                  <th className="px-4 py-2.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                    Job Post
+                  </th>
+                  <th className="px-4 py-2.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                    Resume
+                  </th>
+                  <th className="px-4 py-2.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                    Status
+                  </th>
+                  <th className="px-4 py-2.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                    Applied On
+                  </th>
+                  <th className="px-4 py-2.5 text-right text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                    Actions
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {applications.map((app) => (
+                  <tr key={app.id} className="hover:bg-slate-50/50 transition-colors">
+                    <td className="px-4 py-2.5">
+                      <div className="text-xs font-bold text-primary">
+                        {app.full_name}
+                      </div>
+                      <div className="text-[10px] text-slate-400">{app.email}</div>
+                      <div className="text-[10px] text-slate-400">{app.phone}</div>
+                    </td>
+                    <td className="px-4 py-2.5 text-xs text-primary font-semibold">
+                      {app.job?.title || "Unknown Job"}
+                    </td>
+                    <td className="px-4 py-2.5">
+                      <a
+                        href={`${API_URL}/${app.resume_path}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 bg-slate-50 border border-slate-200 text-[10px] font-bold px-2 py-1 rounded hover:bg-slate-100 transition-colors"
+                      >
+                        View Resume
+                      </a>
+                    </td>
+                    <td className="px-4 py-2.5">
+                      <span
+                        className={`px-2 py-0.5 text-[8px] font-bold uppercase tracking-wider rounded border ${getStatusStyle(app.status)}`}
+                      >
+                        {app.status}
+                      </span>
+                    </td>
+                    <td className="px-4 py-2.5 text-xs text-slate-500 font-medium">
+                      {new Date(app.created_at).toLocaleDateString()}
+                    </td>
+                    <td className="px-4 py-2.5 text-right">
+                      <select
+                        value={app.status}
+                        onChange={(e) =>
+                          handleStatusChange(app.id, e.target.value)
+                        }
+                        className="bg-slate-50 border border-slate-200 rounded px-1.5 py-1 outline-none text-[10px] font-bold text-primary"
+                      >
+                        <option value="pending">Pending</option>
+                        <option value="reviewed">Reviewed</option>
+                        <option value="interviewed">Interviewed</option>
+                        <option value="hired">Hired</option>
+                        <option value="rejected">Rejected</option>
+                      </select>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
     </div>

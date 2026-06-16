@@ -54,31 +54,31 @@ const AdminVerifications = () => {
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-500">
-      <div>
-        <h1 className="text-2xl md:text-3xl font-bold text-primary">
+    <div className="space-y-4 font-sans">
+      <div className="pb-2 border-b border-slate-200">
+        <h1 className="text-xl font-bold text-primary">
           Identity Verification
         </h1>
-        <p className="text-slate-500">
+        <p className="text-xs text-slate-500">
           Review and verify community member documents.
         </p>
       </div>
 
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+      <div className="bg-white rounded-xl border border-slate-200 shadow-xs overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-slate-50/50">
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider border-bottom border-slate-100">
+              <tr className="bg-slate-50 border-b border-slate-200">
+                <th className="px-4 py-2.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
                   User
                 </th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider border-bottom border-slate-100">
+                <th className="px-4 py-2.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
                   Document Type
                 </th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider border-bottom border-slate-100">
+                <th className="px-4 py-2.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
                   Preview
                 </th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider border-bottom border-slate-100">
+                <th className="px-4 py-2.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
                   Actions
                 </th>
               </tr>
@@ -88,7 +88,7 @@ const AdminVerifications = () => {
                 <tr>
                   <td
                     colSpan="4"
-                    className="px-6 py-10 text-center text-slate-400 italic"
+                    className="px-4 py-6 text-center text-xs text-slate-400 italic"
                   >
                     Fetching documents...
                   </td>
@@ -97,7 +97,7 @@ const AdminVerifications = () => {
                 <tr>
                   <td
                     colSpan="4"
-                    className="px-6 py-10 text-center text-slate-400 italic"
+                    className="px-4 py-6 text-center text-xs text-slate-400 italic"
                   >
                     No pending verifications
                   </td>
@@ -108,19 +108,19 @@ const AdminVerifications = () => {
                     key={user.id}
                     className="hover:bg-slate-50/50 transition-colors"
                   >
-                    <td className="px-6 py-4 font-bold text-primary">
+                    <td className="px-4 py-2.5 font-bold text-xs text-primary">
                       {user.full_name || user.email}
                     </td>
-                    <td className="px-6 py-4 text-sm text-slate-600">
+                    <td className="px-4 py-2.5 text-xs text-slate-600">
                       {user.government_id_type || "Government ID"}
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="px-4 py-2.5">
                       {user.government_id_path ? (
                         <a
                           href={`${import.meta.env.VITE_API_BASE_URL}${user.government_id_path}`}
                           target="_blank"
                           rel="noreferrer"
-                          className="inline-flex items-center gap-2 bg-slate-50 border border-slate-200 text-xs font-bold px-3 py-1.5 rounded-lg hover:bg-slate-100 transition-colors"
+                          className="inline-flex items-center gap-1.5 bg-slate-50 border border-slate-200 text-[10px] font-bold px-2 py-1 rounded hover:bg-slate-100 transition-colors"
                         >
                           <svg className="w-3.5 h-3.5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -129,19 +129,19 @@ const AdminVerifications = () => {
                           View File
                         </a>
                       ) : (
-                        <span className="text-xs text-slate-300">No file</span>
+                        <span className="text-[10px] text-slate-300">No file</span>
                       )}
                     </td>
-                    <td className="px-6 py-4">
-                      <div className="flex gap-2">
+                    <td className="px-4 py-2.5">
+                      <div className="flex gap-1.5">
                         <button
-                          className="bg-emerald-500 text-white font-bold px-4 py-1.5 rounded-lg text-xs hover:bg-emerald-600 transition-all shadow-sm"
+                          className="bg-primary text-white font-bold px-3 py-1 rounded text-[10px] hover:bg-slate-900 transition-all shadow-xs"
                           onClick={() => reviewDoc(user.id, "approved")}
                         >
                           Approve
                         </button>
                         <button
-                          className="bg-red-500 text-white font-bold px-4 py-1.5 rounded-lg text-xs hover:bg-red-600 transition-all shadow-sm"
+                          className="bg-red-500/10 text-red-600 border border-red-500/20 font-bold px-3 py-1 rounded text-[10px] hover:bg-red-500 hover:text-white transition-all shadow-xs"
                           onClick={() => reviewDoc(user.id, "rejected")}
                         >
                           Reject

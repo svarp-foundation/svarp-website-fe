@@ -53,31 +53,31 @@ const AdminPayments = () => {
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-500">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+    <div className="space-y-4 font-sans">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pb-2 border-b border-slate-200">
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-primary">
+          <h1 className="text-xl font-bold text-primary">
             Payments & Revenue
           </h1>
-          <p className="text-slate-500">
+          <p className="text-xs text-slate-500">
             Track all transactions and financial history.
           </p>
         </div>
         <button
           onClick={exportCSV}
-          className="bg-white border border-slate-200 text-primary font-bold px-6 py-2.5 rounded-xl hover:bg-slate-50 transition-all text-sm flex items-center gap-2 shadow-sm w-full sm:w-auto justify-center"
+          className="bg-primary text-white font-bold px-4 py-1.5 rounded-lg hover:bg-slate-900 transition-all text-xs flex items-center justify-center gap-1.5 w-full sm:w-auto mt-2 sm:mt-0"
         >
-          <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
           </svg>
           Export CSV
         </button>
       </div>
 
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-        <div className="p-4 border-b border-slate-100 flex gap-4">
+      <div className="bg-white rounded-xl border border-slate-200 shadow-xs overflow-hidden">
+        <div className="p-3 border-b border-slate-100 flex gap-2">
           <select
-            className="bg-slate-50 border border-slate-200 rounded-lg px-4 py-2 text-xs outline-none focus:border-accent"
+            className="bg-slate-50 border border-slate-200 rounded-lg px-2 py-1 outline-none focus:border-accent text-xs font-semibold"
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
           >
@@ -91,20 +91,20 @@ const AdminPayments = () => {
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-slate-50/50">
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider border-bottom border-slate-100">
+              <tr className="bg-slate-50 border-b border-slate-200">
+                <th className="px-4 py-2.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
                   Transaction ID
                 </th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider border-bottom border-slate-100">
+                <th className="px-4 py-2.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
                   User
                 </th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider border-bottom border-slate-100">
+                <th className="px-4 py-2.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
                   Amount
                 </th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider border-bottom border-slate-100">
+                <th className="px-4 py-2.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
                   Status
                 </th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider border-bottom border-slate-100">
+                <th className="px-4 py-2.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
                   Date
                 </th>
               </tr>
@@ -114,7 +114,7 @@ const AdminPayments = () => {
                 <tr>
                   <td
                     colSpan="5"
-                    className="px-6 py-10 text-center text-slate-400 italic"
+                    className="px-4 py-6 text-center text-xs text-slate-400 italic"
                   >
                     Processing records...
                   </td>
@@ -123,7 +123,7 @@ const AdminPayments = () => {
                 <tr>
                   <td
                     colSpan="5"
-                    className="px-6 py-10 text-center text-slate-400 italic"
+                    className="px-4 py-6 text-center text-xs text-slate-400 italic"
                   >
                     No transactions found
                   </td>
@@ -134,31 +134,31 @@ const AdminPayments = () => {
                     key={p.id}
                     className="hover:bg-slate-50/50 transition-colors"
                   >
-                    <td className="px-6 py-4">
-                      <code className="text-[10px] font-bold text-slate-400 bg-slate-50 px-2 py-1 rounded">
+                    <td className="px-4 py-2.5">
+                      <code className="text-[9px] font-bold text-slate-400 bg-slate-50 px-1.5 py-0.5 rounded">
                         #{p.razorpay_order_id || p.id.slice(0, 8)}
                       </code>
                     </td>
-                    <td className="px-6 py-4 font-bold text-primary">
+                    <td className="px-4 py-2.5 text-xs font-bold text-primary">
                       {p.user_email}
                     </td>
-                    <td className="px-6 py-4 font-extrabold text-primary">
-                      ₹{p.amount}
+                    <td className="px-4 py-2.5 text-xs font-extrabold text-primary">
+                      ₹{p.amount.toLocaleString()}
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="px-4 py-2.5">
                       <span
-                        className={`px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-widest ${
+                        className={`px-2 py-0.5 rounded text-[8px] font-bold uppercase tracking-wider border ${
                           p.status === "success"
-                            ? "bg-emerald-50 text-emerald-600"
+                            ? "bg-emerald-50 text-emerald-600 border-emerald-100"
                             : p.status === "pending"
-                              ? "bg-amber-50 text-amber-600"
-                              : "bg-red-50 text-red-600"
+                              ? "bg-amber-50 text-amber-600 border-amber-100"
+                              : "bg-red-50 text-red-600 border-red-100"
                         }`}
                       >
                         {p.status}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-xs text-slate-500">
+                    <td className="px-4 py-2.5 text-xs text-slate-500 font-medium">
                       {new Date(p.created_at).toLocaleDateString()}
                     </td>
                   </tr>

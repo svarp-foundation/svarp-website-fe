@@ -106,98 +106,103 @@ export default function AdminJobs() {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-        <h1 className="text-xl md:text-2xl font-bold text-gray-800">
-          Manage Job Postings
-        </h1>
+    <div className="space-y-4 font-sans">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pb-2 border-b border-slate-200">
+        <div>
+          <h1 className="text-xl font-bold text-primary">
+            Manage Job Postings
+          </h1>
+          <p className="text-xs text-slate-500">
+            Handle recruitment postings displayed on public career section.
+          </p>
+        </div>
         <button
           onClick={() => handleOpenModal()}
-          className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors w-full sm:w-auto text-center"
+          className="bg-primary text-white px-4 py-1.5 rounded-lg hover:bg-slate-900 transition-colors w-full sm:w-auto text-center text-xs font-bold mt-2 sm:mt-0"
         >
           Add New Job
         </button>
       </div>
 
       {loading ? (
-        <div className="flex justify-center p-12">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+        <div className="flex justify-center p-8">
+          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
         </div>
       ) : (
-        <div className="bg-white rounded-xl shadow overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Title
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Type
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Location
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Status
-                </th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {jobs.map((job) => (
-                <tr key={job.id}>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm font-medium text-gray-900">
-                      {job.title}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
-                      {job.job_type}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {job.location}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span
-                      className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${job.is_active ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}
-                    >
-                      {job.is_active ? "Active" : "Inactive"}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <button
-                      onClick={() => handleOpenModal(job)}
-                      className="text-indigo-600 hover:text-indigo-900 mr-4"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDelete(job.id)}
-                      className="text-red-600 hover:text-red-900"
-                    >
-                      Delete
-                    </button>
-                  </td>
+        <div className="bg-white rounded-xl border border-slate-200 shadow-xs overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="bg-slate-50 border-b border-slate-200">
+                  <th className="px-4 py-2.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                    Title
+                  </th>
+                  <th className="px-4 py-2.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                    Type
+                  </th>
+                  <th className="px-4 py-2.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                    Location
+                  </th>
+                  <th className="px-4 py-2.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                    Status
+                  </th>
+                  <th className="px-4 py-2.5 text-right text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                    Actions
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {jobs.map((job) => (
+                  <tr key={job.id} className="hover:bg-slate-50/50 transition-colors">
+                    <td className="px-4 py-2.5 font-bold text-xs text-primary">
+                      {job.title}
+                    </td>
+                    <td className="px-4 py-2.5">
+                      <span className="px-2 py-0.5 text-[8px] font-bold uppercase tracking-wider rounded border border-blue-100 bg-blue-50 text-blue-600">
+                        {job.job_type}
+                      </span>
+                    </td>
+                    <td className="px-4 py-2.5 text-xs text-slate-600">
+                      {job.location}
+                    </td>
+                    <td className="px-4 py-2.5">
+                      <span
+                        className={`px-2 py-0.5 text-[8px] font-bold uppercase tracking-wider rounded border ${job.is_active ? "bg-emerald-50 text-emerald-600 border-emerald-100" : "bg-red-50 text-red-600 border-red-100"}`}
+                      >
+                        {job.is_active ? "Active" : "Inactive"}
+                      </span>
+                    </td>
+                    <td className="px-4 py-2.5 text-right text-xs">
+                      <button
+                        onClick={() => handleOpenModal(job)}
+                        className="text-primary hover:text-accent font-bold mr-3"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => handleDelete(job.id)}
+                        className="text-red-550 text-red-600 hover:text-red-800 font-bold"
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
 
       {showModal && (
-        <div className="fixed inset-0 z-50 overflow-y-auto bg-black bg-opacity-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-2xl w-full p-8">
-            <h2 className="text-xl font-bold mb-6">
+        <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/40 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-xl max-w-lg w-full p-5 border border-slate-200 shadow-xl max-h-[90vh] overflow-y-auto">
+            <h2 className="text-sm font-bold text-primary mb-3">
               {editingJob ? "Edit Job Post" : "Create New Job Post"}
             </h2>
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-3 text-xs">
               <div>
-                <label className="block text-sm font-medium text-gray-700">
+                <label className="block text-[10px] font-bold text-slate-500 uppercase mb-0.5">
                   Job Title
                 </label>
                 <input
@@ -206,19 +211,19 @@ export default function AdminJobs() {
                   required
                   value={formData.title}
                   onChange={handleInputChange}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2 border"
+                  className="w-full px-3 py-1.5 border border-slate-200 rounded-lg outline-none text-xs text-primary font-semibold"
                 />
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">
+                  <label className="block text-[10px] font-bold text-slate-500 uppercase mb-0.5">
                     Job Type
                   </label>
                   <select
                     name="job_type"
                     value={formData.job_type}
                     onChange={handleInputChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2 border"
+                    className="w-full px-2 py-1.5 bg-white border border-slate-200 rounded-lg outline-none text-xs text-primary font-semibold"
                   >
                     <option>Full-time</option>
                     <option>Part-time</option>
@@ -227,7 +232,7 @@ export default function AdminJobs() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">
+                  <label className="block text-[10px] font-bold text-slate-500 uppercase mb-0.5">
                     Location
                   </label>
                   <input
@@ -236,12 +241,12 @@ export default function AdminJobs() {
                     required
                     value={formData.location}
                     onChange={handleInputChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2 border"
+                    className="w-full px-3 py-1.5 border border-slate-200 rounded-lg outline-none text-xs text-primary font-semibold"
                   />
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700">
+                <label className="block text-[10px] font-bold text-slate-500 uppercase mb-0.5">
                   Salary Range (Optional)
                 </label>
                 <input
@@ -249,46 +254,47 @@ export default function AdminJobs() {
                   name="salary_range"
                   value={formData.salary_range}
                   onChange={handleInputChange}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2 border"
+                  className="w-full px-3 py-1.5 border border-slate-200 rounded-lg outline-none text-xs text-primary font-semibold"
                   placeholder="e.g. ₹5L - ₹8L per annum"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700">
+                <label className="block text-[10px] font-bold text-slate-500 uppercase mb-0.5">
                   Job Description
                 </label>
                 <textarea
                   name="description"
                   required
-                  rows="6"
+                  rows="4"
                   value={formData.description}
                   onChange={handleInputChange}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2 border"
+                  className="w-full px-3 py-1.5 border border-slate-200 rounded-lg outline-none text-xs text-primary font-semibold resize-none"
                 ></textarea>
               </div>
-              <div className="flex items-center">
+              <div className="flex items-center gap-2 py-1">
                 <input
                   type="checkbox"
                   name="is_active"
+                  id="job-active"
                   checked={formData.is_active}
                   onChange={handleInputChange}
-                  className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                  className="h-3.5 w-3.5 rounded text-primary focus:ring-accent border-slate-200 accent-primary"
                 />
-                <label className="ml-2 block text-sm text-gray-900">
+                <label htmlFor="job-active" className="text-[10px] font-bold text-slate-600 select-none cursor-pointer">
                   Active (Visible on Careers page)
                 </label>
               </div>
-              <div className="flex justify-end gap-3 pt-4">
+              <div className="flex justify-end gap-2 pt-3 border-t border-slate-100">
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200"
+                  className="px-3 py-1.5 border border-slate-200 text-slate-500 rounded-lg text-xs font-bold hover:bg-slate-50"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700"
+                  className="px-4 py-1.5 bg-primary text-white rounded-lg text-xs font-bold hover:bg-slate-900"
                 >
                   {editingJob ? "Update" : "Create"}
                 </button>
