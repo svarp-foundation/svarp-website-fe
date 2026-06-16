@@ -126,7 +126,7 @@ export default function Navbar() {
                   href={item.path}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="relative text-white transition hover:text-white text-center flex items-center gap-1"
+                  className="relative transition hover:text-accent after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:bg-accent after:transition-all after:w-0 hover:after:w-full text-center flex items-center gap-1"
                 >
                   {item.name}
                 </a>

@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import ImageModal from "../components/ImageModal";
-import Events from "./Events";
 
 export default function EventGallery() {
   const events = [
@@ -175,8 +174,6 @@ export default function EventGallery() {
           ))}
         </div>
       </div>
-      <Events />
-
       {selectedImage && (
         <ImageModal
           src={selectedImage}
