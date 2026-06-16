@@ -105,105 +105,77 @@ const AdminUsers = () => {
         </div>
       </div>
 
-      <div className="bg-white rounded-xl border border-slate-200 shadow-xs overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className="bg-slate-50 border-b border-slate-200">
-                <th className="px-4 py-2.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                  User
-                </th>
-                <th className="px-4 py-2.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                  Role
-                </th>
-                <th className="px-4 py-2.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                  Status
-                </th>
-                <th className="px-4 py-2.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-              {isLoading ? (
-                <tr>
-                  <td
-                    colSpan="4"
-                    className="px-4 py-6 text-center text-xs text-slate-400 italic"
-                  >
-                    Finding members...
-                  </td>
-                </tr>
-              ) : users.length === 0 ? (
-                <tr>
-                  <td
-                    colSpan="4"
-                    className="px-4 py-6 text-center text-xs text-slate-400 italic"
-                  >
-                    No members found
-                  </td>
-                </tr>
-              ) : (
-                users.map((user) => (
-                  <tr
-                    key={user.id}
-                    className="hover:bg-slate-50/50 transition-colors"
-                  >
-                    <td className="px-4 py-2.5">
-                      <div className="font-bold text-xs text-primary">
-                        {user.full_name || "New User"}
-                      </div>
-                      <div className="text-[10px] text-slate-400">{user.email}</div>
-                    </td>
-                    <td className="px-4 py-2.5 text-xs capitalize text-slate-600">
-                      {user.role}
-                    </td>
-                    <td className="px-4 py-2.5">
-                      <span
-                        className={`px-2 py-0.5 rounded text-[8px] font-bold uppercase tracking-wider border ${
-                          user.is_active
-                            ? "bg-emerald-50 text-emerald-600 border-emerald-100"
-                            : "bg-red-50 text-red-600 border-red-100"
-                        }`}
-                      >
-                        {user.is_active ? "Active" : "Suspended"}
-                      </span>
-                    </td>
-                    <td className="px-4 py-2.5">
-                      <div className="flex gap-1.5">
-                        <button
-                          onClick={() => toggleStatus(user.id)}
-                          className="p-1 rounded bg-slate-50 border border-slate-200 text-slate-500 hover:border-accent hover:text-accent transition-all"
-                          title={user.is_active ? "Suspend" : "Activate"}
-                        >
-                          {user.is_active ? (
-                            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
-                            </svg>
-                          ) : (
-                            <svg className="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                          )}
-                        </button>
-                        <button
-                          onClick={() => deleteUser(user.id)}
-                          className="p-1 rounded bg-slate-50 border border-slate-200 text-slate-500 hover:border-red-500 hover:text-red-500 transition-all"
-                          title="Delete"
-                        >
-                          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                          </svg>
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
+      {isLoading ? (
+        <div className="text-center text-xs text-slate-400 italic py-8 bg-white border border-slate-200 rounded-lg shadow-xs">
+          Finding members...
         </div>
-      </div>
+      ) : users.length === 0 ? (
+        <div className="text-center text-xs text-slate-400 italic py-8 bg-white border border-slate-200 rounded-lg shadow-xs">
+          No members found
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+          {users.map((user) => (
+            <div
+              key={user.id}
+              className="bg-white rounded-md border border-slate-200 p-2 flex flex-col justify-between space-y-1.5 hover:border-slate-300 transition-colors shadow-xs"
+            >
+              <div className="flex justify-between items-start gap-1">
+                <div className="min-w-0">
+                  <h3 className="text-xs font-bold text-primary truncate">
+                    {user.full_name || "New User"}
+                  </h3>
+                  <p className="text-[10px] text-slate-400 font-medium truncate">
+                    {user.email}
+                  </p>
+                </div>
+                <span
+                  className={`px-1 py-0.5 rounded text-[8px] font-bold uppercase tracking-wider border shrink-0 ${
+                    user.is_active
+                      ? "bg-emerald-50 text-emerald-600 border-emerald-100"
+                      : "bg-red-50 text-red-600 border-red-100"
+                  }`}
+                >
+                  {user.is_active ? "Active" : "Suspended"}
+                </span>
+              </div>
+              
+              <div className="flex justify-between items-center pt-1.5 border-t border-slate-100 gap-2">
+                <span className="text-[8px] font-bold bg-slate-100 text-slate-500 px-1 py-0.5 rounded capitalize tracking-wide shrink-0">
+                  {user.role}
+                </span>
+                
+                <div className="flex gap-1">
+                  <button
+                    onClick={() => toggleStatus(user.id)}
+                    className="p-1 rounded bg-slate-50 border border-slate-200 text-slate-500 hover:border-accent hover:text-accent transition-all"
+                    title={user.is_active ? "Suspend" : "Activate"}
+                  >
+                    {user.is_active ? (
+                      <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+                      </svg>
+                    ) : (
+                      <svg className="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    )}
+                  </button>
+                  <button
+                    onClick={() => deleteUser(user.id)}
+                    className="p-1 rounded bg-slate-50 border border-slate-200 text-slate-500 hover:border-red-500 hover:text-red-500 transition-all"
+                    title="Delete"
+                  >
+                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

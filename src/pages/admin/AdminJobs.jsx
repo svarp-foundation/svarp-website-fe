@@ -118,7 +118,7 @@ export default function AdminJobs() {
         </div>
         <button
           onClick={() => handleOpenModal()}
-          className="bg-primary text-white px-4 py-1.5 rounded-lg hover:bg-slate-900 transition-colors w-full sm:w-auto text-center text-xs font-bold mt-2 sm:mt-0"
+          className="bg-primary text-white px-4 py-1.5 rounded-lg hover:bg-slate-900 transition-colors w-full sm:w-auto text-center text-xs font-bold mt-2 sm:mt-0 shadow-xs"
         >
           Add New Job
         </button>
@@ -128,69 +128,59 @@ export default function AdminJobs() {
         <div className="flex justify-center p-8">
           <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
         </div>
+      ) : jobs.length === 0 ? (
+        <div className="text-center text-xs text-slate-400 italic py-8 bg-white border border-slate-200 rounded-lg shadow-xs">
+          No job posts created
+        </div>
       ) : (
-        <div className="bg-white rounded-xl border border-slate-200 shadow-xs overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="bg-slate-50 border-b border-slate-200">
-                  <th className="px-4 py-2.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                    Title
-                  </th>
-                  <th className="px-4 py-2.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                    Type
-                  </th>
-                  <th className="px-4 py-2.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                    Location
-                  </th>
-                  <th className="px-4 py-2.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                    Status
-                  </th>
-                  <th className="px-4 py-2.5 text-right text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100">
-                {jobs.map((job) => (
-                  <tr key={job.id} className="hover:bg-slate-50/50 transition-colors">
-                    <td className="px-4 py-2.5 font-bold text-xs text-primary">
-                      {job.title}
-                    </td>
-                    <td className="px-4 py-2.5">
-                      <span className="px-2 py-0.5 text-[8px] font-bold uppercase tracking-wider rounded border border-blue-100 bg-blue-50 text-blue-600">
-                        {job.job_type}
-                      </span>
-                    </td>
-                    <td className="px-4 py-2.5 text-xs text-slate-600">
-                      {job.location}
-                    </td>
-                    <td className="px-4 py-2.5">
-                      <span
-                        className={`px-2 py-0.5 text-[8px] font-bold uppercase tracking-wider rounded border ${job.is_active ? "bg-emerald-50 text-emerald-600 border-emerald-100" : "bg-red-50 text-red-600 border-red-100"}`}
-                      >
-                        {job.is_active ? "Active" : "Inactive"}
-                      </span>
-                    </td>
-                    <td className="px-4 py-2.5 text-right text-xs">
-                      <button
-                        onClick={() => handleOpenModal(job)}
-                        className="text-primary hover:text-accent font-bold mr-3"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => handleDelete(job.id)}
-                        className="text-red-550 text-red-600 hover:text-red-800 font-bold"
-                      >
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+          {jobs.map((job) => (
+            <div
+              key={job.id}
+              className="bg-white rounded-md border border-slate-200 p-2 flex flex-col justify-between space-y-1.5 hover:border-slate-300 transition-colors shadow-xs"
+            >
+              <div className="flex justify-between items-start gap-1">
+                <div className="min-w-0">
+                  <h3 className="text-xs font-bold text-primary truncate">
+                    {job.title}
+                  </h3>
+                  <p className="text-[10px] text-slate-400 font-semibold truncate mt-0.5">
+                    {job.location}
+                  </p>
+                </div>
+                <span
+                  className={`px-1 py-0.5 rounded text-[8px] font-bold uppercase tracking-wider border shrink-0 ${
+                    job.is_active
+                      ? "bg-emerald-50 text-emerald-600 border-emerald-100"
+                      : "bg-red-50 text-red-600 border-red-100"
+                  }`}
+                >
+                  {job.is_active ? "Active" : "Inactive"}
+                </span>
+              </div>
+
+              <div className="pt-1.5 border-t border-slate-100 flex justify-between items-center">
+                <span className="px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-wider rounded border border-blue-100 bg-blue-50 text-blue-600">
+                  {job.job_type}
+                </span>
+                
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => handleOpenModal(job)}
+                    className="text-primary hover:text-accent font-bold text-[9px] outline-none"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleDelete(job.id)}
+                    className="text-red-600 hover:text-red-800 font-bold text-[9px] outline-none"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       )}
 

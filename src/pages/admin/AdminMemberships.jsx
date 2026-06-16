@@ -158,7 +158,7 @@ const AdminMemberships = () => {
             Monitor active subscriptions or assign new ones manually.
           </p>
         </div>
-        <div className="flex bg-slate-100 rounded-lg p-0.5 border border-slate-200 mt-2 sm:mt-0">
+        <div className="flex bg-slate-100 rounded-lg p-0.5 border border-slate-200 mt-2 sm:mt-0 shadow-xs">
           <button
             onClick={() => setFilter("active")}
             className={`px-3 py-1 rounded text-xs font-bold transition-all ${filter === "active" ? "bg-white text-primary shadow-xs" : "text-slate-500 hover:text-primary"}`}
@@ -174,102 +174,73 @@ const AdminMemberships = () => {
         </div>
       </div>
 
-      <div className="bg-white rounded-xl border border-slate-200 shadow-xs overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className="bg-slate-50 border-b border-slate-200">
-                <th className="px-4 py-2.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                  User
-                </th>
-                <th className="px-4 py-2.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                  Current Plan
-                </th>
-                <th className="px-4 py-2.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                  Status
-                </th>
-                <th className="px-4 py-2.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                  Expiry/Action
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-              {isLoading ? (
-                <tr>
-                  <td
-                    colSpan="4"
-                    className="px-4 py-6 text-center text-xs text-slate-400 italic"
-                  >
-                    Synchronizing database...
-                  </td>
-                </tr>
-              ) : filteredUsers.length === 0 ? (
-                <tr>
-                  <td
-                    colSpan="4"
-                    className="px-4 py-6 text-center text-xs text-slate-400 italic"
-                  >
-                    No users found in this category
-                  </td>
-                </tr>
-              ) : (
-                filteredUsers.map((user) => (
-                  <tr
-                    key={user.id}
-                    className="hover:bg-slate-50/50 transition-colors"
-                  >
-                    <td className="px-4 py-2.5">
-                      <div className="font-bold text-xs text-primary">
-                        {user.full_name || user.email.split("@")[0]}
-                      </div>
-                      <div className="text-[9px] text-slate-400 font-medium">
-                        {user.email}
-                      </div>
-                    </td>
-                    <td className="px-4 py-2.5 text-xs font-medium text-slate-600">
-                      {user.membership
-                        ? plans.find(
-                            (p) => p.id === user.membership.membership_id,
-                          )?.name || "Active Plan"
-                        : "None"}
-                    </td>
-                    <td className="px-4 py-2.5">
-                      <span
-                        className={`px-1.5 py-0.5 rounded text-[8px] font-bold uppercase tracking-wider border ${
-                          user.membership && user.membership.is_active
-                            ? "bg-emerald-50 text-emerald-600 border-emerald-100"
-                            : "bg-slate-50 text-slate-400 border-slate-100"
-                        }`}
-                      >
-                        {user.membership && user.membership.is_active
-                          ? "Active"
-                          : "None"}
-                      </span>
-                    </td>
-                    <td className="px-4 py-2.5 text-xs text-slate-500">
-                      <div className="flex flex-col sm:flex-row gap-1.5 items-start sm:items-center">
-                        {user.membership && (
-                          <div className="text-[9px] font-bold text-slate-400 bg-slate-50 px-1.5 py-0.5 rounded border border-slate-100">
-                            Exp: {formatDate(user.membership.end_date)}
-                          </div>
-                        )}
-                        <button
-                          onClick={() => assignMembership(user.id)}
-                          className={`${user.membership ? "text-primary hover:text-accent font-semibold" : "bg-primary text-white px-3 py-1 rounded-lg hover:bg-slate-900"} font-bold text-[10px] active:scale-95 transition-all outline-none`}
-                        >
-                          {user.membership
-                            ? "Change"
-                            : "Assign"}
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
+      {isLoading ? (
+        <div className="text-center text-xs text-slate-400 italic py-8 bg-white border border-slate-200 rounded-lg shadow-xs">
+          Synchronizing database...
         </div>
-      </div>
+      ) : filteredUsers.length === 0 ? (
+        <div className="text-center text-xs text-slate-400 italic py-8 bg-white border border-slate-200 rounded-lg shadow-xs">
+          No users found in this category
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+          {filteredUsers.map((user) => (
+            <div
+              key={user.id}
+              className="bg-white rounded-md border border-slate-200 p-2 flex flex-col justify-between space-y-1.5 hover:border-slate-300 transition-colors shadow-xs"
+            >
+              <div className="flex justify-between items-start gap-1">
+                <div className="min-w-0">
+                  <h3 className="text-xs font-bold text-primary truncate">
+                    {user.full_name || user.email.split("@")[0]}
+                  </h3>
+                  <p className="text-[10px] text-slate-400 font-medium truncate">
+                    {user.email}
+                  </p>
+                </div>
+                <span
+                  className={`px-1 py-0.5 rounded text-[8px] font-bold uppercase tracking-wider border shrink-0 ${
+                    user.membership && user.membership.is_active
+                      ? "bg-emerald-50 text-emerald-600 border-emerald-100"
+                      : "bg-slate-50 text-slate-400 border-slate-100"
+                  }`}
+                >
+                  {user.membership && user.membership.is_active
+                    ? "Active Member"
+                    : "No Plan"}
+                </span>
+              </div>
+
+              <div className="pt-1.5 border-t border-slate-100 flex flex-col justify-between gap-1.5">
+                <div className="flex justify-between items-center text-[10px] text-slate-600 font-semibold">
+                  <span>
+                    Plan:{" "}
+                    {user.membership
+                      ? plans.find((p) => p.id === user.membership.membership_id)
+                          ?.name || "Active Plan"
+                      : "None"}
+                  </span>
+                  {user.membership && (
+                    <span className="text-[9px] text-slate-400 font-semibold">
+                      Exp: {formatDate(user.membership.end_date)}
+                    </span>
+                  )}
+                </div>
+                <button
+                  onClick={() => assignMembership(user.id)}
+                  className={`w-full py-1 rounded-md font-bold text-[10px] transition-all outline-none ${
+                    user.membership
+                      ? "border border-slate-200 text-slate-600 hover:bg-slate-50"
+                      : "bg-primary text-white hover:bg-slate-900"
+                  }`}
+                >
+                  {user.membership ? "Modify Plan" : "Assign Plan"}
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* Manage Membership Plans Section */}
       <div className="mt-6 bg-slate-50/50 rounded-xl border border-slate-200 p-4">
@@ -313,7 +284,7 @@ const AdminMemberships = () => {
               </div>
               <button
                 onClick={() => setEditingPlan(plan)}
-                className="w-full bg-slate-905 bg-slate-950 text-white py-1.5 rounded-lg text-xs font-bold hover:bg-primary transition-all active:scale-[0.98]"
+                className="w-full bg-slate-950 text-white py-1.5 rounded-lg text-xs font-bold hover:bg-primary transition-all active:scale-[0.98]"
               >
                 Edit Plan Details
               </button>
