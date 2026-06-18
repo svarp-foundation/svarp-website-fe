@@ -127,7 +127,7 @@ export default function Contact() {
                 </p>
                 <div className="flex flex-wrap gap-2 pt-1.5">
                   <a
-                    href="https://www.facebook.com/share/17zG3oSPaT/?mibextid=wwXIfr"
+                    href="https://www.facebook.com/profile.php?id=61590402162054"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center justify-center bg-muted hover:bg-blue-50 text-gray-600 hover:text-blue-600 px-3 py-1.5 rounded-lg text-[11px] sm:text-xs font-bold transition duration-200 border border-gray-100 hover:border-blue-100"
@@ -135,12 +135,28 @@ export default function Contact() {
                     Facebook
                   </a>
                   <a
-                    href="https://www.instagram.com/svarpfoundation?igsh=NDg0MzFmZmI2ZnI0&utm_source=qr"
+                    href="https://www.instagram.com/svarpglobal/?hl=en"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center justify-center bg-muted hover:bg-purple-50 text-gray-600 hover:text-purple-600 px-3 py-1.5 rounded-lg text-[11px] sm:text-xs font-bold transition duration-200 border border-gray-100 hover:border-purple-100"
                   >
                     Instagram
+                  </a>
+                  <a
+                    href="https://x.com/svarpglobal"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center bg-muted hover:bg-sky-50 text-gray-600 hover:text-sky-600 px-3 py-1.5 rounded-lg text-[11px] sm:text-xs font-bold transition duration-200 border border-gray-100 hover:border-sky-100"
+                  >
+                    X (Twitter)
+                  </a>
+                  <a
+                    href="https://www.linkedin.com/company/svarpglobal"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center bg-muted hover:bg-blue-50 text-gray-600 hover:text-blue-700 px-3 py-1.5 rounded-lg text-[11px] sm:text-xs font-bold transition duration-200 border border-gray-100 hover:border-blue-200"
+                  >
+                    LinkedIn
                   </a>
                 </div>
               </div>

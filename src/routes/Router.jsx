@@ -41,7 +41,7 @@ export default function Router() {
         <Route path="/about" element={<About />} />
         <Route path="/projects" element={<Projects />} />
         <Route path="/stories" element={<Stories isStandalone={true} />} />
-        <Route path="/reports" element={<Reports />} />
+        <Route path="/reports" element={<UnderDevelopment message="Our reports and documents page is under development. Stay tuned!" />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/careers" element={<Careers />} />
         <Route path="/careers/:jobId" element={<JobDetails />} />

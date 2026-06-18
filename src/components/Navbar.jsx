@@ -47,7 +47,6 @@ export default function Navbar() {
       submenu: [
         { name: "Gallery", path: "/gallery" },
         { name: "Stories", path: "/stories" },
-        { name: "Reports", path: "/reports" },
       ],
     },
     { name: "Courses", path: "https://globalacademy.svarp.org/" },

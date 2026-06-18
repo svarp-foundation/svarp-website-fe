@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
 
-export default function UnderDevelopment() {
+export default function UnderDevelopment({ message = "We are working hard to bring you our new courses. Stay tuned!" }) {
   return (
     <section className="h-dvh flex items-center justify-center bg-muted px-4">
       <div className="text-center max-w-lg">
@@ -13,7 +13,7 @@ export default function UnderDevelopment() {
           <h2 className="text-2xl font-semibold mb-3">Under Development</h2>
 
           <p className="text-gray-600 mb-8">
-            We are working hard to bring you our new courses. Stay tuned!
+            {message}
           </p>
 
           <NavLink
