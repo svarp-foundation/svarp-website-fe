@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import axios from "axios";
 import { API_URL } from "../lib/api";
 import {
@@ -68,13 +68,13 @@ const VerifyCertificate = () => {
             Verification Failed
           </h2>
           <p className="text-gray-600 text-sm mb-8">{error}</p>
-          <a
-            href={`${APP_URL}`}
+          <Link
+            to="/global-academy"
             className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-lg font-bold hover:bg-accent hover:text-primary transition-all duration-300 text-sm"
           >
             <ChevronLeft className="w-5 h-5" />
             Back to Academy
-          </a>
+          </Link>
         </div>
       </div>
     );
@@ -87,13 +87,13 @@ const VerifyCertificate = () => {
       <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-[#1f3b45]/5 rounded-full blur-3xl pointer-events-none -z-10" />
 
       <div className="max-w-3xl mx-auto relative z-10">
-        <a
-          href={`${APP_URL}`}
-          className="inline-flex items-center gap-2 text-gray-505 hover:text-primary font-bold mb-6 transition-colors text-sm"
+        <Link
+          to="/global-academy"
+          className="inline-flex items-center gap-2 text-gray-555 hover:text-primary font-bold mb-6 transition-colors text-sm"
         >
           <ChevronLeft className="w-5 h-5" />
           Back to Academy
-        </a>
+        </Link>
 
         <div className="bg-white rounded-xl shadow-2xl overflow-hidden border border-gray-100 flex flex-col md:flex-row transition-all duration-300 hover:shadow-primary/10">
           {/* Left Side: Status & Badge */}

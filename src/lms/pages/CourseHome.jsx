@@ -546,7 +546,7 @@ const CourseHome = () => {
                     onKeyDown={(e) => {
                       if (e.key === "Enter") {
                         const code = e.target.value.trim();
-                        if (code) window.location.href = `${APP_URL}/verify/${code}`;
+                        if (code) navigate(`/global-academy/verify/${code}`);
                       }
                     }}
                   />
@@ -556,7 +556,7 @@ const CourseHome = () => {
                       const code = document
                         .getElementById("manual-verify-input")
                         ?.value.trim();
-                      if (code) window.location.href = `${APP_URL}/verify/${code}`;
+                      if (code) navigate(`/global-academy/verify/${code}`);
                     }}
                   >
                     Verify

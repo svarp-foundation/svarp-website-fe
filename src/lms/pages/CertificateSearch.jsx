@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 import { 
   ShieldCheck, 
@@ -13,6 +14,7 @@ const APP_URL = import.meta.env.VITE_APP_URL || "https://globalacademy.svarp.org
 
 const CertificateSearch = () => {
   const [certificateId, setCertificateId] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const observerOptions = { threshold: 0.1 };
@@ -36,7 +38,7 @@ const CertificateSearch = () => {
     e.preventDefault();
     const code = certificateId.trim();
     if (code) {
-      window.location.href = `${APP_URL}/verify/${code}`;
+      navigate(`/global-academy/verify/${code}`);
     }
   };
 
@@ -50,13 +52,13 @@ const CertificateSearch = () => {
         
         {/* Left Side: Context & Trust */}
         <div className="reveal">
-          <a
-            href={`${APP_URL}`}
-            className="inline-flex items-center gap-2 text-gray-505 hover:text-primary font-bold mb-8 transition-colors text-sm"
+          <Link
+            to="/global-academy"
+            className="inline-flex items-center gap-2 text-gray-555 hover:text-primary font-bold mb-8 transition-colors text-sm"
           >
             <ChevronLeft size={18} />
-            Back to Academy
-          </a>
+            Back
+          </Link>
           
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-accent/10 border border-accent/20 text-primary rounded-md text-xs font-bold uppercase tracking-wider mb-6">
             <ShieldCheck size={14} className="text-accent" />
