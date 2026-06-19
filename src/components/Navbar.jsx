@@ -49,7 +49,13 @@ export default function Navbar() {
         { name: "Stories", path: "/stories" },
       ],
     },
-    { name: "Courses", path: "/global-academy" },
+    {
+      name: "Courses",
+      submenu: [
+        { name: "Academy Home", path: "/global-academy" },
+        { name: "Verify Certificate", path: "/global-academy/verify" },
+      ],
+    },
     { name: "Contact", path: "/contact" },
   ];
 
