@@ -121,18 +121,18 @@ const CourseHome = () => {
                 institutions worldwide.
               </p>
               <div className="flex flex-col gap-4 max-w-xs mx-auto lg:mx-0">
-                <a
-                  href={`${APP_URL}/register`}
+                <Link
+                  to="/register"
                   className="px-6 py-3 bg-primary text-white font-bold rounded-lg hover:scale-[1.02] hover:bg-accent hover:text-primary transition-all duration-300 shadow-md text-sm text-center"
                 >
                   Join the Academy
-                </a>
-                <a
-                  href={`${APP_URL}`}
+                </Link>
+                <Link
+                  to="/global-academy"
                   className="px-6 py-3 bg-white border border-gray-200 text-primary font-bold rounded-lg hover:scale-[1.02] hover:border-accent hover:text-accent transition-all duration-300 shadow-sm text-sm text-center"
                 >
                   Browse Courses
-                </a>
+                </Link>
               </div>
             </div>
           </div>
@@ -191,13 +191,13 @@ const CourseHome = () => {
                 Explore our most popular and professionally vetted EHS and safety programs.
               </p>
             </div>
-            <a
-              href={`${APP_URL}`}
+            <Link
+              to="/global-academy/catalog"
               className="text-accent font-bold flex items-center gap-2 hover:gap-3 transition-all duration-300 border-b-2 border-accent pb-1 group"
             >
               View Catalog{" "}
               <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </a>
+            </Link>
           </div>
 
           {loading ? (
@@ -414,12 +414,12 @@ const CourseHome = () => {
                     </li>
                   ))}
                 </ul>
-                <a
-                  href={`${APP_URL}`}
+                <Link
+                  to="/global-academy"
                   className="block text-center w-full py-3 px-4 bg-muted hover:bg-primary hover:text-white text-primary font-bold rounded-lg transition duration-300 border border-gray-150"
                 >
                   Learn More
-                </a>
+                </Link>
               </div>
             ))}
           </div>
@@ -702,12 +702,12 @@ const CourseHome = () => {
             globally trusted EHS certifications.
           </p>
           <div className="flex flex-wrap justify-center md:justify-start items-center gap-6">
-            <a
-              href={`${APP_URL}/register`}
+            <Link
+              to="/register"
               className="px-8 py-3.5 bg-accent text-primary font-extrabold rounded-lg shadow-lg hover:bg-white transition duration-300"
             >
               Register Now
-            </a>
+            </Link>
             <div className="flex flex-col justify-center text-left">
               <p className="font-bold flex items-center gap-2 text-accent text-sm sm:text-base">
                 <ShieldCheck className="w-6 h-6" />

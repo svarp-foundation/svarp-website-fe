@@ -68,12 +68,12 @@ const CourseCard = ({ course, isPublic = false, enrolled = false }) => {
         )}
 
         <div className="mt-auto grid grid-cols-2 gap-3">
-          <a
-            href={`${APP_URL}/courses/${course.id}`}
+          <Link
+            to={`/global-academy/courses/${course.id}`}
             className="flex items-center justify-center gap-2 bg-gray-100 text-gray-700 py-2 rounded-lg font-bold hover:bg-gray-200 transition text-sm text-center"
           >
             <Info size={16} /> Overview
-          </a>
+          </Link>
 
           {/* Enrolled users get Continue button */}
           {enrolled ? (

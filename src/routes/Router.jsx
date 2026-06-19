@@ -25,6 +25,7 @@ import CourseHome from "../lms/pages/CourseHome";
 import CourseOverview from "../lms/pages/CourseOverview";
 import CertificateSearch from "../lms/pages/CertificateSearch";
 import VerifyCertificate from "../lms/pages/VerifyCertificate";
+import CourseCatalog from "../lms/pages/CourseCatalog";
 // Admin Pages
 import AdminLayout from "../pages/admin/AdminLayout";
 import AdminLogin from "../pages/admin/AdminLogin";
@@ -59,10 +60,11 @@ export default function Router() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/payment" element={<Payment />} />
         <Route path="/donate" element={<Donation />} />
-        <Route path="/courses" element={<Navigate to="/global-academy" replace />} />
-        <Route path="/course" element={<Navigate to="/global-academy" replace />} />
+        <Route path="/courses" element={<Navigate to="/global-academy/catalog" replace />} />
+        <Route path="/course" element={<Navigate to="/global-academy/catalog" replace />} />
         <Route path="/global-academy" element={<CourseHome />} />
         <Route path="/global-academy/courses/:courseId" element={<CourseOverview />} />
+        <Route path="/global-academy/catalog" element={<CourseCatalog />} />
         <Route path="/global-academy/verify" element={<CertificateSearch />} />
         <Route path="/global-academy/verify/:certificateCode" element={<VerifyCertificate />} />
       </Route>

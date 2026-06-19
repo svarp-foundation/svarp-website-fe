@@ -52,7 +52,8 @@ export default function Navbar() {
     {
       name: "Courses",
       submenu: [
-        { name: "Academy Home", path: "/global-academy" },
+        { name: "Global Academy", path: "/global-academy" },
+        { name: "Courses Catalog", path: "/global-academy/catalog" },
         { name: "Verify Certificate", path: "/global-academy/verify" },
       ],
     },
