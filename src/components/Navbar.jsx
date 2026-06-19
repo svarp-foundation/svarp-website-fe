@@ -49,7 +49,7 @@ export default function Navbar() {
         { name: "Stories", path: "/stories" },
       ],
     },
-    { name: "Courses", path: "https://globalacademy.svarp.org/" },
+    { name: "Courses", path: "/global-academy" },
     { name: "Contact", path: "/contact" },
   ];
 

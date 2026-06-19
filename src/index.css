@@ -127,3 +127,62 @@ html.lenis, html.lenis body {
 .animate-marquee-right {
   animation: marquee-right 40s linear infinite;
 }
+
+/* ─── LMS Reveal & Interactivity Styles ─── */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-delay-100 {
+  transition-delay: 100ms;
+}
+.reveal-delay-200 {
+  transition-delay: 200ms;
+}
+.reveal-delay-300 {
+  transition-delay: 300ms;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+.hover-lift {
+  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.hover-lift:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none !important;
+  width: 0px !important;
+  height: 0px !important;
+}
+.no-scrollbar {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
