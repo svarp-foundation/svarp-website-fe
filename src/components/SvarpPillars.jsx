@@ -6,24 +6,24 @@ export default function SvarpPillars() {
   const pillars = [
     {
       letter: "S",
-      title: "Safety",
-      description: "Protecting lives, preventing workplace hazards, and securing sustainable operations worldwide.",
-      color: "from-blue-500 to-cyan-500",
-      textColor: "text-blue-600",
-      bgLight: "bg-blue-50/50",
-    },
-    {
-      letter: "V",
-      title: "Value",
-      description: "Enhancing organizational excellence, compliance standards, and corporate integrity.",
+      title: "Sustainable",
+      description: "Securing long-term ecological, social, and economic viability through responsible resource management, green practices, and sustainable development initiatives.",
       color: "from-emerald-500 to-teal-500",
       textColor: "text-emerald-600",
       bgLight: "bg-emerald-50/50",
     },
     {
+      letter: "V",
+      title: "Vigilance",
+      description: "Maintaining continuous alertness, proactive threat monitoring, and persistent hazard identification to ensure safety readiness before incidents occur.",
+      color: "from-blue-500 to-cyan-500",
+      textColor: "text-blue-600",
+      bgLight: "bg-blue-50/50",
+    },
+    {
       letter: "A",
       title: "Awareness",
-      description: "Spreading safety education, professional certification training, and driving proactive social actions.",
+      description: "Fostering safety education, spreading critical knowledge, and conducting professional training to build a highly informed and proactive society.",
       color: "from-amber-500 to-orange-500",
       textColor: "text-amber-600",
       bgLight: "bg-amber-50/50",
@@ -31,20 +31,21 @@ export default function SvarpPillars() {
     {
       letter: "R",
       title: "Resilience",
-      description: "Fostering organizational adaptability, emergency preparedness, and systemic operational endurance.",
+      description: "Strengthening systemic adaptability, emergency preparedness, and the organizational endurance required to withstand and recover from disruptions.",
       color: "from-purple-500 to-indigo-500",
       textColor: "text-purple-600",
       bgLight: "bg-purple-50/50",
     },
     {
       letter: "P",
-      title: "Prosperity",
-      description: "Cultivating long-term community wellness, environmental wealth, and sustainable social growth.",
+      title: "Prevention",
+      description: "Eliminating hazards and establishing robust protective measures to mitigate risks and prevent accidents or crises before they can manifest.",
       color: "from-rose-500 to-pink-500",
       textColor: "text-rose-600",
       bgLight: "bg-rose-50/50",
     },
   ];
+
 
   return (
     <section className="py-16 sm:py-24 bg-muted relative overflow-hidden">
