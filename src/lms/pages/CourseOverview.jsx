@@ -5,6 +5,15 @@ import { PlayCircle, FileText, CheckCircle, Lock, ChevronLeft } from "lucide-rea
 import { useAuth } from "../../context/AuthContext";
 
 const APP_URL = import.meta.env.VITE_APP_URL || "https://globalacademy.svarp.org";
+const LMS_BE_URL = import.meta.env.VITE_LMS_BE_URL || "https://api.svarp.org/lms";
+
+const getThumbnailUrl = (url) => {
+  if (!url) return "";
+  if (url.startsWith("http://") || url.startsWith("https://") || url.startsWith("data:")) return url;
+  const cleanBase = LMS_BE_URL.replace(/\/+$/, "");
+  const cleanPath = url.startsWith("/") ? url : `/${url}`;
+  return `${cleanBase}${cleanPath}`;
+};
 
 const CourseOverview = () => {
   const { courseId } = useParams();
@@ -173,7 +182,7 @@ const CourseOverview = () => {
               <div className="aspect-video bg-gray-100 rounded-lg mb-6 overflow-hidden border border-gray-55 shadow-inner">
                 {course.thumbnail_url ? (
                   <img
-                    src={course.thumbnail_url}
+                    src={getThumbnailUrl(course.thumbnail_url)}
                     alt={course.title}
                     className="w-full h-full object-cover"
                   />

@@ -3,6 +3,15 @@ import { Link } from "react-router-dom";
 import { GraduationCap, PlayCircle, Info, CheckCircle } from "lucide-react";
 
 const APP_URL = import.meta.env.VITE_APP_URL || "https://globalacademy.svarp.org";
+const LMS_BE_URL = import.meta.env.VITE_LMS_BE_URL || "https://api.svarp.org/lms";
+
+const getThumbnailUrl = (url) => {
+  if (!url) return "";
+  if (url.startsWith("http://") || url.startsWith("https://") || url.startsWith("data:")) return url;
+  const cleanBase = LMS_BE_URL.replace(/\/+$/, "");
+  const cleanPath = url.startsWith("/") ? url : `/${url}`;
+  return `${cleanBase}${cleanPath}`;
+};
 
 const CourseCard = ({ course, isPublic = false, enrolled = false }) => {
   return (
@@ -10,7 +19,7 @@ const CourseCard = ({ course, isPublic = false, enrolled = false }) => {
       <div className="h-44 bg-gray-200 relative overflow-hidden">
         {course.thumbnail_url ? (
           <img
-            src={course.thumbnail_url}
+            src={getThumbnailUrl(course.thumbnail_url)}
             alt={course.title}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
           />
