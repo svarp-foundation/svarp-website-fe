@@ -1,33 +1,37 @@
+import { useTranslation } from "react-i18next";
+
 export default function WhatWeDo() {
+  const { t } = useTranslation();
+
   const items = [
     {
-      title: "EHS & Sustainability Audits",
-      subtitle: "ISO-aligned safety & ESG compliance",
+      title: t("whatWeDo.ehsAudits"),
+      subtitle: t("whatWeDo.ehsAuditsDesc"),
       image: "/company/images/IMG-1.webp",
     },
     {
-      title: "Training & Certifications",
-      subtitle: "Professional safety & leadership programs",
+      title: t("whatWeDo.training"),
+      subtitle: t("whatWeDo.trainingDesc"),
       image: "/company/images/IMG-2.webp",
     },
     {
-      title: "Risk Engineering",
-      subtitle: "HAZOP, QRA & process safety studies",
+      title: t("whatWeDo.riskEngineering"),
+      subtitle: t("whatWeDo.riskEngineeringDesc"),
       image: "/company/images/IMG-3.webp",
     },
     {
-      title: "Corporate Advisory",
-      subtitle: "Membership & customized consulting",
+      title: t("whatWeDo.corporateAdvisory"),
+      subtitle: t("whatWeDo.corporateAdvisoryDesc"),
       image: "/company/images/IMG-4.webp",
     },
     {
-      title: "Community Empowerment",
-      subtitle: "Education & social responsibility",
+      title: t("whatWeDo.communityEmpowerment"),
+      subtitle: t("whatWeDo.communityEmpowermentDesc"),
       image: "/company/images/IMG-5.webp",
     },
     {
-      title: "Wellness & Leadership",
-      subtitle: "Holistic growth & skill development",
+      title: t("whatWeDo.wellness"),
+      subtitle: t("whatWeDo.wellnessDesc"),
       image: "/company/images/IMG-6.webp",
     },
   ];
@@ -41,12 +45,10 @@ export default function WhatWeDo() {
         {/* Header */}
         <div className="max-w-3xl mb-10 sm:mb-16">
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold mb-4 sm:mb-6">
-            What We Do
+            {t("whatWeDo.title")}
           </h2>
           <p className="text-gray-600 text-base sm:text-lg">
-            SVARP Global delivers integrated solutions across safety,
-            sustainability, professional development, and social impact for
-            organizations and communities.
+            {t("whatWeDo.description")}
           </p>
         </div>
 
@@ -58,19 +60,21 @@ export default function WhatWeDo() {
               className="group relative w-32 h-32 sm:w-44 sm:h-44 md:w-52 md:h-52 rounded-full overflow-hidden flex flex-col items-center justify-center text-center p-4 sm:p-6 shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100"
             >
               {/* Background Image with Zoom on Hover */}
-              <div
-                className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
-                style={{ backgroundImage: `url(${item.image})` }}
+              <img
+                src={item.image}
+                alt={item.title}
+                className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
               />
-              {/* Dark/Gradient Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-br from-black/85 via-black/55 to-black/85 transition-all duration-300 group-hover:from-black/90 group-hover:via-black/65 group-hover:to-black/90" />
+
+              {/* Overlay for readable text */}
+              <div className="absolute inset-0 bg-primary/75 group-hover:bg-primary/85 transition-colors duration-300" />
               
               {/* Content */}
-              <div className="relative z-10 text-white">
-                <h3 className="text-xs sm:text-sm md:text-base font-semibold mb-1 sm:mb-2 leading-tight group-hover:text-accent transition-colors duration-300">
+              <div className="relative z-10 space-y-1 sm:space-y-2 text-white">
+                <h3 className="text-sm sm:text-lg md:text-xl font-bold leading-tight group-hover:text-accent transition-colors">
                   {item.title}
                 </h3>
-                <p className="text-[10px] sm:text-xs text-gray-200 opacity-90 leading-snug">
+                <p className="text-[10px] sm:text-xs text-gray-200 line-clamp-2 leading-tight">
                   {item.subtitle}
                 </p>
               </div>

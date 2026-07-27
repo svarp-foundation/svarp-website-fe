@@ -1,6 +1,8 @@
 import { NavLink, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { useAuth } from "../context/AuthContext";
+import LanguageSwitcher from "./LanguageSwitcher";
 
 const linkClass = ({ isActive }) =>
   `relative transition ${
@@ -17,6 +19,7 @@ export default function Navbar() {
   const [activeDropdown, setActiveDropdown] = useState(null);
   const { user } = useAuth();
   const location = useLocation();
+  const { t } = useTranslation();
 
   useEffect(() => {
     setOpen(false);
@@ -24,40 +27,40 @@ export default function Navbar() {
   }, [location]);
 
   const menuItems = [
-    { name: "Home", path: "/" },
+    { name: t("nav.home"), path: "/" },
     {
-      name: "About",
+      name: t("nav.about"),
       submenu: [
-        { name: "About Us", path: "/about" },
-        { name: "Our Team", path: "/team" },
-        { name: "Certifications", path: "/certifications" },
+        { name: t("nav.aboutUs"), path: "/about" },
+        { name: t("nav.ourTeam"), path: "/team" },
+        { name: t("nav.certifications"), path: "/certifications" },
       ],
     },
-    { name: "Services", path: "/projects" },
+    { name: t("nav.services"), path: "/projects" },
     {
-      name: "Community",
+      name: t("nav.community"),
       submenu: [
-        { name: "Membership", path: "/membership" },
-        { name: "Careers", path: "/careers" },
-        { name: "Events", path: "/events" },
-      ],
-    },
-    {
-      name: "Resources",
-      submenu: [
-        { name: "Gallery", path: "/gallery" },
-        { name: "Stories", path: "/stories" },
+        { name: t("nav.membership"), path: "/membership" },
+        { name: t("nav.careers"), path: "/careers" },
+        { name: t("nav.events"), path: "/events" },
       ],
     },
     {
-      name: "Courses",
+      name: t("nav.resources"),
       submenu: [
-        { name: "Global Academy", path: "/global-academy" },
-        { name: "Courses Catalog", path: "/global-academy/catalog" },
-        { name: "Verify Certificate", path: "/global-academy/verify" },
+        { name: t("nav.gallery"), path: "/gallery" },
+        { name: t("nav.stories"), path: "/stories" },
       ],
     },
-    { name: "Contact", path: "/contact" },
+    {
+      name: t("nav.courses"),
+      submenu: [
+        { name: t("nav.globalAcademy"), path: "/global-academy" },
+        { name: t("nav.coursesCatalog"), path: "/global-academy/catalog" },
+        { name: t("nav.verifyCertificate"), path: "/global-academy/verify" },
+      ],
+    },
+    { name: t("nav.contact"), path: "/contact" },
   ];
 
   const isSubmenuActive = (submenu) => {
@@ -143,6 +146,8 @@ export default function Navbar() {
               )
             ))}
 
+            {/* Language Switcher Component */}
+            <LanguageSwitcher variant="desktop" />
 
             {user ? (
               <NavLink
@@ -181,13 +186,13 @@ export default function Navbar() {
                   to="/login"
                   className="border border-white/20 text-white hover:border-accent hover:text-accent px-4 py-1.5 rounded-full font-semibold transition text-[11px] hover:scale-105 active:scale-95"
                 >
-                  Login
+                  {t("nav.login")}
                 </NavLink>
                 <NavLink
                   to="/register"
                   className="bg-accent text-primary px-4 py-1.5 rounded-full font-bold hover:scale-105 active:scale-95 transition-all shadow-lg shadow-accent/10 text-[11px]"
                 >
-                  Register
+                  {t("nav.register")}
                 </NavLink>
               </div>
             )}
@@ -241,7 +246,7 @@ export default function Navbar() {
 
       {/* Mobile Menu */}
       <div className={`lg:hidden fixed inset-x-0 top-[64px] sm:top-[72px] bottom-0 bg-zinc-950/95 backdrop-blur-2xl border-t border-white/10 transition-all duration-500 overflow-hidden ${open ? "opacity-100 visible" : "opacity-0 invisible pointer-events-none"}`}>
-        <div className="px-4 py-4 space-y-1.5 text-white overflow-y-auto h-full pb-[env(safe-area-inset-bottom,20px)]">
+        <div className="px-4 py-4 space-y-3 text-white overflow-y-auto h-full pb-[env(safe-area-inset-bottom,20px)]">
           {menuItems.map((item) => (
             <div key={item.name} className="border-b border-white/5 last:border-0 pb-1">
               {item.submenu ? (
@@ -292,21 +297,25 @@ export default function Navbar() {
             </div>
           ))}
 
-          <div className="pt-4 flex flex-col gap-2.5">
+          {/* Mobile Language Switcher */}
+          <div className="pt-2 pb-2 border-t border-white/10">
+            <LanguageSwitcher variant="mobile" />
+          </div>
 
+          <div className="pt-2 flex flex-col gap-2.5">
             {!user && (
               <>
                 <NavLink
                   to="/login"
                   className="w-full bg-accent text-primary px-4 py-2.5 rounded-xl text-center text-xs font-bold"
                 >
-                  Login
+                  {t("nav.login")}
                 </NavLink>
                 <NavLink
                   to="/register"
                   className="w-full bg-white/10 text-white border border-white/10 px-4 py-2.5 rounded-xl text-center text-xs font-bold"
                 >
-                  Register
+                  {t("nav.register")}
                 </NavLink>
               </>
             )}

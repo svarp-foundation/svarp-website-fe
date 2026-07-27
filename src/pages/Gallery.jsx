@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import ImageModal from "../components/ImageModal";
 
 export default function EventGallery() {
+  const { t } = useTranslation();
   const events = [
     {
       id: "dn-polytechnic",
@@ -25,17 +27,6 @@ export default function EventGallery() {
         "/events/event-2/picture-5.webp",
       ],
     },
-    // {
-    //   id: "Mahindra pride classroom",
-    //   title: "Mahindra pride classroom",
-    //   images: [
-    //     "/events/event-3/picture-1.webp",
-    //     "/events/event-3/picture-2.webp",
-    //     "/events/event-3/picture-3.webp",
-    //     "/events/event-3/picture-4.webp",
-    //     "/events/event-3/picture-5.webp",
-    //   ],
-    // },
     {
       id: "onground-training",
       title: "Onground Training",
@@ -80,17 +71,6 @@ export default function EventGallery() {
         "/events/event-7/picture-5.webp",
       ],
     },
-    // {
-    //   id: "MPC Nandi Foundation",
-    //   title: "MPC Nandi Foundation",
-    //   images: [
-    //     "/events/event-8/picture-1.webp",
-    //     "/events/event-8/picture-2.webp",
-    //     "/events/event-8/picture-3.webp",
-    //     "/events/event-8/picture-4.webp",
-    //     "/events/event-8/picture-5.webp",
-    //   ],
-    // },
   ];
 
   const [activeEvent, setActiveEvent] = useState(events[0]);
@@ -109,11 +89,10 @@ export default function EventGallery() {
         {/* Header */}
         <div className="max-w-3xl mb-6 sm:mb-10">
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold mb-3 sm:mb-4">
-            Event Gallery
+            {t("gallery.title")}
           </h1>
           <p className="text-gray-600 text-base sm:text-lg">
-            Explore moments from SVARP Global's corporate, certification,
-            and social events.
+            {t("gallery.description")}
           </p>
         </div>
 
@@ -168,7 +147,7 @@ export default function EventGallery() {
               />
 
               <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
-                <span className="text-white text-sm">View</span>
+                <span className="text-white text-sm">{t("gallery.view")}</span>
               </div>
             </div>
           ))}

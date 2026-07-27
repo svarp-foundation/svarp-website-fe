@@ -1,7 +1,9 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { usePopup } from "../context/PopupContext";
 
 export default function Contact() {
+  const { t } = useTranslation();
   const { showPopup } = usePopup();
   const [formData, setFormData] = useState({
     name: "",
@@ -32,15 +34,15 @@ export default function Contact() {
 
       if (!response.ok) {
         const errData = await response.json();
-        throw new Error(errData.detail || "Failed to send message.");
+        throw new Error(errData.detail || t("contact.errorMessage"));
       }
 
-      showPopup("Your message has been sent successfully!", "success");
+      showPopup(t("contact.successMessage"), "success");
       setFormData({ name: "", email: "", message: "" });
     } catch (error) {
       console.error("Contact form error:", error);
       showPopup(
-        error.message || "An error occurred while sending your message.",
+        error.message || t("contact.errorMessage"),
         "error",
       );
     } finally {
@@ -58,13 +60,13 @@ export default function Contact() {
         {/* Header Section */}
         <div className="max-w-3xl">
           <span className="text-xs sm:text-sm font-semibold tracking-wider text-primary uppercase bg-white px-4 py-1.5 rounded-full inline-block mb-3 sm:mb-4 shadow-sm">
-            Get in Touch
+            {t("contact.badge")}
           </span>
           <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold mb-3 sm:mb-6 text-primary tracking-tight">
-            Connect with SVARP Global
+            {t("contact.title")}
           </h1>
           <p className="text-sm sm:text-lg text-gray-600 leading-relaxed">
-            Have questions about our safety leadership courses, EHS audits, or youth empowerment drives? Let us know how we can assist you.
+            {t("contact.description")}
           </p>
         </div>
 
@@ -81,11 +83,11 @@ export default function Contact() {
                 </svg>
               </div>
               <div className="space-y-1">
-                <h3 className="font-extrabold text-primary text-sm sm:text-base">Office Address</h3>
+                <h3 className="font-extrabold text-primary text-sm sm:text-base">{t("contact.officeAddress")}</h3>
                 <p className="text-gray-600 text-xs sm:text-sm leading-relaxed">
-                  A-200, Shatabdi Nagar, Sector 2, MDA <br />
-                  Meerut, Uttar Pradesh – 250103 <br />
-                  India
+                  {t("contact.addressLine1")} <br />
+                  {t("contact.addressLine2")} <br />
+                  {t("contact.addressCountry")}
                 </p>
               </div>
             </div>
@@ -98,14 +100,14 @@ export default function Contact() {
                 </svg>
               </div>
               <div className="space-y-1">
-                <h3 className="font-extrabold text-primary text-sm sm:text-base">Direct Channels</h3>
+                <h3 className="font-extrabold text-primary text-sm sm:text-base">{t("contact.directChannels")}</h3>
                 <div className="flex flex-col gap-2 text-xs sm:text-sm text-gray-600">
                   <div>
-                    <span className="block font-semibold text-primary text-[10px] uppercase tracking-wider">Phone</span>
+                    <span className="block font-semibold text-primary text-[10px] uppercase tracking-wider">{t("contact.phone")}</span>
                     <a href="tel:+919917759966" className="text-gray-600 hover:text-accent transition text-sm">+91-9917759966</a>
                   </div>
                   <div>
-                    <span className="block font-semibold text-primary text-[10px] uppercase tracking-wider">Email</span>
+                    <span className="block font-semibold text-primary text-[10px] uppercase tracking-wider">{t("contact.email")}</span>
                     <a href="mailto:info@svarp.org" className="text-gray-600 hover:text-accent transition text-sm break-all">info@svarp.org</a>
                   </div>
                 </div>
@@ -120,10 +122,10 @@ export default function Contact() {
                 </svg>
               </div>
               <div className="space-y-2 flex-1">
-                <h3 className="font-extrabold text-primary text-sm sm:text-base">Hours & Networking</h3>
+                <h3 className="font-extrabold text-primary text-sm sm:text-base">{t("contact.hoursTitle")}</h3>
                 <p className="text-gray-500 text-[11px] sm:text-xs leading-relaxed">
-                  Monday – Friday: 9:00 AM – 6:00 PM <br />
-                  Saturday: 10:00 AM – 4:00 PM
+                  {t("contact.hoursLine1")} <br />
+                  {t("contact.hoursLine2")}
                 </p>
                 <div className="flex flex-wrap gap-2 pt-1.5">
                   <a
@@ -138,7 +140,7 @@ export default function Contact() {
                     href="https://www.instagram.com/svarpglobal/?hl=en"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center bg-muted hover:bg-purple-50 text-gray-600 hover:text-purple-600 px-3 py-1.5 rounded-lg text-[11px] sm:text-xs font-bold transition duration-200 border border-gray-100 hover:border-purple-100"
+                    className="inline-flex items-center justify-center bg-muted hover:bg-pink-50 text-gray-600 hover:text-pink-600 px-3 py-1.5 rounded-lg text-[11px] sm:text-xs font-bold transition duration-200 border border-gray-100 hover:border-pink-100"
                   >
                     Instagram
                   </a>
@@ -154,7 +156,7 @@ export default function Contact() {
                     href="https://www.linkedin.com/company/svarpglobal"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center bg-muted hover:bg-blue-50 text-gray-600 hover:text-blue-700 px-3 py-1.5 rounded-lg text-[11px] sm:text-xs font-bold transition duration-200 border border-gray-100 hover:border-blue-200"
+                    className="inline-flex items-center justify-center bg-muted hover:bg-blue-50 text-gray-600 hover:text-blue-700 px-3 py-1.5 rounded-lg text-[11px] sm:text-xs font-bold transition duration-200 border border-gray-100 hover:border-blue-100"
                   >
                     LinkedIn
                   </a>
@@ -164,51 +166,63 @@ export default function Contact() {
           </div>
 
           {/* Right Column: Contact Form */}
-          <div className="bg-white rounded-3xl p-5 sm:p-8 shadow-sm border border-gray-100 flex flex-col justify-center">
-            <h2 className="text-lg sm:text-xl font-bold text-primary mb-4 sm:mb-6">Send Us a Message</h2>
-            <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="bg-white rounded-3xl p-6 sm:p-10 shadow-xl border border-gray-100 flex flex-col justify-center">
+            <h2 className="text-xl sm:text-2xl font-bold text-primary mb-6">
+              {t("contact.formTitle")}
+            </h2>
+
+            <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
               <div>
+                <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
+                  {t("contact.namePlaceholder")}
+                </label>
                 <input
                   type="text"
                   name="name"
+                  required
                   value={formData.name}
                   onChange={handleChange}
-                  required
-                  placeholder="Your Full Name"
-                  className="w-full border border-gray-200 bg-slate-50/50 p-3 sm:p-3.5 rounded-xl focus:outline-none focus:ring-2 focus:ring-accent focus:bg-white text-xs sm:text-sm transition"
+                  placeholder={t("contact.namePlaceholder")}
+                  className="w-full px-4 py-3 bg-muted border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-accent transition duration-200"
                 />
               </div>
 
               <div>
+                <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
+                  {t("contact.emailPlaceholder")}
+                </label>
                 <input
                   type="email"
                   name="email"
+                  required
                   value={formData.email}
                   onChange={handleChange}
-                  required
-                  placeholder="Your Email Address"
-                  className="w-full border border-gray-200 bg-slate-50/50 p-3 sm:p-3.5 rounded-xl focus:outline-none focus:ring-2 focus:ring-accent focus:bg-white text-xs sm:text-sm transition"
+                  placeholder={t("contact.emailPlaceholder")}
+                  className="w-full px-4 py-3 bg-muted border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-accent transition duration-200"
                 />
               </div>
 
               <div>
+                <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
+                  {t("contact.messagePlaceholder")}
+                </label>
                 <textarea
                   name="message"
+                  rows="4"
+                  required
                   value={formData.message}
                   onChange={handleChange}
-                  required
-                  placeholder="How can we help you?"
-                  rows="4"
-                  className="w-full border border-gray-200 bg-slate-50/50 p-3 sm:p-3.5 rounded-xl focus:outline-none focus:ring-2 focus:ring-accent focus:bg-white text-xs sm:text-sm transition"
+                  placeholder={t("contact.messagePlaceholder")}
+                  className="w-full px-4 py-3 bg-muted border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-accent transition duration-200"
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full sm:w-auto bg-primary text-white hover:bg-accent hover:text-primary border border-transparent px-6 py-3 sm:px-8 sm:py-3.5 rounded-full font-bold shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-95 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-xs sm:text-sm"
+                className="w-full bg-accent text-primary py-3.5 px-6 rounded-xl font-bold hover:scale-[1.02] active:scale-95 transition-all duration-200 shadow-lg shadow-accent/20 disabled:opacity-50 text-sm"
               >
-                {loading ? "Sending..." : "Send Message"}
+                {loading ? t("contact.sending") : t("contact.sendMessage")}
               </button>
             </form>
           </div>

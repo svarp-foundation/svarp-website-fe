@@ -1,6 +1,9 @@
 import { NavLink } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 export default function Footer() {
+  const { t } = useTranslation();
+
   const socialLinks = [
     {
       name: "Facebook",
@@ -64,18 +67,18 @@ export default function Footer() {
           </NavLink>
           <span className="hidden sm:inline text-slate-700">|</span>
           <p className="text-xs text-slate-400">
-            © {new Date().getFullYear()} SVARP Global. All rights reserved.
+            {t("footer.copyright", { year: new Date().getFullYear() })}
           </p>
         </div>
 
         {/* Right Side: Links, Contacts & Socials */}
         <div className="flex flex-col md:flex-row items-center gap-4 md:gap-6 text-xs text-slate-300 font-medium">
           <div className="flex flex-wrap items-center justify-center gap-4">
-            <NavLink to="/about" className="hover:text-accent transition-colors">About</NavLink>
-            <NavLink to="/team" className="hover:text-accent transition-colors">Team</NavLink>
-            <NavLink to="/projects" className="hover:text-accent transition-colors">Services</NavLink>
-            <NavLink to="/careers" className="hover:text-accent transition-colors">Careers</NavLink>
-            <NavLink to="/contact" className="hover:text-accent transition-colors">Contact</NavLink>
+            <NavLink to="/about" className="hover:text-accent transition-colors">{t("footer.about")}</NavLink>
+            <NavLink to="/team" className="hover:text-accent transition-colors">{t("footer.team")}</NavLink>
+            <NavLink to="/projects" className="hover:text-accent transition-colors">{t("footer.services")}</NavLink>
+            <NavLink to="/careers" className="hover:text-accent transition-colors">{t("footer.careers")}</NavLink>
+            <NavLink to="/contact" className="hover:text-accent transition-colors">{t("footer.contact")}</NavLink>
           </div>
           
           <span className="hidden md:inline text-slate-700">|</span>

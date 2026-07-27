@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import Lenis from "lenis";
 import "./App.css";
 import Router from "./routes/Router";
 import Loader from "./components/Loader";
+import RTLProvider from "./components/RTLProvider";
 import { AuthProvider } from "./context/AuthContext";
 import { PopupProvider } from "./context/PopupContext";
 
@@ -12,6 +14,7 @@ function App() {
     !localStorage.getItem("videoPlayed"),
   );
   const location = useLocation();
+  const { t, i18n } = useTranslation();
 
   const handleLoaderComplete = () => {
     localStorage.setItem("videoPlayed", "true");
@@ -24,9 +27,11 @@ function App() {
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
-      wheelMultiplier: 1.0,
-      touchMultiplier: 1.5,
+      wheelMultiplier: 1,
+      touchMultiplier: 2,
     });
+
+    window.lenis = lenis;
 
     function raf(time) {
       lenis.raf(time);
@@ -34,9 +39,6 @@ function App() {
     }
 
     requestAnimationFrame(raf);
-
-    // Store in window for global access
-    window.lenis = lenis;
 
     return () => {
       lenis.destroy();
@@ -46,48 +48,56 @@ function App() {
 
   // Scroll to top instantly when location changes
   useEffect(() => {
-    if (window.lenis) {
+    if (window.lenis && typeof window.lenis.scrollTo === "function") {
       window.lenis.scrollTo(0, { immediate: true });
     } else {
       window.scrollTo(0, 0);
     }
   }, [location]);
 
-  // Update document title and meta description dynamically based on route
+  // Update Page Titles and Descriptions dynamically based on route and language
   useEffect(() => {
     const routeTitles = {
-      "/": "SVARP Global | Safety Leadership & EHS Solutions",
-      "/about": "About Us | SVARP Global",
-      "/services": "Our Services | SVARP Global",
-      "/certifications": "Certifications | SVARP Global",
-      "/stories": "Impact Stories & Testimonials | SVARP Global",
-      "/team": "Our Team | SVARP Global",
-      "/contact": "Contact Us | SVARP Global",
-      "/careers": "Careers | SVARP Global",
-      "/donation": "Support Our Initiatives | SVARP Global",
-      "/login": "Sign In | SVARP Global Partner Portal",
-      "/register": "Create Account | SVARP Global",
-      "/dashboard": "Partner Dashboard | SVARP Global",
+      "/": t("meta.homeTitle"),
+      "/about": t("meta.aboutTitle"),
+      "/services": t("meta.servicesTitle"),
+      "/certifications": t("meta.certificationsTitle"),
+      "/stories": t("meta.storiesTitle"),
+      "/team": t("meta.teamTitle"),
+      "/contact": t("meta.contactTitle"),
+      "/careers": t("meta.careersTitle"),
+      "/donation": t("meta.donationTitle"),
+      "/login": t("meta.loginTitle"),
+      "/register": t("meta.registerTitle"),
+      "/dashboard": t("meta.dashboardTitle"),
+      "/membership": t("meta.membershipTitle"),
+      "/events": t("meta.eventsTitle"),
+      "/gallery": t("meta.galleryTitle"),
+      "/projects": t("meta.projectsTitle"),
     };
 
     const routeDescriptions = {
-      "/": "SVARP Global is a premier provider of safety leadership training, EHS advisory, community wellness programs, and sustainability initiatives.",
-      "/about": "Learn about SVARP Global's mission, values, and our commitment to building safer, sustainable, and empowered communities.",
-      "/services": "Explore SVARP Global's services, including safety training, occupational health advisory, risk audits, and compliance consulting.",
-      "/certifications": "Verify and apply for occupational safety, EHS, and sustainability certifications from SVARP Global.",
-      "/stories": "Read real impact stories and testimonials from professionals, partners, and organizations working with SVARP Global.",
-      "/team": "Meet the board members, safety experts, and educators guiding SVARP Global's mission.",
-      "/contact": "Get in touch with SVARP Global for safety training programs, consulting queries, and corporate wellness advisory.",
-      "/careers": "Join a purpose-driven team at SVARP Global and build a rewarding career in safety, environment, and social impact.",
-      "/donation": "Support SVARP Global's social initiatives, environmental drives, and community safety awareness campaigns.",
-      "/login": "Access your SVARP Global partner and training dashboard.",
-      "/register": "Register for SVARP Global courses, audits, and certification tracking.",
-      "/dashboard": "Manage your EHS certifications, view training schedules, and monitor audit progress.",
+      "/": t("meta.homeDesc"),
+      "/about": t("meta.aboutDesc"),
+      "/services": t("meta.servicesDesc"),
+      "/certifications": t("meta.certificationsDesc"),
+      "/stories": t("meta.storiesDesc"),
+      "/team": t("meta.teamDesc"),
+      "/contact": t("meta.contactDesc"),
+      "/careers": t("meta.careersDesc"),
+      "/donation": t("meta.donationDesc"),
+      "/login": t("meta.loginDesc"),
+      "/register": t("meta.registerDesc"),
+      "/dashboard": t("meta.dashboardDesc"),
+      "/membership": t("meta.membershipDesc"),
+      "/events": t("meta.eventsDesc"),
+      "/gallery": t("meta.galleryDesc"),
+      "/projects": t("meta.projectsDesc"),
     };
 
     const path = location.pathname;
-    const title = routeTitles[path] || "SVARP Global | Safety Leadership & EHS Solutions";
-    const desc = routeDescriptions[path] || "SVARP Global is a premier provider of safety leadership training, EHS advisory, community wellness programs, and sustainability initiatives.";
+    const title = routeTitles[path] || t("meta.homeTitle");
+    const desc = routeDescriptions[path] || t("meta.homeDesc");
 
     document.title = title;
 
@@ -98,14 +108,16 @@ function App() {
       document.head.appendChild(metaDesc);
     }
     metaDesc.setAttribute("content", desc);
-  }, [location]);
+  }, [location, i18n.language, t]);
 
   return (
-    <AuthProvider>
-      <PopupProvider>
-        {loading ? <Loader onComplete={handleLoaderComplete} /> : <Router />}
-      </PopupProvider>
-    </AuthProvider>
+    <RTLProvider>
+      <AuthProvider>
+        <PopupProvider>
+          {loading ? <Loader onComplete={handleLoaderComplete} /> : <Router />}
+        </PopupProvider>
+      </AuthProvider>
+    </RTLProvider>
   );
 }
 

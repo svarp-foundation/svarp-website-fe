@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate, Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { background } from "../assets/assets";
 
 const Register = () => {
@@ -13,13 +14,14 @@ const Register = () => {
   const [error, setError] = useState("");
   const { register } = useAuth();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
 
     if (password !== confirmPassword) {
-      setError("Passwords do not match.");
+      setError(t("register.passwordMismatch"));
       return;
     }
 
@@ -28,7 +30,7 @@ const Register = () => {
       await register(email, password);
       navigate("/");
     } catch (err) {
-      setError(err.message || "Failed to register. Please try again.");
+      setError(err.message || t("register.registerError"));
     } finally {
       setLoading(false);
     }
@@ -43,7 +45,7 @@ const Register = () => {
       >
         <div className="absolute inset-0 bg-gradient-to-br from-zinc-950/90 via-zinc-900/40 to-zinc-950/90" />
         
-        {/* Spacer to keep layout balanced below fixed Navbar */}
+        {/* Spacer */}
         <div className="relative z-10 h-12" />
 
         {/* Motivational Text */}
@@ -55,29 +57,28 @@ const Register = () => {
             </span>
           </h1>
           <p className="text-zinc-300 text-sm leading-relaxed">
-            Create an account to browse membership benefits, apply for professional training certificates, track verification status, and contribute to social drives.
+            {t("register.heroDesc")}
           </p>
         </div>
 
         {/* Footer info */}
         <div className="relative z-10 text-xs text-zinc-500 font-medium">
-          © {new Date().getFullYear()} SVARP Global. All rights reserved.
+          {t("register.copyright", { year: new Date().getFullYear() })}
         </div>
       </div>
 
       {/* Right panel: Glassmorphic Register Form Container */}
       <div className="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 relative overflow-hidden">
-        {/* Background Ambient Glows */}
         <div className="absolute top-1/4 left-1/4 w-72 h-72 bg-accent/5 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none" />
 
         <div className="w-full max-w-md space-y-8 bg-zinc-900/50 backdrop-blur-xl border border-white/10 p-8 sm:p-10 rounded-3xl shadow-2xl relative z-10">
           <div className="space-y-2 text-center lg:text-left">
             <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-              Create Account
+              {t("register.title")}
             </h2>
             <p className="text-sm text-zinc-400">
-              Sign up today and join our safety-first ecosystem.
+              {t("register.subtitle")}
             </p>
           </div>
 
@@ -85,7 +86,7 @@ const Register = () => {
             {/* Email field */}
             <div className="space-y-1 text-left">
               <label htmlFor="email" className="block text-xs font-semibold text-zinc-400 uppercase tracking-wider">
-                Email Address
+                {t("register.emailLabel")}
               </label>
               <div className="relative rounded-xl shadow-sm">
                 <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-500">
@@ -100,7 +101,7 @@ const Register = () => {
                   autoComplete="email"
                   required
                   className="block w-full pl-11 pr-4 py-3 bg-zinc-950/60 border border-white/10 rounded-xl text-white placeholder-zinc-500 text-sm focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent transition duration-200"
-                  placeholder="name@company.com"
+                  placeholder={t("register.emailPlaceholder")}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
@@ -110,7 +111,7 @@ const Register = () => {
             {/* Password field */}
             <div className="space-y-1 text-left">
               <label htmlFor="password" className="block text-xs font-semibold text-zinc-400 uppercase tracking-wider">
-                Password
+                {t("register.passwordLabel")}
               </label>
               <div className="relative rounded-xl shadow-sm">
                 <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-500">
@@ -151,7 +152,7 @@ const Register = () => {
             {/* Confirm Password field */}
             <div className="space-y-1 text-left">
               <label htmlFor="confirmPassword" className="block text-xs font-semibold text-zinc-400 uppercase tracking-wider">
-                Confirm Password
+                {t("register.confirmPasswordLabel")}
               </label>
               <div className="relative rounded-xl shadow-sm">
                 <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-500">
@@ -207,22 +208,22 @@ const Register = () => {
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                     </svg>
-                    Creating Account...
+                    {t("register.creating")}
                   </>
                 ) : (
-                  "Create Account"
+                  t("register.createAccount")
                 )}
               </button>
             </div>
             
             <div className="text-center pt-2">
               <p className="text-sm text-zinc-400">
-                Already have an account?{" "}
+                {t("register.hasAccount")}{" "}
                 <Link
                   to="/login"
                   className="font-semibold text-accent hover:text-emerald-400 transition duration-150"
                 >
-                  Sign in
+                  {t("register.signIn")}
                 </Link>
               </p>
             </div>

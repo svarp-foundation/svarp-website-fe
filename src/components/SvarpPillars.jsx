@@ -1,51 +1,62 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export default function SvarpPillars() {
   const [hoveredIndex, setHoveredIndex] = useState(0);
+  const { t, i18n } = useTranslation();
 
   const pillars = [
     {
       letter: "S",
-      title: "Sustainable",
-      description: "Securing long-term ecological, social, and economic viability through responsible resource management, green practices, and sustainable development initiatives.",
+      englishTitle: "Sustainable",
+      title: t("pillars.sustainable"),
+      description: t("pillars.sustainableDesc"),
       color: "from-emerald-500 to-teal-500",
       textColor: "text-emerald-600",
       bgLight: "bg-emerald-50/50",
     },
     {
       letter: "V",
-      title: "Vigilance",
-      description: "Maintaining continuous alertness, proactive threat monitoring, and persistent hazard identification to ensure safety readiness before incidents occur.",
+      englishTitle: "Vigilance",
+      title: t("pillars.vigilance"),
+      description: t("pillars.vigilanceDesc"),
       color: "from-blue-500 to-cyan-500",
       textColor: "text-blue-600",
       bgLight: "bg-blue-50/50",
     },
     {
       letter: "A",
-      title: "Awareness",
-      description: "Fostering safety education, spreading critical knowledge, and conducting professional training to build a highly informed and proactive society.",
+      englishTitle: "Awareness",
+      title: t("pillars.awareness"),
+      description: t("pillars.awarenessDesc"),
       color: "from-amber-500 to-orange-500",
       textColor: "text-amber-600",
       bgLight: "bg-amber-50/50",
     },
     {
       letter: "R",
-      title: "Resilience",
-      description: "Strengthening systemic adaptability, emergency preparedness, and the organizational endurance required to withstand and recover from disruptions.",
+      englishTitle: "Resilience",
+      title: t("pillars.resilience"),
+      description: t("pillars.resilienceDesc"),
       color: "from-purple-500 to-indigo-500",
       textColor: "text-purple-600",
       bgLight: "bg-purple-50/50",
     },
     {
       letter: "P",
-      title: "Prevention",
-      description: "Eliminating hazards and establishing robust protective measures to mitigate risks and prevent accidents or crises before they can manifest.",
+      englishTitle: "Prevention",
+      title: t("pillars.prevention"),
+      description: t("pillars.preventionDesc"),
       color: "from-rose-500 to-pink-500",
       textColor: "text-rose-600",
       bgLight: "bg-rose-50/50",
     },
   ];
 
+  const formatTitle = (pillar) => {
+    if (i18n.language === "en") return pillar.title;
+    return `${pillar.title} (${pillar.englishTitle})`;
+  };
 
   return (
     <section className="py-16 sm:py-24 bg-muted relative overflow-hidden">
@@ -57,13 +68,13 @@ export default function SvarpPillars() {
         {/* Top Header */}
         <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
           <span className="text-xs sm:text-sm font-semibold tracking-wider text-primary uppercase bg-white px-4 py-1.5 rounded-full inline-block mb-3 sm:mb-4 shadow-sm">
-            Our Core Pillars
+            {t("pillars.badge")}
           </span>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-primary tracking-tight mb-4">
-            The Meaning of SVARP
+            {t("pillars.title")}
           </h2>
           <p className="text-sm sm:text-base text-gray-600 max-w-xl mx-auto leading-relaxed">
-            Our name defines our purpose. Explore each letter of our name to see the core principles guiding SVARP Global.
+            {t("pillars.description")}
           </p>
         </div>
 
@@ -81,7 +92,7 @@ export default function SvarpPillars() {
                     ? "bg-white shadow-sm border border-gray-100"
                     : "hover:bg-white/40 border border-transparent"
                 }`}
-                aria-label={`Show details for ${pillar.title}`}
+                aria-label={`Show details for ${formatTitle(pillar)}`}
               >
                 {/* Visual Letter Circle */}
                 <div className={`w-10 h-10 lg:w-12 lg:h-12 rounded-xl flex items-center justify-center font-black text-lg lg:text-xl shadow-sm transition-all duration-300 ${
@@ -92,17 +103,17 @@ export default function SvarpPillars() {
                   {pillar.letter}
                 </div>
 
-                {/* Pillar Label (Visible on large screens, hides on mobile for simplicity) */}
+                {/* Pillar Label */}
                 <div className="hidden lg:block text-left">
                   <span className={`block text-[10px] font-bold uppercase tracking-wider ${
                     hoveredIndex === index ? pillar.textColor : "text-gray-400"
                   }`}>
-                    Pillar 0{index + 1}
+                    {t("pillars.pillar")} 0{index + 1}
                   </span>
                   <span className={`text-base font-extrabold transition-colors ${
                     hoveredIndex === index ? "text-primary" : "text-gray-500"
                   }`}>
-                    {pillar.title}
+                    {formatTitle(pillar)}
                   </span>
                 </div>
               </button>
@@ -123,10 +134,10 @@ export default function SvarpPillars() {
                 {/* Small indicator */}
                 <div className="flex justify-between items-center mb-6">
                   <span className={`text-[10px] font-extrabold uppercase tracking-widest px-3 py-1 rounded-md ${pillar.bgLight} ${pillar.textColor}`}>
-                    Pillar 0{index + 1}
+                    {t("pillars.pillar")} 0{index + 1}
                   </span>
                   <span className="text-[10px] text-gray-400 font-semibold uppercase tracking-wider">
-                    SVARP Identity
+                    {t("pillars.identity")}
                   </span>
                 </div>
 
@@ -135,8 +146,8 @@ export default function SvarpPillars() {
                   <span className={`text-transparent bg-clip-text bg-gradient-to-r ${pillar.color}`}>
                     {pillar.letter}
                   </span>
-                  {" "} stands for {" "}
-                  <span className="text-primary">{pillar.title}</span>
+                  {" "} {t("pillars.standsFor")} {" "}
+                  <span className="text-primary">{formatTitle(pillar)}</span>
                 </h3>
 
                 {/* Description */}

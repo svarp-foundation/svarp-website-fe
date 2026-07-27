@@ -1,6 +1,9 @@
 import { NavLink } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 export default function Hero() {
+  const { t } = useTranslation();
+
   const row1Unique = [
     "/company/images/IMG-1.webp",
     "/company/images/IMG-2.webp",
@@ -58,11 +61,8 @@ export default function Hero() {
           <div className="flex overflow-hidden w-full select-none flex-shrink-0">
             <div className="flex gap-3 sm:gap-5 whitespace-nowrap animate-marquee-left">
               {row1Images.map((img, idx) => (
-                <div
-                  key={idx}
-                  className="w-[240px] sm:w-[380px] h-[150px] sm:h-[240px] flex-shrink-0 overflow-hidden rounded-xl sm:rounded-3xl shadow-xl border border-white/5 bg-zinc-900"
-                >
-                  <img src={img} alt="" className="w-full h-full object-cover select-none" />
+                <div key={idx} className="w-40 sm:w-64 h-24 sm:h-40 rounded-xl sm:rounded-2xl overflow-hidden flex-shrink-0 border border-white/10 shadow-lg">
+                  <img src={img} alt="SVARP" className="w-full h-full object-cover opacity-40 hover:opacity-100 transition-opacity duration-300" />
                 </div>
               ))}
             </div>
@@ -72,11 +72,8 @@ export default function Hero() {
           <div className="flex overflow-hidden w-full select-none flex-shrink-0">
             <div className="flex gap-3 sm:gap-5 whitespace-nowrap animate-marquee-right">
               {row2Images.map((img, idx) => (
-                <div
-                  key={idx}
-                  className="w-[240px] sm:w-[380px] h-[150px] sm:h-[240px] flex-shrink-0 overflow-hidden rounded-xl sm:rounded-3xl shadow-xl border border-white/5 bg-zinc-900"
-                >
-                  <img src={img} alt="" className="w-full h-full object-cover select-none" />
+                <div key={idx} className="w-40 sm:w-64 h-24 sm:h-40 rounded-xl sm:rounded-2xl overflow-hidden flex-shrink-0 border border-white/10 shadow-lg">
+                  <img src={img} alt="SVARP" className="w-full h-full object-cover opacity-40 hover:opacity-100 transition-opacity duration-300" />
                 </div>
               ))}
             </div>
@@ -86,11 +83,8 @@ export default function Hero() {
           <div className="flex overflow-hidden w-full select-none flex-shrink-0">
             <div className="flex gap-3 sm:gap-5 whitespace-nowrap animate-marquee-left">
               {row3Images.map((img, idx) => (
-                <div
-                  key={idx}
-                  className="w-[240px] sm:w-[380px] h-[150px] sm:h-[240px] flex-shrink-0 overflow-hidden rounded-xl sm:rounded-3xl shadow-xl border border-white/5 bg-zinc-900"
-                >
-                  <img src={img} alt="" className="w-full h-full object-cover select-none" />
+                <div key={idx} className="w-40 sm:w-64 h-24 sm:h-40 rounded-xl sm:rounded-2xl overflow-hidden flex-shrink-0 border border-white/10 shadow-lg">
+                  <img src={img} alt="SVARP" className="w-full h-full object-cover opacity-40 hover:opacity-100 transition-opacity duration-300" />
                 </div>
               ))}
             </div>
@@ -100,11 +94,8 @@ export default function Hero() {
           <div className="flex overflow-hidden w-full select-none flex-shrink-0">
             <div className="flex gap-3 sm:gap-5 whitespace-nowrap animate-marquee-right">
               {row4Images.map((img, idx) => (
-                <div
-                  key={idx}
-                  className="w-[240px] sm:w-[380px] h-[150px] sm:h-[240px] flex-shrink-0 overflow-hidden rounded-xl sm:rounded-3xl shadow-xl border border-white/5 bg-zinc-900"
-                >
-                  <img src={img} alt="" className="w-full h-full object-cover select-none" />
+                <div key={idx} className="w-40 sm:w-64 h-24 sm:h-40 rounded-xl sm:rounded-2xl overflow-hidden flex-shrink-0 border border-white/10 shadow-lg">
+                  <img src={img} alt="SVARP" className="w-full h-full object-cover opacity-40 hover:opacity-100 transition-opacity duration-300" />
                 </div>
               ))}
             </div>
@@ -114,11 +105,8 @@ export default function Hero() {
           <div className="flex overflow-hidden w-full select-none flex-shrink-0">
             <div className="flex gap-3 sm:gap-5 whitespace-nowrap animate-marquee-left">
               {row5Images.map((img, idx) => (
-                <div
-                  key={idx}
-                  className="w-[240px] sm:w-[380px] h-[150px] sm:h-[240px] flex-shrink-0 overflow-hidden rounded-xl sm:rounded-3xl shadow-xl border border-white/5 bg-zinc-900"
-                >
-                  <img src={img} alt="" className="w-full h-full object-cover select-none" />
+                <div key={idx} className="w-40 sm:w-64 h-24 sm:h-40 rounded-xl sm:rounded-2xl overflow-hidden flex-shrink-0 border border-white/10 shadow-lg">
+                  <img src={img} alt="SVARP" className="w-full h-full object-cover opacity-40 hover:opacity-100 transition-opacity duration-300" />
                 </div>
               ))}
             </div>
@@ -152,9 +140,7 @@ export default function Hero() {
             </h1>
 
             <p className="mt-4 sm:mt-6 text-sm sm:text-lg md:text-xl text-gray-200 max-w-xl mx-auto md:mx-0 leading-relaxed">
-              SVARP Global promotes safety, sustainability, and social
-              responsibility through expert-led training, certification,
-              advisory services, and community-driven initiatives.
+              {t("hero.description")}
             </p>
 
             <p className="mt-4 sm:mt-6 text-accent font-script text-lg sm:text-3xl">
@@ -167,21 +153,21 @@ export default function Hero() {
                 to="/membership"
                 className="w-full sm:w-auto bg-accent text-primary px-7 py-3 rounded-full font-medium hover:scale-105 transition text-center text-sm sm:text-base"
               >
-                Explore Our Memberships
+                {t("hero.ctaMembership")}
               </NavLink>
 
               <NavLink
                 to="/donate"
                 className="w-full sm:w-auto border border-white/40 text-white px-7 py-3 rounded-full hover:bg-white/10 transition text-center text-sm sm:text-base"
               >
-                Donate
+                {t("hero.ctaDonate")}
               </NavLink>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Scroll Indicator (hide on small screens) */}
+      {/* Scroll Indicator */}
       <div className="hidden sm:block absolute bottom-8 left-1/2 -translate-x-1/2 text-white/70 animate-bounce">
         ↓
       </div>

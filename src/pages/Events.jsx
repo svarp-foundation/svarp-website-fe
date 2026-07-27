@@ -1,7 +1,9 @@
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 export default function Events() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const corporateEvents = [
     {
@@ -99,7 +101,7 @@ export default function Events() {
                 onClick={() => navigate("/contact")}
                 className="text-xs font-bold text-primary group-hover:text-accent transition-colors flex items-center gap-1"
               >
-                Register Interest <span className="group-hover:translate-x-1 transition-transform duration-300">&rarr;</span>
+                {t("events.registerInterest")} <span className="group-hover:translate-x-1 transition-transform duration-300">&rarr;</span>
               </button>
             </div>
           </div>
@@ -118,15 +120,13 @@ export default function Events() {
         {/* Header */}
         <div className="max-w-3xl mb-12 sm:mb-16">
           <span className="text-xs sm:text-sm font-semibold tracking-wider text-primary uppercase bg-white px-4 py-1.5 rounded-full inline-block mb-3 sm:mb-4 shadow-sm">
-            Events Calendar
+            {t("events.badge")}
           </span>
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold mb-4 sm:mb-6 text-primary leading-tight">
-            Our Events & Programs
+            {t("events.title")}
           </h1>
           <p className="text-base sm:text-lg text-gray-600 leading-relaxed">
-            SVARP Global organizes corporate workshops and social drives aimed at
-            strengthening safety culture, promoting sustainability, and driving
-            positive community change through education and engagement.
+            {t("events.description")}
           </p>
         </div>
 
@@ -135,7 +135,7 @@ export default function Events() {
           <div className="flex items-center gap-3 mb-8 sm:mb-10">
             <span className="w-8 h-1 bg-accent rounded-full"></span>
             <h2 className="text-2xl sm:text-3xl font-semibold text-primary">
-              Corporate Events & Workshops
+              {t("events.corporateTitle")}
             </h2>
           </div>
           {renderEventGrid(corporateEvents)}
@@ -146,7 +146,7 @@ export default function Events() {
           <div className="flex items-center gap-3 mb-8 sm:mb-10">
             <span className="w-8 h-1 bg-accent rounded-full"></span>
             <h2 className="text-2xl sm:text-3xl font-semibold text-primary">
-              Social Drives & Community Camps
+              {t("events.socialTitle")}
             </h2>
           </div>
           {renderEventGrid(socialEvents)}
@@ -159,19 +159,17 @@ export default function Events() {
           
           <div className="relative z-10 max-w-3xl mx-auto text-center space-y-6">
             <h2 className="text-2xl sm:text-4xl font-bold tracking-tight">
-              Partner With Us for Events
+              {t("events.ctaTitle")}
             </h2>
             <p className="opacity-95 text-sm sm:text-base leading-relaxed">
-              Whether you are a corporation seeking workplace safety audits, an educational
-              institution building safety awareness, or a community organization looking to collaborate,
-              SVARP Global provides custom-designed, expert-led events.
+              {t("events.ctaDesc")}
             </p>
             <div className="pt-4">
               <button
                 onClick={() => navigate("/contact")}
                 className="w-full sm:w-auto bg-accent text-primary px-8 py-3.5 rounded-full font-bold hover:scale-105 transition-all shadow-lg shadow-accent/20"
               >
-                Plan an Event with SVARP
+                {t("events.ctaButton")}
               </button>
             </div>
           </div>
