@@ -1,12 +1,21 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 export default function Dashboard() {
   const { token, logout } = useAuth();
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState("overview"); // "overview" | "profile" | "membership" | "donations" | "academy"
+  const [copiedId, setCopiedId] = useState(false);
   const navigate = useNavigate();
+
+  const handleCopyId = () => {
+    const portalId = `SVARP-USR-${userData?.id || "001"}`;
+    navigator.clipboard.writeText(portalId);
+    setCopiedId(true);
+    setTimeout(() => setCopiedId(false), 2000);
+  };
 
   useEffect(() => {
     if (!token) {
@@ -22,14 +31,13 @@ export default function Dashboard() {
             headers: {
               Authorization: `Bearer ${token}`,
             },
-          },
+          }
         );
 
         if (response.ok) {
           const data = await response.json();
           setUserData(data);
         } else {
-          // If token invalid
           logout();
           navigate("/login");
         }
@@ -43,12 +51,17 @@ export default function Dashboard() {
     fetchUserData();
   }, [token, navigate, logout]);
 
-  if (loading)
+  if (loading) {
     return (
-      <div className="min-h-dvh flex items-center justify-center">
-        Loading...
+      <div className="min-h-dvh flex items-center justify-center bg-slate-900 text-white px-4">
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-10 h-10 border-4 border-accent border-t-transparent rounded-full animate-spin"></div>
+          <p className="text-xs sm:text-sm font-semibold tracking-wider uppercase text-slate-400">Loading Dashboard...</p>
+        </div>
       </div>
     );
+  }
+
   if (!userData) return null;
 
   const membership = userData.membership;
@@ -60,210 +73,862 @@ export default function Dashboard() {
       : "N/A";
   const isLifetime = membership && !membership.end_date && membership.is_active;
 
+  // Calculate Profile Completeness
+  const totalMandatoryFields = 11 + (userData.is_student ? 1 : 0);
+  const filledFields = 
+    (userData.full_name ? 1 : 0) +
+    (userData.phone_number ? 1 : 0) +
+    (userData.date_of_birth ? 1 : 0) +
+    (userData.address ? 1 : 0) +
+    (userData.city ? 1 : 0) +
+    (userData.state ? 1 : 0) +
+    (userData.pincode ? 1 : 0) +
+    (userData.government_id_type ? 1 : 0) +
+    (userData.government_id_number ? 1 : 0) +
+    (userData.government_id_path ? 1 : 0) +
+    (userData.profile_picture_path ? 1 : 0) +
+    (userData.is_student ? (userData.student_id_path ? 1 : 0) : 0);
+  
+  const profileCompleteness = Math.round((filledFields / totalMandatoryFields) * 100);
+
+  const totalDonationsAmount = userData.donations
+    ? userData.donations.reduce((acc, d) => (d.status === "success" ? acc + Number(d.amount || 0) : acc), 0)
+    : 0;
+
+  const navTabs = [
+    {
+      id: "overview",
+      label: "Overview",
+      shortLabel: "Overview",
+      icon: (
+        <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+        </svg>
+      ),
+    },
+    {
+      id: "profile",
+      label: "Profile & Identity",
+      shortLabel: "Profile",
+      badge: profileCompleteness < 100 ? `${profileCompleteness}%` : "Verified",
+      icon: (
+        <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+        </svg>
+      ),
+    },
+    {
+      id: "membership",
+      label: "Membership & Payments",
+      shortLabel: "Plans",
+      icon: (
+        <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+        </svg>
+      ),
+    },
+    {
+      id: "donations",
+      label: "My Donations",
+      shortLabel: "Donations",
+      count: userData.donations ? userData.donations.length : 0,
+      icon: (
+        <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+        </svg>
+      ),
+    },
+    {
+      id: "academy",
+      label: "Academy & Courses",
+      shortLabel: "Academy",
+      icon: (
+        <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 14l9-5-9-5-9 5 9 5z" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0112 20.055a11.952 11.952 0 01-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+        </svg>
+      ),
+    },
+  ];
+
   return (
-    <div className="min-h-dvh bg-muted py-8 sm:py-12 px-4 sm:px-6 lg:px-8 mt-12 sm:mt-12">
-      <div className="max-w-4xl mx-auto space-y-5 sm:space-y-8">
-        {/* Header */}
-        <div className="bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-lg flex max-lg:flex-col max-lg:gap-3 lg:justify-between lg:items-center">
-          <div>
-            <h1 className="text-2xl sm:text-3xl max-lg:text-xl font-bold text-primary flex items-center gap-2 sm:gap-3 flex-wrap">
-              Hello, {userData.full_name}!
-              {!userData.is_active && (
-                <span className="bg-red-100 text-red-700 text-xs px-3 py-1 rounded-full border border-red-200 animate-pulse font-bold uppercase tracking-wider">
-                  ⚠️ Suspended
-                </span>
-              )}
-            </h1>
-            <p className="text-gray-500 mt-1">
-              {userData.is_active
-                ? "Welcome to your dashboard."
-                : "Your account access is currently restricted."}
-            </p>
-          </div>
-        </div>
+    <div className="min-h-dvh bg-slate-100/90 pt-24 sm:pt-28 lg:pt-32 pb-12 font-sans text-slate-800 overflow-x-hidden w-full">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 space-y-4 sm:space-y-6">
 
-        {/* Membership Status Card */}
-        <div className="bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-lg border-l-4 sm:border-l-8 border-accent">
-          <h2 className="text-xl sm:text-2xl font-semibold text-primary mb-4 sm:mb-6">
-            Membership Details
-          </h2>
+        {/* ── Top Admin Portal Header ── */}
+        <div className="bg-slate-900 rounded-2xl sm:rounded-3xl p-4 sm:p-8 text-white shadow-xl relative overflow-hidden border border-slate-800">
+          <div className="absolute top-0 right-0 -mt-8 -mr-8 w-48 sm:w-64 h-48 sm:h-64 bg-accent/10 rounded-full blur-3xl pointer-events-none"></div>
+          <div className="absolute bottom-0 left-1/3 -mb-12 w-60 sm:w-80 h-60 sm:h-80 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-md:gap-3">
-            <div>
-              <p className="text-sm text-gray-500 uppercase tracking-wide font-semibold">
-                Current Plan
-              </p>
-              <p className="text-xl font-medium text-gray-900 mt-1">
-                {planName}
-              </p>
+          <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4 sm:gap-6">
+            
+            {/* User Info Stack */}
+            <div className="flex items-center gap-3 sm:gap-6">
+              <div className="relative flex-shrink-0">
+                {userData.profile_picture_path ? (
+                  <img
+                    src={`${import.meta.env.VITE_API_BASE_URL}${userData.profile_picture_path}`}
+                    alt={userData.full_name}
+                    className="w-14 h-14 sm:w-20 sm:h-20 rounded-2xl object-cover border-2 border-accent/40 shadow-md"
+                  />
+                ) : (
+                  <div className="w-14 h-14 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-br from-primary via-slate-800 to-slate-900 border-2 border-accent/40 flex items-center justify-center text-white text-xl sm:text-2xl font-bold shadow-md">
+                    {userData.full_name ? userData.full_name.charAt(0).toUpperCase() : "U"}
+                  </div>
+                )}
+                {userData.is_active && (
+                  <span className="absolute -bottom-1 -right-1 w-4 h-4 sm:w-5 sm:h-5 bg-emerald-500 border-2 border-slate-900 rounded-full flex items-center justify-center text-slate-900" title="Account Active">
+                    <svg className="w-2.5 h-2.5 sm:w-3 sm:h-3 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                    </svg>
+                  </span>
+                )}
+              </div>
+
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
+                  <h1 className="text-lg sm:text-2xl lg:text-3xl font-extrabold tracking-tight text-white truncate">
+                    {userData.full_name || "User Portal"}
+                  </h1>
+                  {!userData.is_active && (
+                    <span className="bg-red-500/20 text-red-400 text-[10px] sm:text-xs px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full border border-red-500/30 font-bold uppercase tracking-wider animate-pulse">
+                      Restricted
+                    </span>
+                  )}
+                  {status === "Active" && (
+                    <span className="bg-emerald-500/20 text-emerald-300 text-[10px] sm:text-xs px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full border border-emerald-500/30 font-semibold inline-flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+                      {planName}
+                    </span>
+                  )}
+                </div>
+
+                <p className="text-slate-400 text-xs sm:text-sm mt-0.5 truncate">
+                  {userData.email}
+                </p>
+
+              </div>
             </div>
 
-            <div>
-              <p className="text-sm text-gray-500 uppercase tracking-wide font-semibold">
-                Status
-              </p>
-              <span
-                className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium mt-1 ${
-                  status === "Active"
-                    ? "bg-green-100 text-green-800"
-                    : "bg-red-100 text-red-800"
-                }`}
-              >
-                {status}
-              </span>
-            </div>
-
-            <div>
-              <p className="text-sm text-gray-500 uppercase tracking-wide font-semibold">
-                Valid Until
-              </p>
-              <p className="text-xl font-medium text-gray-900 mt-1">
-                {isLifetime ? "Lifetime Access" : expiryDate}
-              </p>
-            </div>
-          </div>
-
-          {!membership && (
-            <div className="mt-8 flex justify-center">
+            {/* Quick Actions Toolbar (Fits UI structure on all screen sizes) */}
+            <div className="grid grid-cols-3 sm:flex sm:items-center gap-2 sm:gap-3 w-full md:w-auto">
               <button
-                onClick={() => navigate("/membership")}
-                className="bg-primary text-white px-6 py-2 rounded-full hover:opacity-90 transition"
+                type="button"
+                onClick={handleCopyId}
+                className="w-full sm:w-auto px-3 sm:px-3.5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-semibold backdrop-blur-md transition-all flex items-center justify-center gap-1.5 border border-white/10 active:scale-95 cursor-pointer"
+                title="Click to copy User ID"
               >
-                Browse Plans
+                <svg className="w-4 h-4 text-accent flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  {copiedId ? (
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 13l4 4L19 7" />
+                  ) : (
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                  )}
+                </svg>
+                <span className="truncate">{copiedId ? "Copied!" : "Copy ID"}</span>
+              </button>
+
+              <button
+                onClick={() => setActiveTab("profile")}
+                className="w-full sm:w-auto px-3 sm:px-3.5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-semibold backdrop-blur-md transition-all flex items-center justify-center gap-1.5 border border-white/10 active:scale-95"
+              >
+                <svg className="w-4 h-4 text-accent flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
+                <span className="truncate">Edit Profile</span>
+              </button>
+
+              <button
+                onClick={logout}
+                className="w-full sm:w-auto px-3 sm:px-3.5 py-2.5 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs font-semibold transition-all flex items-center justify-center gap-1.5 border border-red-500/20 active:scale-95"
+              >
+                <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
+                <span className="truncate">Logout</span>
               </button>
             </div>
-          )}
+
+          </div>
         </div>
 
-        {/* Profile Details Form */}
-        <ProfileForm userData={userData} token={token} />
+        {/* ── Mobile Responsive KPI Metric Cards Grid ── */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+          
+          {/* Card 1: Membership Plan */}
+          <div className="bg-white rounded-2xl p-3.5 sm:p-5 shadow-sm border border-slate-200 hover:shadow-md transition-shadow">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-400">Membership Tier</span>
+              <div className={`p-1.5 sm:p-2 rounded-xl ${status === "Active" ? "bg-emerald-50 text-emerald-600" : "bg-red-50 text-red-600"}`}>
+                <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                </svg>
+              </div>
+            </div>
+            <p className="text-sm sm:text-xl font-bold text-slate-900 mt-2 sm:mt-3 truncate">{planName}</p>
+            <div className="mt-1 sm:mt-2 flex items-center justify-between text-[11px] sm:text-xs">
+              <span className={`font-semibold px-2 py-0.5 rounded-full text-[10px] ${status === "Active" ? "bg-emerald-100 text-emerald-800" : "bg-slate-100 text-slate-600"}`}>
+                {status}
+              </span>
+              <span className="text-slate-500 font-medium truncate max-sm:hidden">
+                {isLifetime ? "Lifetime" : expiryDate !== "N/A" ? expiryDate : "No Sub"}
+              </span>
+            </div>
+          </div>
 
-        {/* Recent Transactions (Optional/If data exists) */}
-        {userData.transactions && userData.transactions.length > 0 && (
-          <div className="bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-lg">
-            <h2 className="text-xl sm:text-2xl font-semibold text-primary mb-4 sm:mb-6">
-              Transaction History
-            </h2>
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead>
-                  <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Date
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Amount
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Status
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                  {userData.transactions.map((tx) => (
-                    <tr key={tx.id}>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {new Date(tx.created_at).toLocaleDateString()}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        ₹{tx.amount}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm">
+          {/* Card 2: Profile Health */}
+          <div className="bg-white rounded-2xl p-3.5 sm:p-5 shadow-sm border border-slate-200 hover:shadow-md transition-shadow">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-400">Profile Health</span>
+              <div className="p-1.5 sm:p-2 rounded-xl bg-blue-50 text-blue-600">
+                <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+              </div>
+            </div>
+            <div className="flex items-baseline gap-1.5 sm:gap-2 mt-2 sm:mt-3">
+              <p className="text-lg sm:text-2xl font-bold text-slate-900">{profileCompleteness}%</p>
+              <span className="text-[10px] sm:text-xs text-slate-500 font-medium truncate">
+                {profileCompleteness === 100 ? "Verified" : "Action Needed"}
+              </span>
+            </div>
+            <div className="w-full bg-slate-100 h-1.5 sm:h-2 rounded-full mt-2 sm:mt-3 overflow-hidden">
+              <div
+                className={`h-full transition-all duration-500 ${profileCompleteness === 100 ? "bg-emerald-500" : "bg-blue-600"}`}
+                style={{ width: `${profileCompleteness}%` }}
+              ></div>
+            </div>
+          </div>
+
+          {/* Card 3: Total Donations */}
+          <div className="bg-white rounded-2xl p-3.5 sm:p-5 shadow-sm border border-slate-200 hover:shadow-md transition-shadow">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-400">Total Donated</span>
+              <div className="p-1.5 sm:p-2 rounded-xl bg-amber-50 text-amber-600">
+                <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+            </div>
+            <p className="text-lg sm:text-2xl font-bold text-slate-900 mt-2 sm:mt-3 truncate">₹{totalDonationsAmount.toLocaleString()}</p>
+            <div className="mt-1 sm:mt-2 flex items-center justify-between text-[10px] sm:text-xs text-slate-500">
+              <span>{userData.donations ? userData.donations.length : 0} Receipts</span>
+              <button
+                onClick={() => setActiveTab("donations")}
+                className="text-primary font-semibold hover:underline"
+              >
+                80G ↗
+              </button>
+            </div>
+          </div>
+
+          {/* Card 4: Global Academy */}
+          <div className="bg-white rounded-2xl p-3.5 sm:p-5 shadow-sm border border-slate-200 hover:shadow-md transition-shadow">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-400">Academy</span>
+              <div className="p-1.5 sm:p-2 rounded-xl bg-indigo-50 text-indigo-600">
+                <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 14l9-5-9-5-9 5 9 5z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0112 20.055a11.952 11.952 0 01-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+                </svg>
+              </div>
+            </div>
+            <p className="text-sm sm:text-lg font-bold text-slate-900 mt-2 sm:mt-3 truncate">LMS Active</p>
+            <div className="mt-1 sm:mt-2 flex items-center justify-between text-[10px] sm:text-xs">
+              <span className="text-slate-500">Training</span>
+              <Link to="/global-academy/catalog" className="text-indigo-600 font-semibold hover:underline">
+                Catalog ↗
+              </Link>
+            </div>
+          </div>
+
+        </div>
+
+        {/* ── Scrollable Touch-Friendly Tab Bar ── */}
+        <div className="bg-white rounded-2xl p-1.5 sm:p-2 shadow-sm border border-slate-200 overflow-x-auto no-scrollbar scroll-smooth">
+          <div className="flex items-center gap-1 min-w-max">
+            {navTabs.map((tab) => {
+              const isActive = activeTab === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 sm:gap-2 ${
+                    isActive
+                      ? "bg-slate-900 text-accent shadow-sm"
+                      : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                  }`}
+                >
+                  {tab.icon}
+                  <span className="hidden sm:inline">{tab.label}</span>
+                  <span className="sm:hidden">{tab.shortLabel}</span>
+                  {tab.badge && (
+                    <span
+                      className={`text-[9px] sm:text-[10px] px-1.5 py-0.5 rounded-full font-extrabold ${
+                        isActive ? "bg-accent/20 text-accent border border-accent/30" : "bg-slate-200 text-slate-700"
+                      }`}
+                    >
+                      {tab.badge}
+                    </span>
+                  )}
+                  {tab.count !== undefined && tab.count > 0 && (
+                    <span
+                      className={`text-[9px] sm:text-[10px] px-1.5 py-0.5 rounded-full font-bold ${
+                        isActive ? "bg-white/20 text-white" : "bg-slate-100 text-slate-600"
+                      }`}
+                    >
+                      {tab.count}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* ── Tab Content Views ── */}
+
+        {/* TAB 1: OVERVIEW */}
+        {activeTab === "overview" && (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+            
+            {/* Main Column */}
+            <div className="lg:col-span-2 space-y-4 sm:space-y-6">
+              
+              {/* Membership Status Box */}
+              <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-8 shadow-sm border border-slate-200 relative overflow-hidden">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4 sm:pb-5">
+                  <div>
+                    <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-400">Current Subscription</span>
+                    <h3 className="text-lg sm:text-2xl font-extrabold text-slate-900 mt-0.5">{planName}</h3>
+                  </div>
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <span className={`px-2.5 py-1 rounded-full text-[10px] sm:text-xs font-bold uppercase tracking-wider ${
+                      status === "Active" ? "bg-emerald-100 text-emerald-800 border border-emerald-200" : "bg-red-100 text-red-800 border border-red-200"
+                    }`}>
+                      ● {status}
+                    </span>
+                    {!membership && (
+                      <button
+                        onClick={() => navigate("/membership")}
+                        className="bg-slate-900 text-accent hover:bg-slate-800 px-4 py-2 rounded-xl text-xs font-bold transition shadow-sm"
+                      >
+                        Browse Plans
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 pt-4 sm:pt-5">
+                  <div>
+                    <p className="text-[10px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wide">Valid Until</p>
+                    <p className="text-xs sm:text-sm font-bold text-slate-800 mt-0.5">
+                      {isLifetime ? "✨ Lifetime" : expiryDate}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-[10px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wide">Account Role</p>
+                    <p className="text-xs sm:text-sm font-bold text-slate-800 mt-0.5 uppercase">
+                      {userData.role || "Member"}
+                    </p>
+                  </div>
+                  <div className="col-span-2 sm:col-span-1">
+                    <p className="text-[10px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wide">ID Verification</p>
+                    <p className="text-xs sm:text-sm font-bold text-emerald-600 mt-0.5 flex items-center gap-1">
+                      <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                      </svg>
+                      {userData.government_id_path ? "Verified" : "Pending"}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Quick Actions Shortcuts Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+                <Link
+                  to="/membership"
+                  className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition group flex items-center sm:block gap-3"
+                >
+                  <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-slate-900 text-xs sm:text-sm">Upgrade Membership</h4>
+                    <p className="text-slate-500 text-[11px] sm:text-xs mt-0.5">Corporate & Annual tiers</p>
+                  </div>
+                </Link>
+
+                <Link
+                  to="/global-academy/catalog"
+                  className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition group flex items-center sm:block gap-3"
+                >
+                  <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-slate-900 text-xs sm:text-sm">Course Catalog</h4>
+                    <p className="text-slate-500 text-[11px] sm:text-xs mt-0.5">EHS & Safety training</p>
+                  </div>
+                </Link>
+
+                <Link
+                  to="/donate"
+                  className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition group flex items-center sm:block gap-3"
+                >
+                  <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-slate-900 text-xs sm:text-sm">Make a Donation</h4>
+                    <p className="text-slate-500 text-[11px] sm:text-xs mt-0.5">Support green initiatives</p>
+                  </div>
+                </Link>
+              </div>
+
+              {/* Recent Transactions Preview */}
+              <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-slate-200">
+                <div className="flex items-center justify-between mb-3 sm:mb-4">
+                  <h3 className="text-sm sm:text-md font-bold text-slate-900">Recent Transactions</h3>
+                  <button
+                    onClick={() => setActiveTab("membership")}
+                    className="text-xs font-semibold text-primary hover:underline"
+                  >
+                    View All ↗
+                  </button>
+                </div>
+
+                {userData.transactions && userData.transactions.length > 0 ? (
+                  <>
+                    {/* Desktop Table View */}
+                    <div className="hidden sm:block overflow-x-auto">
+                      <table className="min-w-full divide-y divide-slate-100">
+                        <thead>
+                          <tr className="bg-slate-50 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                            <th className="px-4 py-3 rounded-l-lg">Date</th>
+                            <th className="px-4 py-3">Amount</th>
+                            <th className="px-4 py-3 rounded-r-lg">Status</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100 text-xs font-medium text-slate-700">
+                          {userData.transactions.slice(0, 3).map((tx) => (
+                            <tr key={tx.id} className="hover:bg-slate-50/50 transition">
+                              <td className="px-4 py-3.5 whitespace-nowrap">
+                                {new Date(tx.created_at).toLocaleDateString()}
+                              </td>
+                              <td className="px-4 py-3.5 whitespace-nowrap font-bold text-slate-900">
+                                ₹{tx.amount}
+                              </td>
+                              <td className="px-4 py-3.5 whitespace-nowrap">
+                                <span
+                                  className={`px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider ${
+                                    tx.status === "success"
+                                      ? "bg-emerald-100 text-emerald-800"
+                                      : "bg-amber-100 text-amber-800"
+                                  }`}
+                                >
+                                  {tx.status}
+                                </span>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+
+                    {/* Mobile Touch Cards View */}
+                    <div className="sm:hidden space-y-2">
+                      {userData.transactions.slice(0, 3).map((tx) => (
+                        <div key={tx.id} className="p-3 bg-slate-50 rounded-xl border border-slate-100 flex items-center justify-between text-xs">
+                          <div>
+                            <p className="font-bold text-slate-900">₹{tx.amount}</p>
+                            <p className="text-[10px] text-slate-400">{new Date(tx.created_at).toLocaleDateString()}</p>
+                          </div>
+                          <span
+                            className={`px-2 py-0.5 rounded-full text-[9px] font-extrabold uppercase ${
+                              tx.status === "success" ? "bg-emerald-100 text-emerald-800" : "bg-amber-100 text-amber-800"
+                            }`}
+                          >
+                            {tx.status}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </>
+                ) : (
+                  <div className="text-center py-6 bg-slate-50 rounded-xl border border-dashed border-slate-200 text-slate-500 text-xs">
+                    No transactions recorded yet.
+                  </div>
+                )}
+              </div>
+
+            </div>
+
+            {/* Right Column (Sidebar Widgets) */}
+            <div className="space-y-4 sm:space-y-6">
+
+              {/* Profile Completion Checklist Widget */}
+              <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-slate-200">
+                <div className="flex items-center justify-between mb-3 sm:mb-4">
+                  <h3 className="text-xs sm:text-md font-bold text-slate-900">Verification Health</h3>
+                  <span className="text-xs font-bold text-primary">{profileCompleteness}%</span>
+                </div>
+
+                <ul className="space-y-2.5 text-xs">
+                  <li className="flex items-center justify-between p-2 sm:p-2.5 rounded-xl bg-slate-50 border border-slate-100">
+                    <span className="font-semibold text-slate-700">Basic Info & Contact</span>
+                    {userData.phone_number ? (
+                      <span className="text-emerald-600 font-bold">✓ Saved</span>
+                    ) : (
+                      <span className="text-amber-600 font-semibold">Pending</span>
+                    )}
+                  </li>
+                  <li className="flex items-center justify-between p-2 sm:p-2.5 rounded-xl bg-slate-50 border border-slate-100">
+                    <span className="font-semibold text-slate-700">Government ID Upload</span>
+                    {userData.government_id_path ? (
+                      <span className="text-emerald-600 font-bold">✓ Uploaded</span>
+                    ) : (
+                      <span className="text-amber-600 font-semibold">Pending</span>
+                    )}
+                  </li>
+                  <li className="flex items-center justify-between p-2 sm:p-2.5 rounded-xl bg-slate-50 border border-slate-100">
+                    <span className="font-semibold text-slate-700">Profile Photo</span>
+                    {userData.profile_picture_path ? (
+                      <span className="text-emerald-600 font-bold">✓ Uploaded</span>
+                    ) : (
+                      <span className="text-amber-600 font-semibold">Pending</span>
+                    )}
+                  </li>
+                  {userData.is_student && (
+                    <li className="flex items-center justify-between p-2 sm:p-2.5 rounded-xl bg-slate-50 border border-slate-100">
+                      <span className="font-semibold text-slate-700">Student ID Verification</span>
+                      {userData.student_id_path ? (
+                        <span className="text-emerald-600 font-bold">✓ Uploaded</span>
+                      ) : (
+                        <span className="text-amber-600 font-semibold">Pending</span>
+                      )}
+                    </li>
+                  )}
+                </ul>
+
+                <button
+                  onClick={() => setActiveTab("profile")}
+                  className="w-full mt-4 py-2.5 bg-slate-900 hover:bg-slate-800 text-accent font-bold text-xs rounded-xl transition text-center block"
+                >
+                  Complete Profile Form →
+                </button>
+              </div>
+
+              {/* Verified Certificate Quick Lookup Widget */}
+              <div className="bg-gradient-to-br from-slate-900 to-slate-800 text-white rounded-2xl p-4 sm:p-6 shadow-sm border border-slate-800">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-accent/20 text-accent flex items-center justify-center mb-2.5">
+                  <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                  </svg>
+                </div>
+                <h4 className="font-extrabold text-xs sm:text-sm text-white">Certificate Verifier</h4>
+                <p className="text-slate-400 text-xs mt-1 leading-relaxed">
+                  Verify genuine SVARP training certificates & digital credentials.
+                </p>
+                <Link
+                  to="/global-academy/verify"
+                  className="mt-3 inline-flex items-center gap-1 text-xs font-bold text-accent hover:underline"
+                >
+                  Open Verifier Portal ↗
+                </Link>
+              </div>
+
+            </div>
+
+          </div>
+        )}
+
+        {/* TAB 2: PROFILE & IDENTITY FORM */}
+        {activeTab === "profile" && (
+          <ProfileForm userData={userData} token={token} />
+        )}
+
+        {/* TAB 3: MEMBERSHIP & PAYMENTS */}
+        {activeTab === "membership" && (
+          <div className="space-y-4 sm:space-y-6">
+            
+            {/* Membership Card Details */}
+            <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-8 shadow-sm border border-slate-200">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4 sm:pb-5 mb-4 sm:mb-6">
+                <div>
+                  <h3 className="text-lg sm:text-xl font-bold text-slate-900">Subscription Overview</h3>
+                  <p className="text-xs text-slate-500 mt-0.5">Manage your active membership plan and view entitlement status</p>
+                </div>
+                <button
+                  onClick={() => navigate("/membership")}
+                  className="bg-slate-900 text-accent hover:bg-slate-800 px-5 py-2.5 rounded-xl text-xs font-bold transition shadow-sm self-start sm:self-auto w-full sm:w-auto"
+                >
+                  {membership ? "Change / Renew Plan" : "Subscribe Now"}
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-6">
+                <div className="p-3.5 sm:p-4 rounded-xl bg-slate-50 border border-slate-100">
+                  <span className="text-[10px] sm:text-xs font-semibold text-slate-400 uppercase">Plan Name</span>
+                  <p className="text-base sm:text-lg font-bold text-slate-900 mt-0.5">{planName}</p>
+                </div>
+                <div className="p-3.5 sm:p-4 rounded-xl bg-slate-50 border border-slate-100">
+                  <span className="text-[10px] sm:text-xs font-semibold text-slate-400 uppercase">Active Status</span>
+                  <div className="mt-0.5">
+                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold ${
+                      status === "Active" ? "bg-emerald-100 text-emerald-800" : "bg-red-100 text-red-800"
+                    }`}>
+                      {status}
+                    </span>
+                  </div>
+                </div>
+                <div className="p-3.5 sm:p-4 rounded-xl bg-slate-50 border border-slate-100">
+                  <span className="text-[10px] sm:text-xs font-semibold text-slate-400 uppercase">Access Period</span>
+                  <p className="text-base sm:text-lg font-bold text-slate-900 mt-0.5">
+                    {isLifetime ? "Lifetime Unlimited" : expiryDate}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Full Transaction History Table */}
+            <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-8 shadow-sm border border-slate-200">
+              <h3 className="text-lg sm:text-xl font-bold text-slate-900 mb-4">Payment Transactions History</h3>
+              
+              {userData.transactions && userData.transactions.length > 0 ? (
+                <>
+                  {/* Desktop Table View */}
+                  <div className="hidden sm:block overflow-x-auto rounded-xl border border-slate-100">
+                    <table className="min-w-full divide-y divide-slate-100">
+                      <thead>
+                        <tr className="bg-slate-50 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                          <th className="px-6 py-3.5">Transaction ID</th>
+                          <th className="px-6 py-3.5">Date</th>
+                          <th className="px-6 py-3.5">Amount</th>
+                          <th className="px-6 py-3.5">Status</th>
+                        </tr>
+                      </thead>
+                      <tbody className="bg-white divide-y divide-slate-100 text-xs font-medium text-slate-700">
+                        {userData.transactions.map((tx) => (
+                          <tr key={tx.id} className="hover:bg-slate-50/50 transition">
+                            <td className="px-6 py-4 whitespace-nowrap font-mono text-slate-500">
+                              TXN-{tx.id}
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              {new Date(tx.created_at).toLocaleDateString()}
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap font-bold text-slate-900">
+                              ₹{tx.amount}
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              <span
+                                className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${
+                                  tx.status === "success"
+                                    ? "bg-emerald-100 text-emerald-800"
+                                    : "bg-amber-100 text-amber-800"
+                                }`}
+                              >
+                                {tx.status}
+                              </span>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  {/* Mobile Touch Cards View */}
+                  <div className="sm:hidden space-y-2.5">
+                    {userData.transactions.map((tx) => (
+                      <div key={tx.id} className="p-3.5 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-between text-xs">
+                        <div>
+                          <p className="font-mono text-[10px] text-slate-400">TXN-{tx.id}</p>
+                          <p className="font-bold text-slate-900 text-sm mt-0.5">₹{tx.amount}</p>
+                          <p className="text-[10px] text-slate-500">{new Date(tx.created_at).toLocaleDateString()}</p>
+                        </div>
                         <span
-                          className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                            tx.status === "success"
-                              ? "bg-green-100 text-green-800"
-                              : "bg-yellow-100 text-yellow-800"
+                          className={`px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase ${
+                            tx.status === "success" ? "bg-emerald-100 text-emerald-800" : "bg-amber-100 text-amber-800"
                           }`}
                         >
                           {tx.status}
                         </span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              ) : (
+                <div className="text-center py-8 sm:py-12 bg-slate-50 rounded-2xl border border-dashed border-slate-200 text-slate-500 text-xs sm:text-sm">
+                  No payment transactions logged in your account history.
+                </div>
+              )}
             </div>
+
           </div>
         )}
 
-        {/* My Donations (Optional/If data exists) */}
-        {userData.donations && userData.donations.length > 0 && (
-          <div className="bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-lg">
-            <h2 className="text-xl sm:text-2xl font-semibold text-primary mb-4 sm:mb-6">
-              My Donations
-            </h2>
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead>
-                  <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Date
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Amount
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Status
-                    </th>
-                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Action
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
+        {/* TAB 4: MY DONATIONS */}
+        {activeTab === "donations" && (
+          <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-8 shadow-sm border border-slate-200 space-y-4 sm:space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4 sm:pb-5">
+              <div>
+                <h3 className="text-lg sm:text-xl font-bold text-slate-900">Donation History & Tax Certificates</h3>
+                <p className="text-xs text-slate-500 mt-0.5">Download your official 80G tax exemption certificates</p>
+              </div>
+              <Link
+                to="/donate"
+                className="bg-amber-500 hover:bg-amber-600 text-slate-900 px-5 py-2.5 rounded-xl text-xs font-bold transition shadow-sm self-start sm:self-auto w-full sm:w-auto flex items-center justify-center gap-1.5"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                </svg>
+                Donate Again
+              </Link>
+            </div>
+
+            {userData.donations && userData.donations.length > 0 ? (
+              <>
+                {/* Desktop Table View */}
+                <div className="hidden sm:block overflow-x-auto rounded-xl border border-slate-100">
+                  <table className="min-w-full divide-y divide-slate-100">
+                    <thead>
+                      <tr className="bg-slate-50 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                        <th className="px-6 py-3.5">Date</th>
+                        <th className="px-6 py-3.5">Amount</th>
+                        <th className="px-6 py-3.5">Status</th>
+                        <th className="px-6 py-3.5 text-right">Tax Certificate</th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-slate-100 text-xs font-medium text-slate-700">
+                      {userData.donations.map((donation) => (
+                        <tr key={donation.id} className="hover:bg-slate-50/50 transition">
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            {new Date(donation.created_at).toLocaleDateString()}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap font-bold text-slate-900">
+                            ₹{donation.amount}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <span
+                              className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${
+                                donation.status === "success"
+                                  ? "bg-emerald-100 text-emerald-800"
+                                  : "bg-amber-100 text-amber-800"
+                              }`}
+                            >
+                              {donation.status}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-right font-semibold">
+                            {donation.status === "success" ? (
+                              <a
+                                href={`${import.meta.env.VITE_API_BASE_URL}/donations/${donation.id}/certificate`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-1 text-primary hover:text-emerald-700 font-bold bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-lg hover:bg-emerald-50 hover:border-emerald-200 transition"
+                              >
+                                <svg className="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
+                                Download PDF
+                              </a>
+                            ) : (
+                              <span className="text-slate-400">N/A</span>
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+
+                {/* Mobile Cards View */}
+                <div className="sm:hidden space-y-3">
                   {userData.donations.map((donation) => (
-                    <tr key={donation.id}>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {new Date(donation.created_at).toLocaleDateString()}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        ₹{donation.amount}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm">
+                    <div key={donation.id} className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-2 text-xs">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="font-bold text-slate-900 text-base">₹{donation.amount}</p>
+                          <p className="text-[10px] text-slate-500">{new Date(donation.created_at).toLocaleDateString()}</p>
+                        </div>
                         <span
-                          className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                            donation.status === "success"
-                              ? "bg-green-100 text-green-800"
-                              : "bg-yellow-100 text-yellow-800"
+                          className={`px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase ${
+                            donation.status === "success" ? "bg-emerald-100 text-emerald-800" : "bg-amber-100 text-amber-800"
                           }`}
                         >
                           {donation.status}
                         </span>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm">
-                        {donation.status === "success" && (
-                          <a
-                            href={`${import.meta.env.VITE_API_BASE_URL}/donations/${donation.id}/certificate`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-primary hover:text-green-700 font-medium"
-                          >
-                            Download Certificate
-                          </a>
-                        )}
-                      </td>
-                    </tr>
+                      </div>
+                      {donation.status === "success" && (
+                        <a
+                          href={`${import.meta.env.VITE_API_BASE_URL}/donations/${donation.id}/certificate`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="w-full mt-2 inline-flex items-center justify-center gap-1.5 text-xs font-bold text-slate-900 bg-white border border-slate-300 py-2 rounded-lg hover:bg-slate-100 transition shadow-sm"
+                        >
+                          <svg className="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                          </svg>
+                          Download 80G Certificate
+                        </a>
+                      )}
+                    </div>
                   ))}
-                </tbody>
-              </table>
+                </div>
+              </>
+            ) : (
+              <div className="text-center py-8 sm:py-12 bg-slate-50 rounded-2xl border border-dashed border-slate-200 text-slate-500 text-xs sm:text-sm">
+                No donation records found. Your future contributions will generate 80G tax certificates here.
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* TAB 5: ACADEMY & COURSES */}
+        {activeTab === "academy" && (
+          <div className="space-y-4 sm:space-y-6">
+            <div className="bg-gradient-to-r from-slate-900 via-primary to-slate-900 rounded-2xl sm:rounded-3xl p-5 sm:p-10 text-white shadow-xl relative overflow-hidden">
+              <div className="max-w-2xl">
+                <span className="text-[10px] sm:text-xs font-extrabold uppercase tracking-widest text-accent bg-accent/10 border border-accent/20 px-2.5 py-1 rounded-full">
+                  SVARP Global Academy
+                </span>
+                <h2 className="text-xl sm:text-3xl font-extrabold mt-3 text-white">
+                  Environmental, Safety & EHS Learning Hub
+                </h2>
+                <p className="text-slate-300 text-xs sm:text-sm mt-2 leading-relaxed">
+                  Access official safety training modules, certified EHS courses, and verify training certificates for global compliance.
+                </p>
+                <div className="mt-5 sm:mt-6 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                  <Link
+                    to="/global-academy/catalog"
+                    className="bg-accent hover:bg-emerald-400 text-slate-950 font-extrabold px-6 py-3 rounded-xl text-xs transition shadow-md flex items-center justify-center gap-2 text-center"
+                  >
+                    Browse Course Catalog →
+                  </Link>
+                  <Link
+                    to="/global-academy/verify"
+                    className="bg-white/10 hover:bg-white/20 text-white font-bold px-6 py-3 rounded-xl text-xs backdrop-blur-md transition border border-white/10 flex items-center justify-center gap-2 text-center"
+                  >
+                    Verify Certificate Code
+                  </Link>
+                </div>
+              </div>
             </div>
           </div>
         )}
 
-        <div className="bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-lg flex max-lg:flex-col max-lg:gap-3 lg:justify-between lg:items-center">
-          <button
-            onClick={logout}
-            className="bg-red-50 text-red-600 px-5 py-2 rounded-full font-medium hover:bg-red-100 transition"
-          >
-            Logout
-          </button>
-        </div>
       </div>
     </div>
   );
 }
 
+/* ── ProfileForm Component (100% Mobile Responsive) ── */
 function ProfileForm({ userData, token }) {
   const [formData, setFormData] = useState({
     full_name: userData.full_name || "",
@@ -285,7 +950,7 @@ function ProfileForm({ userData, token }) {
   const [loading, setLoading] = useState(false);
   const [disclaimerConfirmed, setDisclaimerConfirmed] = useState(false);
 
-  // Separate states for file uploads
+  // File upload states
   const [govIdFile, setGovIdFile] = useState(null);
   const [studentIdFile, setStudentIdFile] = useState(null);
   const [profilePicFile, setProfilePicFile] = useState(null);
@@ -334,7 +999,6 @@ function ProfileForm({ userData, token }) {
     isStudentIdPathFilled ||
     isGstFilled;
 
-  // Track if any changes have been made to the form relative to saved userData
   const hasChanges =
     formData.full_name !== (userData.full_name || "") ||
     formData.phone_number !== (userData.phone_number || "") ||
@@ -353,7 +1017,6 @@ function ProfileForm({ userData, token }) {
 
   const showSubmitSection = !isFullySubmitted || hasChanges;
 
-  // Calculate completeness score for the progress bar
   const totalMandatoryFields = 11 + (formData.is_student ? 1 : 0);
   const filledMandatoryFields = 
     (formData.full_name ? 1 : 0) +
@@ -371,8 +1034,8 @@ function ProfileForm({ userData, token }) {
   
   const percentComplete = Math.round((filledMandatoryFields / totalMandatoryFields) * 100);
 
-  const disabledInputClass = "mt-1 block w-full rounded-xl border-gray-200 bg-gray-50/70 text-gray-500 cursor-not-allowed sm:text-sm p-3.5 border transition-all";
-  const activeInputClass = "mt-1 block w-full rounded-xl border-gray-200 shadow-sm focus:border-primary focus:ring-primary/20 focus:ring-4 sm:text-sm p-3.5 border transition-all bg-white placeholder-gray-400";
+  const disabledInputClass = "mt-1 block w-full rounded-xl border-slate-200 bg-slate-50 text-slate-500 cursor-not-allowed text-xs sm:text-sm p-3 sm:p-3.5 border transition-all";
+  const activeInputClass = "mt-1 block w-full rounded-xl border-slate-200 shadow-sm focus:border-slate-900 focus:ring-slate-900/20 focus:ring-4 text-xs sm:text-sm p-3 sm:p-3.5 border transition-all bg-white placeholder-slate-400";
 
   const handleChange = (e) => {
     const value =
@@ -398,7 +1061,7 @@ function ProfileForm({ userData, token }) {
           Authorization: `Bearer ${token}`,
         },
         body: data,
-      },
+      }
     );
 
     if (!response.ok) {
@@ -423,7 +1086,6 @@ function ProfileForm({ userData, token }) {
     try {
       let updatedData = { ...formData };
 
-      // Upload files if selected
       if (govIdFile)
         updatedData.government_id_path = await uploadFile(govIdFile);
       if (studentIdFile)
@@ -440,12 +1102,11 @@ function ProfileForm({ userData, token }) {
             Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify(updatedData),
-        },
+        }
       );
 
       if (response.ok) {
         setMessage("Application details updated successfully!");
-        // Refresh page or details after short timeout
         setTimeout(() => {
           window.location.reload();
         }, 1500);
@@ -462,47 +1123,46 @@ function ProfileForm({ userData, token }) {
   };
 
   return (
-    <div className="bg-white rounded-2xl sm:rounded-3xl p-6 sm:p-10 shadow-lg border-t-8 border-primary relative overflow-hidden">
+    <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-10 shadow-sm border border-slate-200 relative overflow-hidden">
       
-      {/* Form Title */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 border-b pb-6 border-gray-100">
+      {/* Form Title Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5 sm:mb-6 border-b border-slate-100 pb-4 sm:pb-6">
         <div>
-          <h2 className="text-xl sm:text-2xl font-bold text-primary">
-            Membership Application Form
+          <h2 className="text-lg sm:text-2xl font-bold text-slate-900">
+            Membership & Verification Details
           </h2>
-          <p className="text-gray-500 text-sm mt-1">
-            Complete the fields below to verify your profile and qualify for membership.
+          <p className="text-slate-500 text-xs sm:text-sm mt-0.5">
+            Complete all fields to verify your profile identity and qualify for official membership services.
           </p>
         </div>
 
-        {/* Progress Badge */}
         <div className="flex items-center gap-3">
-          <div className="text-right">
-            <span className="text-xs text-gray-400 font-semibold block uppercase">Profile Strength</span>
-            <span className="text-sm font-bold text-primary">{percentComplete}% Complete</span>
+          <div className="text-left sm:text-right">
+            <span className="text-[10px] text-slate-400 font-semibold block uppercase tracking-wider">Completeness</span>
+            <span className="text-xs sm:text-sm font-bold text-slate-900">{percentComplete}%</span>
           </div>
-          <div className="w-16 h-1.5 bg-gray-100 rounded-full overflow-hidden">
-            <div className="h-full bg-accent transition-all duration-500" style={{ width: `${percentComplete}%` }} />
+          <div className="w-16 h-2 bg-slate-100 rounded-full overflow-hidden">
+            <div className="h-full bg-emerald-500 transition-all duration-500" style={{ width: `${percentComplete}%` }} />
           </div>
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-8">
+      <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-8">
         
-        {/* 1. Personal Details Section */}
-        <div className="space-y-6">
-          <div className="flex items-center gap-3 border-b border-gray-50 pb-3">
-            <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-              <svg className="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        {/* 1. Personal Details */}
+        <div className="space-y-4 sm:space-y-5">
+          <div className="flex items-center gap-2 border-b border-slate-100 pb-2">
+            <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-slate-100 flex items-center justify-center text-slate-700">
+              <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
               </svg>
             </div>
-            <h3 className="text-lg font-bold text-primary">Personal Details</h3>
+            <h3 className="text-sm sm:text-md font-bold text-slate-900">Personal Information</h3>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5">
+              <label className="block text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">
                 Full Name *
               </label>
               <div className="relative">
@@ -516,7 +1176,7 @@ function ProfileForm({ userData, token }) {
                   required
                 />
                 {isFullNameFilled && (
-                  <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400" title="Locked & Verified">
+                  <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs" title="Locked & Verified">
                     🔒
                   </span>
                 )}
@@ -524,7 +1184,7 @@ function ProfileForm({ userData, token }) {
             </div>
             
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5">
+              <label className="block text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">
                 Email Address
               </label>
               <div className="relative">
@@ -532,16 +1192,16 @@ function ProfileForm({ userData, token }) {
                   type="email"
                   value={userData.email || ""}
                   disabled
-                  className="mt-1 block w-full rounded-xl border-gray-100 bg-gray-50/70 text-gray-400 cursor-not-allowed sm:text-sm p-3.5 border"
+                  className="mt-1 block w-full rounded-xl border-slate-100 bg-slate-50 text-slate-400 cursor-not-allowed text-xs sm:text-sm p-3 sm:p-3.5 border"
                 />
-                <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400" title="Email locked">
+                <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs" title="Email locked">
                   🔒
                 </span>
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5">
+              <label className="block text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">
                 Contact Number *
               </label>
               <div className="relative">
@@ -556,7 +1216,7 @@ function ProfileForm({ userData, token }) {
                   placeholder="Ex: +91 9876543210"
                 />
                 {isPhoneFilled && (
-                  <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400" title="Locked & Verified">
+                  <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs" title="Locked & Verified">
                     🔒
                   </span>
                 )}
@@ -564,7 +1224,7 @@ function ProfileForm({ userData, token }) {
             </div>
 
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5">
+              <label className="block text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">
                 Date of Birth *
               </label>
               <div className="relative">
@@ -578,7 +1238,7 @@ function ProfileForm({ userData, token }) {
                   required
                 />
                 {isDobFilled && (
-                  <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400" title="Locked & Verified">
+                  <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs" title="Locked & Verified">
                     🔒
                   </span>
                 )}
@@ -587,21 +1247,20 @@ function ProfileForm({ userData, token }) {
           </div>
         </div>
 
-        {/* 2. Address Details Section */}
-        <div className="space-y-6">
-          <div className="flex items-center gap-3 border-b border-gray-50 pb-3">
-            <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-              <svg className="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        {/* 2. Address Details */}
+        <div className="space-y-4 sm:space-y-5">
+          <div className="flex items-center gap-2 border-b border-slate-100 pb-2">
+            <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-slate-100 flex items-center justify-center text-slate-700">
+              <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
             </div>
-            <h3 className="text-lg font-bold text-primary">Address & Contact Info</h3>
+            <h3 className="text-sm sm:text-md font-bold text-slate-900">Address Info</h3>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             <div className="sm:col-span-2">
-              <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5">
+              <label className="block text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">
                 Street Address *
               </label>
               <div className="relative">
@@ -612,11 +1271,11 @@ function ProfileForm({ userData, token }) {
                   onChange={handleChange}
                   disabled={isAddressFilled}
                   className={isAddressFilled ? disabledInputClass : activeInputClass}
-                  placeholder="Apartment, unit, building, street, etc."
+                  placeholder="Apartment, unit, street address"
                   required
                 />
                 {isAddressFilled && (
-                  <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400" title="Locked & Verified">
+                  <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs" title="Locked & Verified">
                     🔒
                   </span>
                 )}
@@ -624,7 +1283,7 @@ function ProfileForm({ userData, token }) {
             </div>
 
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5">
+              <label className="block text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">
                 City *
               </label>
               <div className="relative">
@@ -639,7 +1298,7 @@ function ProfileForm({ userData, token }) {
                   required
                 />
                 {isCityFilled && (
-                  <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400" title="Locked & Verified">
+                  <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs" title="Locked & Verified">
                     🔒
                   </span>
                 )}
@@ -647,7 +1306,7 @@ function ProfileForm({ userData, token }) {
             </div>
 
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5">
+              <label className="block text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">
                 State *
               </label>
               <div className="relative">
@@ -662,7 +1321,7 @@ function ProfileForm({ userData, token }) {
                   required
                 />
                 {isStateFilled && (
-                  <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400" title="Locked & Verified">
+                  <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs" title="Locked & Verified">
                     🔒
                   </span>
                 )}
@@ -670,7 +1329,7 @@ function ProfileForm({ userData, token }) {
             </div>
 
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5">
+              <label className="block text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">
                 Pincode *
               </label>
               <div className="relative">
@@ -686,7 +1345,7 @@ function ProfileForm({ userData, token }) {
                   maxLength={6}
                 />
                 {isPincodeFilled && (
-                  <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400" title="Locked & Verified">
+                  <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs" title="Locked & Verified">
                     🔒
                   </span>
                 )}
@@ -695,20 +1354,20 @@ function ProfileForm({ userData, token }) {
           </div>
         </div>
 
-        {/* 3. Identity Verification Section */}
-        <div className="space-y-6">
-          <div className="flex items-center gap-3 border-b border-gray-50 pb-3">
-            <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-              <svg className="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        {/* 3. Identity Verification & File Uploads */}
+        <div className="space-y-4 sm:space-y-5">
+          <div className="flex items-center gap-2 border-b border-slate-100 pb-2">
+            <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-slate-100 flex items-center justify-center text-slate-700">
+              <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.378 0 2.5-1.122 2.5-2.5S10.378 9 9 9" />
               </svg>
             </div>
-            <h3 className="text-lg font-bold text-primary">Identity Verification</h3>
+            <h3 className="text-sm sm:text-md font-bold text-slate-900">Identity Verification</h3>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5">
+              <label className="block text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">
                 Government ID Type *
               </label>
               <div className="relative">
@@ -726,7 +1385,7 @@ function ProfileForm({ userData, token }) {
                   <option value="Passport">Passport</option>
                 </select>
                 {isGovIdTypeFilled && (
-                  <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400" title="Locked & Verified">
+                  <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs" title="Locked & Verified">
                     🔒
                   </span>
                 )}
@@ -735,7 +1394,7 @@ function ProfileForm({ userData, token }) {
 
             {formData.government_id_type && (
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5">
+                <label className="block text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">
                   {formData.government_id_type} Number *
                 </label>
                 <div className="relative">
@@ -749,7 +1408,7 @@ function ProfileForm({ userData, token }) {
                     required
                   />
                   {isGovIdNumFilled && (
-                    <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400" title="Locked & Verified">
+                    <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs" title="Locked & Verified">
                       🔒
                     </span>
                   )}
@@ -757,59 +1416,49 @@ function ProfileForm({ userData, token }) {
               </div>
             )}
 
-            {/* Gov ID File Area */}
+            {/* Gov ID Upload Box */}
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5">
-                Upload Government ID Card *
+              <label className="block text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">
+                Government ID File *
               </label>
               
               {formData.government_id_path ? (
-                <div className="flex items-center justify-between p-3.5 bg-emerald-50 border border-emerald-100 rounded-2xl">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600">
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                <div className="flex items-center justify-between p-3 bg-emerald-50 border border-emerald-100 rounded-xl">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-7 h-7 rounded-lg bg-emerald-100 flex items-center justify-center text-emerald-600 flex-shrink-0">
+                      <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 13l4 4L19 7" />
                       </svg>
                     </div>
-                    <div>
-                      <p className="text-sm font-semibold text-emerald-800">Government ID Uploaded</p>
+                    <div className="min-w-0">
+                      <p className="text-xs font-bold text-emerald-800 truncate">Gov ID Uploaded</p>
                       <a
                         href={`${import.meta.env.VITE_API_BASE_URL}${formData.government_id_path}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-xs text-primary hover:underline font-semibold flex items-center gap-0.5 mt-0.5"
+                        className="text-[10px] sm:text-[11px] text-primary hover:underline font-bold"
                       >
                         View File ↗
                       </a>
                     </div>
                   </div>
-                  <span className="text-xs font-bold uppercase tracking-wider text-emerald-700 bg-emerald-100/40 px-2.5 py-1 rounded-md">
-                    Locked
+                  <span className="text-[9px] sm:text-[10px] font-bold uppercase text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded">
+                    Verified
                   </span>
                 </div>
               ) : govIdFile ? (
-                <div className="flex items-center justify-between p-3.5 bg-blue-50 border border-blue-100 rounded-2xl">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
-                      <svg className="w-5 h-5 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                      </svg>
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold text-blue-800 line-clamp-1">{govIdFile.name}</p>
-                      <p className="text-xs text-blue-600">{(govIdFile.size / 1024 / 1024).toFixed(2)} MB • Ready</p>
-                    </div>
-                  </div>
+                <div className="flex items-center justify-between p-3 bg-blue-50 border border-blue-100 rounded-xl">
+                  <p className="text-xs font-bold text-blue-800 truncate">{govIdFile.name}</p>
                   <button
                     type="button"
                     onClick={() => setGovIdFile(null)}
-                    className="text-xs font-bold text-red-600 hover:text-red-800 bg-red-50 px-2.5 py-1.5 rounded-lg transition"
+                    className="text-xs font-bold text-red-600 hover:underline flex-shrink-0 ml-2"
                   >
                     Remove
                   </button>
                 </div>
               ) : (
-                <div className="relative border-2 border-dashed border-gray-200 rounded-2xl p-5 text-center hover:border-primary transition duration-300 bg-gray-50/50 group">
+                <div className="relative border-2 border-dashed border-slate-200 rounded-xl p-3.5 text-center hover:border-slate-800 transition bg-slate-50/50">
                   <input
                     type="file"
                     accept=".pdf,image/*"
@@ -817,72 +1466,55 @@ function ProfileForm({ userData, token }) {
                     className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                     required
                   />
-                  <svg className="w-8 h-8 text-gray-400 group-hover:text-primary mx-auto mb-2 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                  </svg>
-                  <p className="text-xs font-semibold text-gray-700">Click to upload ID Card</p>
-                  <p className="text-[10px] text-gray-400 mt-1">PDF or Image, max 5MB</p>
+                  <p className="text-xs font-bold text-slate-700">Click to Upload Gov ID</p>
+                  <p className="text-[10px] text-slate-400 mt-0.5">PDF or Image (Max 5MB)</p>
                 </div>
               )}
             </div>
 
-            {/* Profile Pic Upload Area */}
+            {/* Profile Photo Box */}
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5">
-                Profile Photo (Passport size) *
+              <label className="block text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">
+                Profile Passport Photo *
               </label>
 
               {formData.profile_picture_path ? (
-                <div className="flex items-center justify-between p-3.5 bg-emerald-50 border border-emerald-100 rounded-2xl">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full border border-emerald-200 overflow-hidden shadow-sm flex-shrink-0">
-                      <img
-                        src={`${import.meta.env.VITE_API_BASE_URL}${formData.profile_picture_path}`}
-                        alt="Profile Pic"
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold text-emerald-800">Photograph Uploaded</p>
+                <div className="flex items-center justify-between p-3 bg-emerald-50 border border-emerald-100 rounded-xl">
+                  <div className="flex items-center gap-2.5">
+                    <img
+                      src={`${import.meta.env.VITE_API_BASE_URL}${formData.profile_picture_path}`}
+                      alt="Profile Pic"
+                      className="w-7 h-7 rounded-full object-cover border border-emerald-300 flex-shrink-0"
+                    />
+                    <div className="min-w-0">
+                      <p className="text-xs font-bold text-emerald-800 truncate">Photo Uploaded</p>
                       <a
                         href={`${import.meta.env.VITE_API_BASE_URL}${formData.profile_picture_path}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-xs text-primary hover:underline font-semibold flex items-center gap-0.5 mt-0.5"
+                        className="text-[10px] sm:text-[11px] text-primary hover:underline font-bold"
                       >
                         View Photo ↗
                       </a>
                     </div>
                   </div>
-                  <span className="text-xs font-bold uppercase tracking-wider text-emerald-700 bg-emerald-100/40 px-2.5 py-1 rounded-md">
-                    Locked
+                  <span className="text-[9px] sm:text-[10px] font-bold uppercase text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded">
+                    Verified
                   </span>
                 </div>
               ) : profilePicFile ? (
-                <div className="flex items-center justify-between p-3.5 bg-blue-50 border border-blue-100 rounded-2xl">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full border border-blue-200 overflow-hidden shadow-sm flex-shrink-0 bg-blue-50">
-                      <img
-                        src={URL.createObjectURL(profilePicFile)}
-                        alt="Preview"
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold text-blue-800 line-clamp-1">{profilePicFile.name}</p>
-                      <p className="text-xs text-blue-600">{(profilePicFile.size / 1024 / 1024).toFixed(2)} MB • Ready</p>
-                    </div>
-                  </div>
+                <div className="flex items-center justify-between p-3 bg-blue-50 border border-blue-100 rounded-xl">
+                  <p className="text-xs font-bold text-blue-800 truncate">{profilePicFile.name}</p>
                   <button
                     type="button"
                     onClick={() => setProfilePicFile(null)}
-                    className="text-xs font-bold text-red-600 hover:text-red-800 bg-red-50 px-2.5 py-1.5 rounded-lg transition"
+                    className="text-xs font-bold text-red-600 hover:underline flex-shrink-0 ml-2"
                   >
                     Remove
                   </button>
                 </div>
               ) : (
-                <div className="relative border-2 border-dashed border-gray-200 rounded-2xl p-5 text-center hover:border-primary transition duration-300 bg-gray-50/50 group">
+                <div className="relative border-2 border-dashed border-slate-200 rounded-xl p-3.5 text-center hover:border-slate-800 transition bg-slate-50/50">
                   <input
                     type="file"
                     accept="image/*"
@@ -890,107 +1522,63 @@ function ProfileForm({ userData, token }) {
                     className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                     required
                   />
-                  <svg className="w-8 h-8 text-gray-400 group-hover:text-primary mx-auto mb-2 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
-                  <p className="text-xs font-semibold text-gray-700">Click to upload photo</p>
-                  <p className="text-[10px] text-gray-400 mt-1">Image format only, max 3MB</p>
+                  <p className="text-xs font-bold text-slate-700">Click to Upload Photo</p>
+                  <p className="text-[10px] text-slate-400 mt-0.5">Image format (Max 3MB)</p>
                 </div>
               )}
             </div>
           </div>
         </div>
 
-        {/* 4. Additional Information Section */}
-        <div className="space-y-6">
-          <div className="flex items-center gap-3 border-b border-gray-50 pb-3">
-            <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-              <svg className="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        {/* 4. Additional Info & Student Verification */}
+        <div className="space-y-3 sm:space-y-4">
+          <div className="flex items-center gap-2 border-b border-slate-100 pb-2">
+            <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-slate-100 flex items-center justify-center text-slate-700">
+              <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
-            <h3 className="text-lg font-bold text-primary">Additional Information</h3>
+            <h3 className="text-sm sm:text-md font-bold text-slate-900">Student & Tax Info</h3>
           </div>
 
-          <div className="space-y-5">
-            {/* Student Checkbox */}
+          <div className="space-y-3 sm:space-y-4">
             <div className="flex items-start">
-              <div className="flex items-center h-5 mt-0.5">
-                <input
-                  type="checkbox"
-                  name="is_student"
-                  checked={formData.is_student}
-                  onChange={handleChange}
-                  disabled={isStudentFilled}
-                  className="h-5 w-5 text-primary focus:ring-primary/25 border-gray-300 rounded-lg transition"
-                  id="student_checkbox"
-                />
-              </div>
-              <label
-                htmlFor="student_checkbox"
-                className="ml-3 text-sm font-semibold text-gray-700 cursor-pointer"
-              >
-                I am applying for a Student Membership discount
-                <p className="text-xs text-gray-400 font-normal mt-0.5">
-                  Requires loading a valid College or School Identification Card for verification.
+              <input
+                type="checkbox"
+                name="is_student"
+                checked={formData.is_student}
+                onChange={handleChange}
+                disabled={isStudentFilled}
+                className="h-4 w-4 mt-0.5 text-slate-900 focus:ring-slate-900 border-slate-300 rounded"
+                id="student_checkbox"
+              />
+              <label htmlFor="student_checkbox" className="ml-2 text-xs font-bold text-slate-700 cursor-pointer">
+                Apply for Student Membership Discount
+                <p className="text-[10px] text-slate-400 font-normal mt-0.5">
+                  Requires uploading valid College/School Student ID Card.
                 </p>
               </label>
             </div>
 
-            {/* Conditional Student ID Upload */}
             {formData.is_student && (
-              <div className="pl-6 border-l-2 border-primary mt-4 space-y-4">
-                <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5">
-                  Upload Student ID Card *
+              <div className="pl-3 sm:pl-4 border-l-2 border-slate-900 space-y-2.5">
+                <label className="block text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-500">
+                  Student ID File *
                 </label>
-
                 {formData.student_id_path ? (
-                  <div className="flex items-center justify-between p-3.5 bg-emerald-50 border border-emerald-100 rounded-2xl max-w-md">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600">
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                      </div>
-                      <div>
-                        <p className="text-sm font-semibold text-emerald-800">Student ID Uploaded</p>
-                        <a
-                          href={`${import.meta.env.VITE_API_BASE_URL}${formData.student_id_path}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-xs text-primary hover:underline font-semibold flex items-center gap-0.5 mt-0.5"
-                        >
-                          View Student ID ↗
-                        </a>
-                      </div>
-                    </div>
-                    <span className="text-xs font-bold uppercase tracking-wider text-emerald-700 bg-emerald-100/40 px-2.5 py-1 rounded-md">
-                      Locked
-                    </span>
+                  <div className="flex items-center justify-between p-2.5 bg-emerald-50 border border-emerald-100 rounded-xl max-w-md">
+                    <span className="text-xs font-bold text-emerald-800">Student ID Uploaded</span>
+                    <a href={`${import.meta.env.VITE_API_BASE_URL}${formData.student_id_path}`} target="_blank" rel="noreferrer" className="text-xs font-bold text-primary">
+                      View ↗
+                    </a>
                   </div>
                 ) : studentIdFile ? (
-                  <div className="flex items-center justify-between p-3.5 bg-blue-50 border border-blue-100 rounded-2xl max-w-md">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
-                        <svg className="w-5 h-5 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                        </svg>
-                      </div>
-                      <div>
-                        <p className="text-sm font-semibold text-blue-800 line-clamp-1">{studentIdFile.name}</p>
-                        <p className="text-xs text-blue-600">{(studentIdFile.size / 1024 / 1024).toFixed(2)} MB • Ready</p>
-                      </div>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => setStudentIdFile(null)}
-                      className="text-xs font-bold text-red-600 hover:text-red-800 bg-red-50 px-2.5 py-1.5 rounded-lg transition"
-                    >
-                      Remove
-                    </button>
+                  <div className="flex items-center justify-between p-2.5 bg-blue-50 border border-blue-100 rounded-xl max-w-md">
+                    <span className="text-xs font-bold text-blue-800 truncate">{studentIdFile.name}</span>
+                    <button type="button" onClick={() => setStudentIdFile(null)} className="text-xs text-red-600 font-bold ml-2">Remove</button>
                   </div>
                 ) : (
-                  <div className="relative border-2 border-dashed border-gray-200 rounded-2xl p-5 text-center hover:border-primary transition duration-300 bg-gray-50/50 group max-w-md">
+                  <div className="relative border-2 border-dashed border-slate-200 rounded-xl p-3 text-center bg-slate-50 max-w-md">
                     <input
                       type="file"
                       accept=".pdf,image/*"
@@ -998,114 +1586,74 @@ function ProfileForm({ userData, token }) {
                       className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                       required={formData.is_student && !formData.student_id_path}
                     />
-                    <svg className="w-8 h-8 text-gray-400 group-hover:text-primary mx-auto mb-2 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                    </svg>
-                    <p className="text-xs font-semibold text-gray-700">Click to upload Student ID</p>
-                    <p className="text-[10px] text-gray-400 mt-1">PDF or image, max 4MB</p>
+                    <p className="text-xs font-bold text-slate-700">Click to Upload Student ID</p>
                   </div>
                 )}
               </div>
             )}
 
-            {/* GST Number */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6 mt-4">
-              <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5">
-                  GST Number (if applicable)
-                </label>
-                <div className="relative">
-                  <input
-                    type="text"
-                    name="gst_number"
-                    value={formData.gst_number}
-                    onChange={handleChange}
-                    disabled={isGstFilled}
-                    className={isGstFilled ? disabledInputClass : activeInputClass}
-                    placeholder="Ex: 22AAAAA0000A1Z5"
-                  />
-                  {isGstFilled && (
-                    <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400" title="Locked & Verified">
-                      🔒
-                    </span>
-                  )}
-                </div>
-              </div>
+            <div>
+              <label className="block text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">
+                GST Number (Optional)
+              </label>
+              <input
+                type="text"
+                name="gst_number"
+                value={formData.gst_number}
+                onChange={handleChange}
+                disabled={isGstFilled}
+                className={isGstFilled ? disabledInputClass : activeInputClass}
+                placeholder="Ex: 22AAAAA0000A1Z5"
+              />
             </div>
           </div>
         </div>
 
-        {/* 5. Disclaimer Checkbox */}
+        {/* 5. Terms Affirmation */}
         {showSubmitSection && (
-          <div className="bg-yellow-50/50 border border-yellow-200/80 p-5 sm:p-6 rounded-2xl space-y-4">
-            <h3 className="text-md font-bold text-yellow-800 flex items-center gap-2">
-              ⚠️ Mandatory Terms & Affirmation
-            </h3>
+          <div className="bg-slate-50 border border-slate-200 p-3.5 sm:p-5 rounded-xl space-y-2.5">
+            <h4 className="text-[11px] sm:text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
+              <span>⚠️</span> Mandatory Affirmation
+            </h4>
             <div className="flex items-start">
-              <div className="flex items-center h-5 mt-0.5">
-                <input
-                  id="disclaimer"
-                  name="disclaimer"
-                  type="checkbox"
-                  checked={disclaimerConfirmed}
-                  onChange={(e) => setDisclaimerConfirmed(e.target.checked)}
-                  className="focus:ring-yellow-500 h-5 w-5 text-yellow-600 border-gray-300 rounded-lg cursor-pointer transition"
-                  required
-                />
-              </div>
-              <div className="ml-3 text-sm">
-                <label
-                  htmlFor="disclaimer"
-                  className="font-bold text-gray-800 cursor-pointer block"
-                >
-                  I confirm that all application details are correct
-                </label>
-                <ul className="list-disc pl-5 mt-2 text-xs text-gray-600 space-y-1.5">
-                  <li>
-                    The applicant confirms that all information and documents
-                    submitted are true and accurate.
-                  </li>
-                  <li>
-                    In case of any discrepancy, false information, or invalid
-                    documents, the membership may be terminated without any
-                    prior notice.
-                  </li>
-                  <li>
-                    The organization reserves the right to verify submitted
-                    documents at any time.
-                  </li>
-                </ul>
-              </div>
+              <input
+                id="disclaimer"
+                type="checkbox"
+                checked={disclaimerConfirmed}
+                onChange={(e) => setDisclaimerConfirmed(e.target.checked)}
+                className="h-4 w-4 mt-0.5 text-slate-900 focus:ring-slate-900 border-slate-300 rounded cursor-pointer"
+                required
+              />
+              <label htmlFor="disclaimer" className="ml-2 text-xs text-slate-700 font-semibold cursor-pointer">
+                I confirm that all submitted details and documents are true and accurate.
+              </label>
             </div>
           </div>
         )}
 
-        {/* Submit Actions / Locked Info Banner */}
+        {/* Submit Actions */}
         {showSubmitSection ? (
-          <div className="pt-6 border-t border-gray-100">
+          <div className="pt-3 border-t border-slate-100">
             <button
               type="submit"
               disabled={loading || !disclaimerConfirmed}
-              className="w-full sm:w-auto bg-primary text-white border border-transparent hover:bg-white hover:text-primary hover:border-primary px-8 py-3.5 rounded-full font-medium shadow-md hover:shadow-lg transition disabled:opacity-50 disabled:cursor-not-allowed text-base flex items-center justify-center gap-2"
+              className="w-full sm:w-auto bg-slate-900 hover:bg-slate-800 text-accent font-bold px-8 py-3.5 sm:py-3 rounded-xl text-xs sm:text-xs transition shadow-md disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               {loading && (
-                <svg className="animate-spin h-5 w-5 text-current" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                </svg>
+                <div className="w-4 h-4 border-2 border-accent border-t-transparent rounded-full animate-spin"></div>
               )}
               {loading
-                ? "Uploading & Submitting..."
+                ? "Submitting..."
                 : isPartiallySubmitted
                   ? "Update Details"
-                  : "Save Application Details"}
+                  : "Save Profile Details"}
             </button>
             
             {message && (
               <div
-                className={`mt-4 p-4 rounded-xl text-sm font-semibold border ${
+                className={`mt-3 p-3 rounded-xl text-xs font-bold border ${
                   message.includes("successfully") 
-                    ? "bg-green-50 text-green-800 border-green-200" 
+                    ? "bg-emerald-50 text-emerald-800 border-emerald-200" 
                     : "bg-red-50 text-red-800 border-red-200"
                 }`}
               >
@@ -1114,22 +1662,18 @@ function ProfileForm({ userData, token }) {
             )}
           </div>
         ) : (
-          <div className="pt-6 border-t border-gray-100">
-            <div className="bg-emerald-50 text-emerald-800 border-emerald-100 border p-5 rounded-2xl flex items-start gap-4">
-              <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 flex-shrink-0">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <div>
-                <p className="font-bold text-sm text-emerald-900">Application Submitted & Verified</p>
-                <p className="text-xs text-emerald-700/95 mt-0.5 leading-relaxed">
-                  Your profile details have been successfully uploaded and locked. Our administration team has verified your records. You are ready to subscribe or upgrade your memberships.
-                </p>
-              </div>
+          <div className="pt-3 border-t border-slate-100">
+            <div className="bg-emerald-50 text-emerald-800 border border-emerald-100 p-3.5 rounded-xl flex items-center gap-2.5">
+              <svg className="w-5 h-5 text-emerald-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 13l4 4L19 7" />
+              </svg>
+              <p className="text-xs font-bold">
+                Profile Verified & Locked. Your identity records are approved by administration.
+              </p>
             </div>
           </div>
         )}
+
       </form>
     </div>
   );
