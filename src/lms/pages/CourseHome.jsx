@@ -121,12 +121,12 @@ const CourseHome = () => {
                 institutions worldwide.
               </p>
               <div className="flex flex-col gap-4 max-w-xs mx-auto lg:mx-0">
-                <Link
-                  to="/register"
+                <a
+                  href={`${APP_URL}/login`}
                   className="px-6 py-3 bg-primary text-white font-bold rounded-lg hover:scale-[1.02] hover:bg-accent hover:text-primary transition-all duration-300 shadow-md text-sm text-center"
                 >
                   Join the Academy
-                </Link>
+                </a>
                 <Link
                   to="/global-academy"
                   className="px-6 py-3 bg-white border border-gray-200 text-primary font-bold rounded-lg hover:scale-[1.02] hover:border-accent hover:text-accent transition-all duration-300 shadow-sm text-sm text-center"
@@ -702,12 +702,12 @@ const CourseHome = () => {
             globally trusted EHS certifications.
           </p>
           <div className="flex flex-wrap justify-center md:justify-start items-center gap-6">
-            <Link
-              to="/register"
+            <a
+              href={`${APP_URL}/register`}
               className="px-8 py-3.5 bg-accent text-primary font-extrabold rounded-lg shadow-lg hover:bg-white transition duration-300"
             >
               Register Now
-            </Link>
+            </a>
             <div className="flex flex-col justify-center text-left">
               <p className="font-bold flex items-center gap-2 text-accent text-sm sm:text-base">
                 <ShieldCheck className="w-6 h-6" />

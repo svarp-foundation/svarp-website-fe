@@ -4,6 +4,8 @@ import { useTranslation } from "react-i18next";
 import { useAuth } from "../context/AuthContext";
 import LanguageSwitcher from "./LanguageSwitcher";
 
+const APP_URL = import.meta.env.VITE_APP_URL || "https://globalacademy.svarp.org";
+
 const linkClass = ({ isActive }) =>
   `relative transition ${
     isActive ? "text-accent after:w-full" : "hover:text-accent after:w-0"
@@ -20,6 +22,8 @@ export default function Navbar() {
   const { user } = useAuth();
   const location = useLocation();
   const { t } = useTranslation();
+
+  const isGlobalAcademy = location.pathname.startsWith("/global-academy") || location.pathname.startsWith("/courses") || location.pathname.startsWith("/course");
 
   useEffect(() => {
     setOpen(false);
@@ -180,6 +184,21 @@ export default function Navbar() {
                   )}
                 </div>
               </NavLink>
+            ) : isGlobalAcademy ? (
+              <div className="flex items-center gap-3">
+                <a
+                  href={`${APP_URL}/login`}
+                  className="border border-white/20 text-white hover:border-accent hover:text-accent px-4 py-1.5 rounded-full font-semibold transition text-[11px] hover:scale-105 active:scale-95"
+                >
+                  {t("nav.login")}
+                </a>
+                <a
+                  href={`${APP_URL}/register`}
+                  className="bg-accent text-primary px-4 py-1.5 rounded-full font-bold hover:scale-105 active:scale-95 transition-all shadow-lg shadow-accent/10 text-[11px]"
+                >
+                  {t("nav.register")}
+                </a>
+              </div>
             ) : (
               <div className="flex items-center gap-3">
                 <NavLink
@@ -304,20 +323,37 @@ export default function Navbar() {
 
           <div className="pt-2 flex flex-col gap-2.5">
             {!user && (
-              <>
-                <NavLink
-                  to="/login"
-                  className="w-full bg-accent text-primary px-4 py-2.5 rounded-xl text-center text-xs font-bold"
-                >
-                  {t("nav.login")}
-                </NavLink>
-                <NavLink
-                  to="/register"
-                  className="w-full bg-white/10 text-white border border-white/10 px-4 py-2.5 rounded-xl text-center text-xs font-bold"
-                >
-                  {t("nav.register")}
-                </NavLink>
-              </>
+              isGlobalAcademy ? (
+                <>
+                  <a
+                    href={`${APP_URL}/login`}
+                    className="w-full bg-accent text-primary px-4 py-2.5 rounded-xl text-center text-xs font-bold"
+                  >
+                    {t("nav.login")}
+                  </a>
+                  <a
+                    href={`${APP_URL}/register`}
+                    className="w-full bg-white/10 text-white border border-white/10 px-4 py-2.5 rounded-xl text-center text-xs font-bold"
+                  >
+                    {t("nav.register")}
+                  </a>
+                </>
+              ) : (
+                <>
+                  <NavLink
+                    to="/login"
+                    className="w-full bg-accent text-primary px-4 py-2.5 rounded-xl text-center text-xs font-bold"
+                  >
+                    {t("nav.login")}
+                  </NavLink>
+                  <NavLink
+                    to="/register"
+                    className="w-full bg-white/10 text-white border border-white/10 px-4 py-2.5 rounded-xl text-center text-xs font-bold"
+                  >
+                    {t("nav.register")}
+                  </NavLink>
+                </>
+              )
             )}
           </div>
         </div>
