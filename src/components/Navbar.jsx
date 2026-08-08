@@ -64,6 +64,13 @@ export default function Navbar() {
         { name: t("nav.verifyCertificate"), path: "/global-academy/verify" },
       ],
     },
+    {
+      name: t("nav.store"),
+      submenu: [
+        { name: t("nav.svarpBodyWellness"), path: "https://bodywellness.svarp.org/" },
+        { name: t("nav.productsCatalog"), path: "https://bodywellness.svarp.org/shop" },
+      ],
+    },
     { name: t("nav.contact"), path: "/contact" },
   ];
 
@@ -122,13 +129,25 @@ export default function Navbar() {
                   <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform group-hover:translate-y-0 translate-y-2">
                     <div className="bg-zinc-900/95 backdrop-blur-2xl border border-white/10 rounded-xl overflow-hidden min-w-[180px] shadow-2xl">
                       {item.submenu.map((sub) => (
-                        <NavLink
-                          key={sub.path}
-                          to={sub.path}
-                          className={dropdownItemClass}
-                        >
-                          {sub.name}
-                        </NavLink>
+                        sub.path.startsWith("http") ? (
+                          <a
+                            key={sub.path}
+                            href={sub.path}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={dropdownItemClass({ isActive: false })}
+                          >
+                            {sub.name}
+                          </a>
+                        ) : (
+                          <NavLink
+                            key={sub.path}
+                            to={sub.path}
+                            className={dropdownItemClass}
+                          >
+                            {sub.name}
+                          </NavLink>
+                        )
                       ))}
                     </div>
                   </div>
@@ -286,13 +305,25 @@ export default function Navbar() {
                   </button>
                   <div className={`pl-4 space-y-0.5 transition-all duration-300 overflow-hidden ${activeDropdown === item.name ? "max-h-96 opacity-100 mt-0.5 mb-2" : "max-h-0 opacity-0"}`}>
                     {item.submenu.map((sub) => (
-                      <NavLink
-                        key={sub.path}
-                        to={sub.path}
-                        className={({ isActive }) => `block py-1 text-xs ${isActive ? "text-accent" : "text-white/60"}`}
-                      >
-                        {sub.name}
-                      </NavLink>
+                      sub.path.startsWith("http") ? (
+                        <a
+                          key={sub.path}
+                          href={sub.path}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="block py-1 text-xs text-white/60 hover:text-accent"
+                        >
+                          {sub.name}
+                        </a>
+                      ) : (
+                        <NavLink
+                          key={sub.path}
+                          to={sub.path}
+                          className={({ isActive }) => `block py-1 text-xs ${isActive ? "text-accent" : "text-white/60"}`}
+                        >
+                          {sub.name}
+                        </NavLink>
+                      )
                     ))}
                   </div>
                 </>
