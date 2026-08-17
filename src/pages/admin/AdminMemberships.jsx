@@ -136,6 +136,32 @@ const AdminMemberships = () => {
     }
   };
 
+  const cancelMembership = async (userId) => {
+    if (!window.confirm("Are you sure you want to cancel this user's membership?")) return;
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/admin/memberships/cancel/${userId}`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        },
+      );
+      if (response.ok) {
+        alert("Membership cancelled successfully!");
+        fetchData();
+      } else {
+        const err = await response.json();
+        alert(`Error: ${err.detail}`);
+      }
+    } catch (error) {
+      console.error("Cancellation failed", error);
+    }
+  };
+
+
   const filteredUsers = users.filter((u) => {
     if (filter === "active") return u.membership != null;
     if (filter === "none") return u.membership == null;
@@ -226,16 +252,31 @@ const AdminMemberships = () => {
                     </span>
                   )}
                 </div>
-                <button
-                  onClick={() => assignMembership(user.id)}
-                  className={`w-full py-1 rounded-md font-bold text-[10px] transition-all outline-none ${
-                    user.membership
-                      ? "border border-slate-200 text-slate-600 hover:bg-slate-50"
-                      : "bg-primary text-white hover:bg-slate-900"
-                  }`}
-                >
-                  {user.membership ? "Modify Plan" : "Assign Plan"}
-                </button>
+                {user.membership ? (
+                  <div className="flex gap-1.5 w-full">
+                    <button
+                      onClick={() => assignMembership(user.id)}
+                      className="flex-1 py-1 rounded-md font-bold text-[10px] transition-all border border-slate-200 text-slate-600 hover:bg-slate-50 outline-none"
+                    >
+                      Modify Plan
+                    </button>
+                    {user.membership.is_active && (
+                      <button
+                        onClick={() => cancelMembership(user.id)}
+                        className="py-1 px-2.5 rounded-md font-bold text-[10px] transition-all bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700 outline-none border border-red-100 cursor-pointer"
+                      >
+                        Cancel
+                      </button>
+                    )}
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => assignMembership(user.id)}
+                    className="w-full py-1 rounded-md font-bold text-[10px] transition-all bg-primary text-white hover:bg-slate-900 outline-none"
+                  >
+                    Assign Plan
+                  </button>
+                )}
               </div>
             </div>
           ))}

@@ -8,6 +8,8 @@ import seemaChaudhary from "./images/our-team/seema-chaudhary.webp";
 import vikashKumar from "./images/our-team/vikash-kumar.webp";
 import poonamSingh from "./images/our-team/poonam-singh.webp";
 import swastikSharma from "./images/our-team/swastik-sharma.webp";
+import praveenKumarDuggal from "./images/our-team/praveen-kumar-duggal.webp";
+import drVeenaChugh from "./images/our-team/dr-veena-chugh.webp";
 import loadingVideo from "./videos/loading-video.mp4";
 
 export {
@@ -21,5 +23,7 @@ export {
   poonamSingh,
   vikashKumar,
   swastikSharma,
+  praveenKumarDuggal,
+  drVeenaChugh,
   loadingVideo,
 };

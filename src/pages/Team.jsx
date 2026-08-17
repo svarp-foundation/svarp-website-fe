@@ -1,15 +1,73 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
-    drShilpiBansal,
-    preetiChaudhary,
-    priyankaVerma,
-    rajvirSingh,
-    santoshSingh,
-    seemaChaudhary,
-    poonamSingh,
-    vikashKumar,
-    swastikSharma
+  drShilpiBansal,
+  preetiChaudhary,
+  priyankaVerma,
+  rajvirSingh,
+  santoshSingh,
+  seemaChaudhary,
+  poonamSingh,
+  vikashKumar,
+  swastikSharma,
+  praveenKumarDuggal,
+  drVeenaChugh
 } from "../assets/assets";
+
+function TeamCard({ member, defaultImg }) {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  return (
+    <div className="bg-white rounded-3xl p-6 sm:p-8 border border-gray-100 shadow-sm hover:shadow-xl hover:border-primary/10 transition-all duration-300 flex flex-col justify-between relative overflow-hidden group min-h-[280px]">
+      {/* Top Accent bar on hover */}
+      <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-primary via-accent to-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+      <div>
+        {/* Avatar Circle with Shadow */}
+        <img
+          src={member.img || defaultImg}
+          alt={member.name}
+          className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl object-fill mb-4 sm:mb-6 border border-gray-100 shadow-sm group-hover:scale-105 transition-transform duration-500"
+        />
+
+        {/* Name & Role */}
+        <h3 className="text-lg sm:text-xl font-bold text-primary group-hover:text-accent transition-colors duration-300 mb-1">
+          {member.name}
+        </h3>
+        <p className="text-xs sm:text-sm text-accent font-semibold tracking-wider uppercase mb-4">
+          {member.role}
+        </p>
+
+        {/* Bio */}
+        <p className={`text-gray-600 text-sm leading-relaxed ${isExpanded ? "" : "line-clamp-2"}`}>
+          {member.bio}
+        </p>
+      </div>
+
+      <div className="mt-4 pt-2">
+        <button
+          onClick={() => setIsExpanded(!isExpanded)}
+          className="text-xs font-semibold text-primary hover:text-accent transition-colors duration-200 focus:outline-none flex items-center gap-1"
+        >
+          {isExpanded ? (
+            <>
+              See Less
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 15l7-7 7 7" />
+              </svg>
+            </>
+          ) : (
+            <>
+              See More
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </>
+          )}
+        </button>
+      </div>
+    </div>
+  );
+}
 
 export default function Team({ isStandalone = false }) {
   const team = [
@@ -67,122 +125,34 @@ export default function Team({ isStandalone = false }) {
       role: "Head of Software & IT",
       bio: "An IT infrastructure and software engineering lead driving digital platforms, LMS tools, and portal development for SVARP.",
     },
+    {
+      img: drVeenaChugh,
+      name: "Dr. Veena Chugh",
+      role: "Resource Professional",
+      bio: "A senior anesthesiologist and former Director General Health Services, Government of Haryana, with 25+ years of experience in trauma care, emergency response, patient safety, and critical care. She brings extensive expertise in trauma resuscitation, Golden Hour response, safety protocols, medical training, and community health initiatives, with a strong commitment to advancing road safety and reducing road traffic injuries."
+    },
+    {
+      img: praveenKumarDuggal,
+      name: "Praveen Kumar Duggal",
+      role: "Safety & Fire Professional",
+      bio: "A seasoned Safety Engineer and Occupational Health & Safety specialist with 44 years of experience in industrial safety, fire protection, emergency management, safety audits, and training across power plants, construction sites, and hazardous industries."
+    },
+    {
+      img: "https://kgdarcnvrkzjyasdpoab.supabase.co/storage/v1/object/public/Company%20Portal/profile%20images/hr001.jpeg",
+      name: "Vani Baliyan",
+      role: "Graphics Designer & Social Media Manager",
+      bio: "A creative professional specializing in graphic design, visual communication, social media management, and digital content creation, focused on building engaging brand identities and strengthening online presence."
+    },
+    {
+      img: "https://kgdarcnvrkzjyasdpoab.supabase.co/storage/v1/object/public/Company%20Portal/profile%20images/sales002.png",
+      name: "Robin Chaudhary",
+      role: "E-Commerce & Documentation Manager",
+      bio: "A detail-oriented professional specializing in e-commerce operations, product management, documentation, and digital workflows, ensuring organized processes and efficient management of online business operations."
+    },
   ];
 
   const defaultImg =
     "https://ui-avatars.com/api/?background=9bcf9b&color=1f3b45&size=256";
-
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [visibleCount, setVisibleCount] = useState(3);
-  const [isHovered, setIsHovered] = useState(false);
-
-  // Dragging / Swiping State
-  const [isDragging, setIsDragging] = useState(false);
-  const [startX, setStartX] = useState(0);
-  const [dragDistance, setDragDistance] = useState(0);
-
-  // Responsive logic to handle visible cards based on screen size
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth < 640) {
-        setVisibleCount(1);
-      } else if (window.innerWidth < 1024) {
-        setVisibleCount(2);
-      } else {
-        setVisibleCount(3);
-      }
-    };
-
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  const maxIndex = team.length - visibleCount;
-
-  // Auto-play logic (pauses when hovering)
-  useEffect(() => {
-    if (isHovered) return;
-
-    const timer = setInterval(() => {
-      setCurrentIndex((prevIndex) => (prevIndex >= maxIndex ? 0 : prevIndex + 1));
-    }, 5000);
-
-    return () => clearInterval(timer);
-  }, [isHovered, maxIndex]);
-
-  // Make sure current index stays valid when resizing
-  useEffect(() => {
-    if (currentIndex > maxIndex) {
-      setCurrentIndex(Math.max(0, maxIndex));
-    }
-  }, [visibleCount, currentIndex, maxIndex]);
-
-  const handleNext = () => {
-    setCurrentIndex((prevIndex) => (prevIndex >= maxIndex ? 0 : prevIndex + 1));
-  };
-
-  const handlePrev = () => {
-    setCurrentIndex((prevIndex) => (prevIndex <= 0 ? maxIndex : prevIndex - 1));
-  };
-
-  const startDrag = (clientX) => {
-    setIsDragging(true);
-    setStartX(clientX);
-    setDragDistance(0);
-  };
-
-  const moveDrag = (clientX) => {
-    if (!isDragging) return;
-    setDragDistance(startX - clientX);
-  };
-
-  const endDrag = () => {
-    if (!isDragging) return;
-    setIsDragging(false);
-    const minDragDistance = 50;
-
-    if (dragDistance > minDragDistance) {
-      handleNext();
-    } else if (dragDistance < -minDragDistance) {
-      handlePrev();
-    }
-    setDragDistance(0);
-  };
-
-  const handleMouseDown = (e) => {
-    if (e.button !== 0) return; // Left click only
-    startDrag(e.clientX);
-  };
-
-  const handleMouseMove = (e) => {
-    moveDrag(e.clientX);
-  };
-
-  const handleMouseUp = () => {
-    endDrag();
-  };
-
-  const handleMouseLeave = () => {
-    if (isDragging) {
-      setIsDragging(false);
-      setDragDistance(0);
-    }
-  };
-
-  const handleTouchStart = (e) => {
-    startDrag(e.touches[0].clientX);
-  };
-
-  const handleTouchMove = (e) => {
-    moveDrag(e.touches[0].clientX);
-  };
-
-  const handleTouchEnd = () => {
-    endDrag();
-  };
-
-  const totalDots = maxIndex + 1;
 
   return (
     <section className={`pb-16 sm:pb-24 bg-white relative overflow-hidden ${isStandalone ? "pt-24 sm:pt-32" : "pt-16 sm:pt-32"}`}>
@@ -205,115 +175,11 @@ export default function Team({ isStandalone = false }) {
           </div>
         </div>
 
-        {/* Carousel Container with Floating Side Arrows */}
-        <div className="relative px-4 sm:px-12">
-          {/* Floating Left Button */}
-          <button
-            onClick={handlePrev}
-            className="absolute -left-2 sm:left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 sm:w-12 sm:h-12 rounded-full border border-gray-200 bg-white flex items-center justify-center text-primary shadow-lg hover:shadow-xl hover:bg-muted hover:border-primary/20 transition-all duration-300 active:scale-95"
-            aria-label="Previous Team Member"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
-            </svg>
-          </button>
-
-          <div
-            className="relative select-none cursor-grab active:cursor-grabbing"
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => {
-              setIsHovered(false);
-              handleMouseLeave();
-            }}
-            onMouseDown={handleMouseDown}
-            onMouseMove={handleMouseMove}
-            onMouseUp={handleMouseUp}
-            onTouchStart={handleTouchStart}
-            onTouchMove={handleTouchMove}
-            onTouchEnd={handleTouchEnd}
-          >
-            {/* Outer Slider Window */}
-            <div className="overflow-hidden">
-              {/* Slider Track */}
-              <div
-                className={`flex ${isDragging ? "transition-none" : "transition-transform duration-500 ease-out"}`}
-                style={{
-                  transform: `translate3d(calc(-${currentIndex * (100 / visibleCount)}% - ${dragDistance}px), 0px, 0px)`,
-                }}
-              >
-                {team.map((member, i) => (
-                  <div
-                    key={i}
-                    className="flex-shrink-0"
-                    style={{
-                      width: `${100 / visibleCount}%`,
-                      padding: "0 12px",
-                    }}
-                  >
-                    {/* Card design with rich aesthetics */}
-                    <div className="h-full bg-white rounded-3xl p-6 sm:p-8 border border-gray-100 shadow-sm hover:shadow-xl hover:border-primary/10 transition-all duration-300 flex flex-col justify-between relative overflow-hidden group min-h-[380px]">
-                      {/* Top Accent bar on hover */}
-                      <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-primary via-accent to-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                      
-                      <div>
-                        {/* Avatar Circle with Shadow */}
-                        <img
-                          src={member.img || defaultImg}
-                          alt={member.name}
-                          className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl object-cover mb-4 sm:mb-6 border border-gray-100 shadow-sm group-hover:scale-105 transition-transform duration-500"
-                        />
-  
-                        {/* Name & Role */}
-                        <h3 className="text-lg sm:text-xl font-bold text-primary group-hover:text-accent transition-colors duration-300 mb-1">
-                          {member.name}
-                        </h3>
-                        <p className="text-xs sm:text-sm text-accent font-semibold tracking-wider uppercase mb-4">
-                          {member.role}
-                        </p>
-                        
-                        {/* Bio */}
-                        <p className="text-gray-600 text-sm leading-relaxed line-clamp-5">
-                          {member.bio}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Floating Right Button */}
-          <button
-            onClick={handleNext}
-            className="absolute -right-2 sm:right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 sm:w-12 sm:h-12 rounded-full border border-gray-200 bg-white flex items-center justify-center text-primary shadow-lg hover:shadow-xl hover:bg-muted hover:border-primary/20 transition-all duration-300 active:scale-95"
-            aria-label="Next Team Member"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
-        </div>
-
-        {/* Carousel Bottom Control Bar (Dots Only) */}
-        <div className="mt-8 flex justify-center items-center">
-          {/* Dots Indicator */}
-          <div className="flex gap-2 items-center">
-            {[...Array(totalDots)].map((_, i) => (
-              <button
-                key={i}
-                onClick={() => setCurrentIndex(i)}
-                className="p-1 focus:outline-none"
-                aria-label={`Go to slide ${i + 1}`}
-              >
-                <div
-                  className={`h-2 transition-all duration-300 rounded-full ${
-                    currentIndex === i ? "w-6 bg-primary" : "w-2 bg-gray-200 hover:bg-gray-400"
-                  }`}
-                />
-              </button>
-            ))}
-          </div>
+        {/* Team Grid Tiles */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+          {team.map((member, i) => (
+            <TeamCard key={i} member={member} defaultImg={defaultImg} />
+          ))}
         </div>
 
         {/* Values Strip */}
