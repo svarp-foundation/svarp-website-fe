@@ -163,8 +163,9 @@ const AdminMemberships = () => {
 
 
   const filteredUsers = users.filter((u) => {
-    if (filter === "active") return u.membership != null;
-    if (filter === "none") return u.membership == null;
+    const hasActive = Boolean(u.membership && u.membership.is_active);
+    if (filter === "active") return hasActive;
+    if (filter === "none") return !hasActive;
     return true;
   });
 
@@ -210,76 +211,75 @@ const AdminMemberships = () => {
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
-          {filteredUsers.map((user) => (
-            <div
-              key={user.id}
-              className="bg-white rounded-md border border-slate-200 p-2 flex flex-col justify-between space-y-1.5 hover:border-slate-300 transition-colors shadow-xs"
-            >
-              <div className="flex justify-between items-start gap-1">
-                <div className="min-w-0">
-                  <h3 className="text-xs font-bold text-primary truncate">
-                    {user.full_name || user.email.split("@")[0]}
-                  </h3>
-                  <p className="text-[10px] text-slate-400 font-medium truncate">
-                    {user.email}
-                  </p>
-                </div>
-                <span
-                  className={`px-1 py-0.5 rounded text-[8px] font-bold uppercase tracking-wider border shrink-0 ${
-                    user.membership && user.membership.is_active
-                      ? "bg-emerald-50 text-emerald-600 border-emerald-100"
-                      : "bg-slate-50 text-slate-400 border-slate-100"
-                  }`}
-                >
-                  {user.membership && user.membership.is_active
-                    ? "Active Member"
-                    : "No Plan"}
-                </span>
-              </div>
-
-              <div className="pt-1.5 border-t border-slate-100 flex flex-col justify-between gap-1.5">
-                <div className="flex justify-between items-center text-[10px] text-slate-600 font-semibold">
-                  <span>
-                    Plan:{" "}
-                    {user.membership
-                      ? plans.find((p) => p.id === user.membership.membership_id)
-                          ?.name || "Active Plan"
-                      : "None"}
+          {filteredUsers.map((user) => {
+            const isActiveMember = Boolean(user.membership && user.membership.is_active);
+            return (
+              <div
+                key={user.id}
+                className="bg-white rounded-md border border-slate-200 p-2 flex flex-col justify-between space-y-1.5 hover:border-slate-300 transition-colors shadow-xs"
+              >
+                <div className="flex justify-between items-start gap-1">
+                  <div className="min-w-0">
+                    <h3 className="text-xs font-bold text-primary truncate">
+                      {user.full_name || user.email.split("@")[0]}
+                    </h3>
+                    <p className="text-[10px] text-slate-400 font-medium truncate">
+                      {user.email}
+                    </p>
+                  </div>
+                  <span
+                    className={`px-1 py-0.5 rounded text-[8px] font-bold uppercase tracking-wider border shrink-0 ${
+                      isActiveMember
+                        ? "bg-emerald-50 text-emerald-600 border-emerald-100"
+                        : "bg-slate-50 text-slate-400 border-slate-100"
+                    }`}
+                  >
+                    {isActiveMember ? "Active Member" : "No Plan"}
                   </span>
-                  {user.membership && (
-                    <span className="text-[9px] text-slate-400 font-semibold">
-                      Exp: {formatDate(user.membership.end_date)}
-                    </span>
-                  )}
                 </div>
-                {user.membership ? (
-                  <div className="flex gap-1.5 w-full">
-                    <button
-                      onClick={() => assignMembership(user.id)}
-                      className="flex-1 py-1 rounded-md font-bold text-[10px] transition-all border border-slate-200 text-slate-600 hover:bg-slate-50 outline-none"
-                    >
-                      Modify Plan
-                    </button>
-                    {user.membership.is_active && (
+
+                <div className="pt-1.5 border-t border-slate-100 flex flex-col justify-between gap-1.5">
+                  <div className="flex justify-between items-center text-[10px] text-slate-600 font-semibold">
+                    <span>
+                      Plan:{" "}
+                      {isActiveMember
+                        ? plans.find((p) => p.id === user.membership.membership_id)
+                            ?.name || "Active Plan"
+                        : "None"}
+                    </span>
+                    {isActiveMember && (
+                      <span className="text-[9px] text-slate-400 font-semibold">
+                        Exp: {formatDate(user.membership.end_date)}
+                      </span>
+                    )}
+                  </div>
+                  {isActiveMember ? (
+                    <div className="flex gap-1.5 w-full">
+                      <button
+                        onClick={() => assignMembership(user.id)}
+                        className="flex-1 py-1 rounded-md font-bold text-[10px] transition-all border border-slate-200 text-slate-600 hover:bg-slate-50 outline-none"
+                      >
+                        Modify Plan
+                      </button>
                       <button
                         onClick={() => cancelMembership(user.id)}
                         className="py-1 px-2.5 rounded-md font-bold text-[10px] transition-all bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700 outline-none border border-red-100 cursor-pointer"
                       >
                         Cancel
                       </button>
-                    )}
-                  </div>
-                ) : (
-                  <button
-                    onClick={() => assignMembership(user.id)}
-                    className="w-full py-1 rounded-md font-bold text-[10px] transition-all bg-primary text-white hover:bg-slate-900 outline-none"
-                  >
-                    Assign Plan
-                  </button>
-                )}
+                    </div>
+                  ) : (
+                    <button
+                      onClick={() => assignMembership(user.id)}
+                      className="w-full py-1 rounded-md font-bold text-[10px] transition-all bg-primary text-white hover:bg-slate-900 outline-none"
+                    >
+                      Assign Plan
+                    </button>
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
 
