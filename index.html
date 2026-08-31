@@ -9,28 +9,84 @@
     
     <!-- SEO Meta Tags -->
     <meta name="description" content="SVARP Global is a premier provider of safety leadership training, EHS advisory, community wellness programs, and sustainability initiatives." />
-    <meta name="keywords" content="SVARP Global, EHS audit, safety leadership, sustainability, community wellness, environment health safety" />
+    <meta name="keywords" content="SVARP Global, EHS audit, safety leadership, sustainability, community wellness, environment health safety, safety certification, workplace safety" />
     <meta name="author" content="SVARP Global" />
-    <meta name="robots" content="index, follow" />
-    <link rel="canonical" href="https://www.svarp.org/" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="SVARP Global" />
+    <meta property="og:locale" content="en_US" />
     <meta property="og:url" content="https://www.svarp.org" />
     <meta property="og:title" content="SVARP Global | Building Safer, Smarter, Sustainable Futures" />
     <meta property="og:description" content="Empowering organizations and communities with expert safety leadership, training, and sustainability solutions." />
-    <meta property="og:image" content="/company/svarp-logo.webp" />
+    <meta property="og:image" content="https://www.svarp.org/company/svarp-logo.webp" />
+    <meta property="og:image:alt" content="SVARP Global Logo" />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:url" content="https://www.svarp.org" />
     <meta name="twitter:title" content="SVARP Global | Building Safer, Smarter, Sustainable Futures" />
     <meta name="twitter:description" content="Empowering organizations and communities with expert safety leadership, training, and sustainability solutions." />
-    <meta name="twitter:image" content="/company/svarp-logo.webp" />
+    <meta name="twitter:image" content="https://www.svarp.org/company/svarp-logo.webp" />
 
     <!-- Favicon -->
     <link rel="icon" type="image/webp" href="/company/svarp-logo.webp" />
     <link rel="apple-touch-icon" href="/company/svarp-logo.webp" />
+
+    <!-- Font Preconnect for Core Web Vitals -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Pacifico&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Structured Data (Schema.org JSON-LD) -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Organization",
+            "@id": "https://www.svarp.org/#organization",
+            "name": "SVARP Global",
+            "alternateName": "SVARP Foundation",
+            "url": "https://www.svarp.org",
+            "logo": {
+              "@type": "ImageObject",
+              "@id": "https://www.svarp.org/#logo",
+              "url": "https://www.svarp.org/company/svarp-logo.webp",
+              "caption": "SVARP Global Logo"
+            },
+            "image": "https://www.svarp.org/company/svarp-logo.webp",
+            "description": "SVARP Global is a premier provider of safety leadership training, EHS advisory, community wellness programs, and sustainability initiatives.",
+            "sameAs": [
+              "https://www.linkedin.com/company/svarpglobal/",
+              "https://youtube.com/@svarpglobal",
+              "https://www.facebook.com/profile.php?id=61590402162054",
+              "https://www.instagram.com/svarpglobal/"
+            ],
+            "contactPoint": {
+              "@type": "ContactPoint",
+              "contactType": "customer support",
+              "url": "https://www.svarp.org/contact"
+            }
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://www.svarp.org/#website",
+            "url": "https://www.svarp.org",
+            "name": "SVARP Global",
+            "description": "Building Safer, Smarter, Sustainable Futures",
+            "publisher": {
+              "@id": "https://www.svarp.org/#organization"
+            },
+            "inLanguage": "en"
+          }
+        ]
+      }
+    </script>
 
     <!-- ✅ Tailwind CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -53,12 +109,6 @@
         },
       };
     </script>
-
-    <!-- Fonts -->
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Pacifico&display=swap"
-      rel="stylesheet"
-    />
   </head>
   <body class="bg-muted font-sans">
     <div id="root"></div>

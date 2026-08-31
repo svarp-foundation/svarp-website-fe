@@ -1,4 +1,9 @@
 User-agent: *
 Allow: /
+Disallow: /admin
+Disallow: /admin/
+Disallow: /dashboard
+Disallow: /payment
+Disallow: /not-found
 
 Sitemap: https://www.svarp.org/sitemap.xml

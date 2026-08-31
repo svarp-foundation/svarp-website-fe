@@ -12,16 +12,24 @@ export default function Loader({ onComplete }) {
     if (videoRef.current) {
       videoRef.current.playbackRate = 2.0;
     }
-  }, []);
+
+    // Safety fallback: ensure loader dismisses within 2.5s even if video fails to play/end
+    const fallbackTimer = setTimeout(() => {
+      setFading(true);
+      setTimeout(onComplete, 500);
+    }, 2500);
+
+    return () => clearTimeout(fallbackTimer);
+  }, [onComplete]);
 
   const handleVideoEnd = () => {
     setFading(true);
-    setTimeout(onComplete, 1000);
+    setTimeout(onComplete, 500);
   };
 
   return (
     <div
-      className={`fixed inset-0 z-[100] flex items-center justify-center bg-white transition-opacity duration-1000 ${
+      className={`fixed inset-0 z-[100] flex items-center justify-center bg-white transition-opacity duration-500 ${
         fading ? "opacity-0" : "opacity-100"
       }`}
     >
